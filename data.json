@@ -1,1 +1,41 @@
-
+{
+  "brandName": "NIRVANA",
+  "brandSub": "BIOTECH",
+  "logoUrl": "",
+  "home": {
+    "tagline": "Pioneering Life Sciences",
+    "title": "Welcome to Nirvana Biotech",
+    "subtitle": "Innovating the future of clinical delivery frameworks and molecular engineering.",
+    "backgroundUrl": "https://picsum.photos/id/247/1200/800"
+  },
+  "about": {
+    "title": "About Our Scientific Mission",
+    "desc": "Nirvana Biotech stands at the intersection of computational biology and technical precision. We construct advanced biological frameworks tailored to next-generation therapeutic pipelines."
+  },
+  "innovations": [
+    {
+      "title": "Aptamer Engineering Modality",
+      "desc": "High-affinity diagnostic platforms built for robust target delivery vectors.",
+      "imageUrl": ""
+    }
+  ],
+  "team": [
+    {
+      "name": "Dr. Rajindra",
+      "role": "Principal Lead Investigator",
+      "imageUrl": ""
+    }
+  ],
+  "research": [
+    {
+      "date": "2026",
+      "title": "RNA-Folding Structural Models Logs",
+      "desc": "Documenting multi-tiered molecular configurations using advanced alignment algorithms.",
+      "imageUrl": ""
+    }
+  ],
+  "contact": {
+    "title": "Connect With Our Labs",
+    "desc": "Initiate data packet transmittal or submit clinical framework inquiries directly to our administrative hub."
+  }
+}
