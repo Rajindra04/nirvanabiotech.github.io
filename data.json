@@ -1,1 +1,47 @@
-
+{
+  "brandName": "NIRVANA",
+  "brandSub": "Biotech",
+  "logoUrl": "images/logo.png",
+  
+  "home": {
+    "backgroundUrl": "images/home-bg.jpg",
+    "tagline": "Pioneering Life Sciences",
+    "title": "Next-Gen Therapeutic Innovations",
+    "subtitle": "We merge deep cellular analysis with state-of-the-art biochemistry to accelerate breakthrough medical molecular structures."
+  },
+  
+  "about": {
+    "title": "Our Mission",
+    "desc": "Nirvana Biotech was founded with a singular, clear path ahead: solving compound molecular delivery frameworks that standard methodologies deem unreachable. Our open-access research platform unites laboratories worldwide to reduce lead times for therapeutic synthesis."
+  },
+  
+  "innovations": [
+    {
+      "title": "Gene Modification Frameworks",
+      "desc": "High-fidelity sequence mapping engineered to eliminate unintended gene splicing variances.",
+      "imageUrl": "https://images.unsplash.com/photo-1579154204601-01588f35116f?q=80&w=600&fit=crop"
+    }
+  ],
+  
+  "team": [
+    {
+      "name": "Dr. Priya Sharma",
+      "role": "Chief Scientific Officer",
+      "imageUrl": "images/priya-sharma.jpg"
+    }
+  ],
+  
+  "research": [
+    {
+      "date": "June 2026",
+      "title": "Evaluating Lipid Carrier Kinetics in Cellular Environments",
+      "desc": "Comprehensive analytical metrics measuring nanoparticle degradation velocity inside structural tissue layers.",
+      "imageUrl": "https://images.unsplash.com/photo-1453847668862-487637052f8a?q=80&w=300&fit=crop"
+    }
+  ],
+  
+  "contact": {
+    "title": "Connect With Us",
+    "desc": "Interested in strategic development partnerships or investing? Secure communications route directly to our primary review team."
+  }
+}
