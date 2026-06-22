@@ -535,8 +535,8 @@
                         'Authorization': `Bearer ${token}`,
                     },
                     body: JSON.stringify({
-                        dataJson: SITE_DATA,
-                        images,
+                        dataJson: SITE_DATA, // Matches what your worker expects
+                        images: images,
                         commitMessage: "Admin: update site content via dashboard",
                     }),
                 });
@@ -552,97 +552,118 @@
                     throw new Error(errBody.error || `Save failed (${resp.status})`);
                 }
 
+                alert("Changes successfully committed and pushed to GitHub! Give it a minute to update.");
                 PENDING_IMAGES = {};
-                statusEl.textContent = "Saved! Changes are now permanent (live site updates in ~30-60s).";
-                statusEl.classList.remove('text-slate-300');
-                statusEl.classList.add('text-emerald-400');
+                markSavedStatus();
+
             } catch (err) {
-                console.error(err);
-                statusEl.textContent = "Save failed — see console for details.";
-                alert(`Could not save changes: ${err.message}`);
+                console.error("Save framework operation crashed:", err);
+                alert(`Failed to sync changes: ${err.message}`);
+                markUnsaved();
             } finally {
                 saveBtn.disabled = false;
                 saveBtn.textContent = "Save Changes (Permanent)";
             }
         }
 
-        // Wrap the hydration logic into a reusable renderer so edits can re-render
-        // without re-fetching data.json from the network.
+        function markSavedStatus() {
+            const statusEl = document.getElementById('save-status');
+            statusEl.textContent = "All changes saved permanently to GitHub.";
+            statusEl.classList.remove('text-slate-300');
+            statusEl.classList.add('text-emerald-400');
+        }
+
+        // --- Core Content Rendering Engine ---
         function renderFromData(data) {
+            if (!data) return;
+
             document.getElementById('logo-text').textContent = data.brandName || "NIRVANA";
-            document.getElementById('logo-sub').textContent = data.brandSub || "Biotech";
-            document.getElementById('logo-img').src = data.logoUrl || FALLBACK_IMG;
-            document.getElementById('logo-img').setAttribute('data-target-path', data.logoUrl || '');
+            document.getElementById('logo-sub').textContent = data.brandSub || "BIOTECH";
+            
+            const logoImg = document.getElementById('logo-img');
+            if (logoImg && data.logoUrl) logoImg.src = data.logoUrl;
 
-            document.getElementById('home-tagline').textContent = data.home.tagline;
-            document.getElementById('home-title').textContent = data.home.title;
-            document.getElementById('home-subtitle').textContent = data.home.subtitle;
-            document.getElementById('home').style.backgroundImage = `linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.95)), url('${data.home.backgroundUrl}')`;
+            if (data.home) {
+                document.getElementById('home-tagline').textContent = data.home.tagline || "";
+                document.getElementById('home-title').textContent = data.home.title || "";
+                document.getElementById('home-subtitle').textContent = data.home.subtitle || "";
+                if (data.home.backgroundUrl) {
+                    document.getElementById('home-section')?.style.setProperty('background-image', `url('${data.home.backgroundUrl}')`);
+                }
+            }
 
-            document.getElementById('about-title').textContent = data.about.title;
-            document.getElementById('about-desc').textContent = data.about.desc;
+            if (data.about) {
+                document.getElementById('about-title').textContent = data.about.title || "";
+                document.getElementById('about-desc').textContent = data.about.desc || "";
+            }
 
-            const innovGrid = document.getElementById('innovations-grid');
-            innovGrid.innerHTML = '';
-            data.innovations.forEach((item, idx) => {
-                innovGrid.innerHTML += `
-                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-start relative">
-                        <button class="edit-only hidden absolute top-3 right-3 text-red-400 hover:text-red-600 text-xs" onclick="removeArrayItem('innovations', ${idx})"><i class="fa-solid fa-trash"></i></button>
-                        <div class="rounded-xl mb-6 w-full max-h-48 overflow-hidden bg-slate-100 relative">
-                            <img src="${item.imageUrl || FALLBACK_IMG}" class="w-full h-48 object-cover rounded-xl" alt="Innovation">
-                            <button class="edit-only hidden absolute bottom-2 right-2 bg-white shadow rounded-lg px-2 py-1 text-[10px] font-medium text-sky-600" onclick="promptImageEdit('innovations.${idx}.imageUrl')"><i class="fa-solid fa-image mr-1"></i>Change</button>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">${item.title}</h3>
-                        <p class="text-slate-600">${item.desc}</p>
-                        <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs mt-3" onclick="promptTextEdit('innovations.${idx}.title', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>edit title</button>
-                        <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs mt-1" onclick="promptTextEdit('innovations.${idx}.desc', null, true, this)"><i class="fa-solid fa-pen mr-1"></i>edit description</button>
-                    </div>`;
-            });
-
-            document.getElementById('team').style.backgroundImage = `linear-gradient(rgba(248,250,252,0.9), rgba(248,250,252,0.95)), url('https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2080')`;
-            const teamGrid = document.getElementById('team-grid');
-            teamGrid.innerHTML = '';
-            data.team.forEach((member, idx) => {
-                teamGrid.innerHTML += `
-                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center transition-all hover:shadow-md relative">
-                        <button class="edit-only hidden absolute top-3 right-3 text-red-400 hover:text-red-600 text-xs" onclick="removeArrayItem('team', ${idx})"><i class="fa-solid fa-trash"></i></button>
-                        <div class="rounded-2xl mb-5 overflow-hidden relative">
-                            <img src="${member.imageUrl || FALLBACK_IMG}" class="w-48 h-48 rounded-xl object-cover shadow-inner" alt="${member.name}">
-                            <button class="edit-only hidden absolute bottom-2 right-2 bg-white shadow rounded-lg px-2 py-1 text-[10px] font-medium text-sky-600" onclick="promptImageEdit('team.${idx}.imageUrl')"><i class="fa-solid fa-image mr-1"></i>Change</button>
-                        </div>
-                        <h3 class="font-bold text-lg text-slate-900">${member.name}</h3>
-                        <p class="text-sm font-medium text-sky-600 mt-1">${member.role}</p>
-                        <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs mt-3" onclick="promptTextEdit('team.${idx}.name', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>edit name</button>
-                        <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs mt-1" onclick="promptTextEdit('team.${idx}.role', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>edit role</button>
-                    </div>`;
-            });
-
-            document.getElementById('research').style.backgroundImage = `linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.95)), url('https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=2070')`;
-            const researchGrid = document.getElementById('research-grid');
-            researchGrid.innerHTML = '';
-            data.research.forEach((paper, idx) => {
-                researchGrid.innerHTML += `
-                    <div class="p-6 bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl hover:bg-white transition-all shadow-sm flex flex-col md:flex-row gap-6 items-start md:items-center relative">
-                        <button class="edit-only hidden absolute top-3 right-3 text-red-400 hover:text-red-600 text-xs" onclick="removeArrayItem('research', ${idx})"><i class="fa-solid fa-trash"></i></button>
-                        <div class="rounded-xl w-full md:w-32 h-32 flex-shrink-0 overflow-hidden bg-slate-100 relative">
-                            <img src="${paper.imageUrl || FALLBACK_IMG}" class="w-full h-full object-cover rounded-xl" alt="Research Article Thumbnail">
-                            <button class="edit-only hidden absolute bottom-1 right-1 bg-white shadow rounded-lg px-2 py-1 text-[10px] font-medium text-sky-600" onclick="promptImageEdit('research.${idx}.imageUrl')"><i class="fa-solid fa-image mr-1"></i>Change</button>
-                        </div>
-                        <div class="flex-grow">
-                            <span class="text-xs font-semibold text-emerald-600 uppercase bg-emerald-50 px-2.5 py-1 rounded">${paper.date}</span>
-                            <h4 class="text-lg font-bold text-slate-900 mt-2">${paper.title}</h4>
-                            <p class="text-slate-600 text-sm mt-1">${paper.desc}</p>
-                            <div class="flex gap-3 mt-2">
-                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('research.${idx}.date', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>date</button>
-                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('research.${idx}.title', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>title</button>
-                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('research.${idx}.desc', null, true, this)"><i class="fa-solid fa-pen mr-1"></i>desc</button>
+            // Render Innovations Grid
+            const innGrid = document.getElementById('innovations-grid');
+            if (innGrid) {
+                innGrid.innerHTML = '';
+                (data.innovations || []).forEach((item, idx) => {
+                    innGrid.innerHTML += `
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 overflow-hidden relative">
+                            ${item.imageUrl ? `<img src="${item.imageUrl}" class="w-full h-48 object-cover rounded-xl mb-4" />` : ''}
+                            <h4 class="text-xl font-bold text-slate-900">${item.title}</h4>
+                            <p class="text-sm text-slate-600 mt-2">${item.desc}</p>
+                            <div class="flex gap-3 mt-4">
+                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('innovations.${idx}.title', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>title</button>
+                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('innovations.${idx}.desc', null, true, this)"><i class="fa-solid fa-pen mr-1"></i>desc</button>
+                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptImageEdit('innovations.${idx}.imageUrl')"><i class="fa-solid fa-image mr-1"></i>image</button>
+                                <button class="edit-only hidden text-rose-500 hover:text-rose-600 text-xs ml-auto" onclick="removeArrayItem('innovations', ${idx})"><i class="fa-solid fa-trash"></i></button>
                             </div>
-                        </div>
-                    </div>`;
-            });
+                        </div>`;
+                });
+            }
 
-            document.getElementById('contact-title').textContent = data.contact.title;
-            document.getElementById('contact-desc').textContent = data.contact.desc;
+            // Render Team Grid
+            const teamGrid = document.getElementById('team-grid');
+            if (teamGrid) {
+                teamGrid.innerHTML = '';
+                (data.team || []).forEach((member, idx) => {
+                    teamGrid.innerHTML += `
+                        <div class="bg-white rounded-2xl p-6 text-center border border-slate-100 shadow-sm relative">
+                            <img src="${member.imageUrl || FALLBACK_IMG}" class="w-24 h-24 rounded-full mx-auto object-cover border-2 border-sky-500 shadow-sm" />
+                            <h4 class="text-lg font-bold text-slate-900 mt-4">${member.name}</h4>
+                            <p class="text-slate-500 text-xs">${member.role}</p>
+                            <div class="flex justify-center gap-2 mt-4">
+                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('team.${idx}.name', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>name</button>
+                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('team.${idx}.role', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>role</button>
+                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptImageEdit('team.${idx}.imageUrl')"><i class="fa-solid fa-image mr-1"></i>image</button>
+                                <button class="edit-only hidden text-rose-500 hover:text-rose-600 text-xs ml-2" onclick="removeArrayItem('team', ${idx})"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>`;
+                });
+            }
+
+            // Render Research Grid
+            const resGrid = document.getElementById('research-grid');
+            if (resGrid) {
+                resGrid.innerHTML = '';
+                (data.research || []).forEach((paper, idx) => {
+                    resGrid.innerHTML += `
+                        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col md:flex-row gap-6 relative">
+                            ${paper.imageUrl ? `<img src="${paper.imageUrl}" class="w-full md:w-48 h-32 object-cover rounded-xl" />` : ''}
+                            <div class="flex-1">
+                                <span class="text-xs font-bold text-emerald-600 uppercase bg-emerald-50 px-2.5 py-1 rounded-md">${paper.date}</span>
+                                <h4 class="text-lg font-bold text-slate-900 mt-2">${paper.title}</h4>
+                                <p class="text-slate-600 text-sm mt-1">${paper.desc}</p>
+                                <div class="flex gap-3 mt-4">
+                                    <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('research.${idx}.date', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>date</button>
+                                    <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('research.${idx}.title', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>title</button>
+                                    <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('research.${idx}.desc', null, true, this)"><i class="fa-solid fa-pen mr-1"></i>desc</button>
+                                    <button class="edit-only hidden text-rose-500 hover:text-rose-600 text-xs ml-auto" onclick="removeArrayItem('research', ${idx})"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            }
+
+            if (data.contact) {
+                document.getElementById('contact-title').textContent = data.contact.title || "";
+                document.getElementById('contact-desc').textContent = data.contact.desc || "";
+            }
         }
 
         window.onload = () => {
