@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<!-- saved from url=(0055)https://rajindra04.github.io/nirvanabiotech.github.io/# -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nirvana Biotech | Pioneering Life Sciences</title>
-    <script src="./Nirvana Biotech _ Pioneering Life Sciences_files/saved_resource"></script>
-    <link rel="stylesheet" href="./Nirvana Biotech _ Pioneering Life Sciences_files/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.4s ease-out forwards; }
@@ -15,261 +15,125 @@
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
         .nav-link.active { color: #0ea5e9; font-weight: 600; }
         
-        /* Admin Interactive Layer Rules */
-        .admin-editable-active { position: relative; min-width: 40px; min-height: 20px; display: inline-block; }
-        .admin-editable-active:hover { background-color: rgba(14, 165, 233, 0.08); outline: 2px dashed #0ea5e9; outline-offset: 4px; border-radius: 4px; }
-        
-        .editable-image { position: relative; display: inline-block; overflow: hidden; cursor: default; }
-        .admin-image-active { cursor: pointer !important; }
-        .admin-image-active::before {
-            content: "📸 Upload Image";
-            position: absolute; inset: 0; background: rgba(15, 23, 42, 0.7);
-            color: white; font-size: 13px; font-weight: 500;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; transition: opacity 0.2s ease; pointer-events: none; z-index: 10;
-        }
-        .admin-image-active:hover::before { opacity: 1; }
-        
         .section-bg {
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            transition: background-image 0.4s ease-in-out;
         }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Admin toolbar */
-        #admin-toolbar {
-            position: fixed; bottom: 20px; right: 20px; z-index: 60;
-            display: none;
-            flex-direction: column; gap: 8px;
-            background: rgba(15, 23, 42, 0.95);
-            padding: 14px; border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            font-family: inherit;
-        }
-        #admin-toolbar.visible { display: flex; }
-        #admin-toolbar button {
-            font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
-            color: white; padding: 8px 14px; border-radius: 10px;
-            display: flex; align-items: center; gap: 8px; white-space: nowrap;
-            transition: all 0.15s ease; border: none; cursor: pointer;
-        }
-        #save-status {
-            font-size: 11px; color: #94a3b8; text-align: center; padding-top: 2px;
-        }
     </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.visible{visibility:visible}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.-top-4{top:-1rem}.right-6{right:1.5rem}.top-0{top:0px}.top-6{top:1.5rem}.z-10{z-index:10}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-12{margin-bottom:3rem}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-6{margin-bottom:1.5rem}.mr-2{margin-right:0.5rem}.mt-1{margin-top:0.25rem}.mt-10{margin-top:2.5rem}.mt-12{margin-top:3rem}.mt-2{margin-top:0.5rem}.mt-6{margin-top:1.5rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-12{height:3rem}.h-32{height:8rem}.h-48{height:12rem}.h-full{height:100%}.max-h-48{max-height:12rem}.min-h-\[80vh\]{min-height:80vh}.min-h-screen{min-height:100vh}.w-12{width:3rem}.w-48{width:12rem}.w-full{width:100%}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-5xl{max-width:64rem}.max-w-6xl{max-width:72rem}.max-w-7xl{max-width:80rem}.max-w-xl{max-width:36rem}.flex-shrink-0{flex-shrink:0}.flex-grow{flex-grow:1}.cursor-pointer{cursor:pointer}.resize-none{resize:none}.flex-col{flex-direction:column}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-y-5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-slate-100{--tw-border-opacity:1;border-color:rgb(241 245 249 / var(--tw-border-opacity, 1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240 / var(--tw-border-opacity, 1))}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59 / var(--tw-border-opacity, 1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.bg-emerald-600{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.bg-red-600\/90{background-color:rgb(220 38 38 / 0.9)}.bg-sky-50{--tw-bg-opacity:1;background-color:rgb(240 249 255 / var(--tw-bg-opacity, 1))}.bg-sky-600{--tw-bg-opacity:1;background-color:rgb(2 132 199 / var(--tw-bg-opacity, 1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249 / var(--tw-bg-opacity, 1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.bg-slate-700{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-slate-900\/90{background-color:rgb(15 23 42 / 0.9)}.bg-slate-950{--tw-bg-opacity:1;background-color:rgb(2 6 23 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/90{background-color:rgb(255 255 255 / 0.9)}.object-cover{object-fit:cover}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-20{padding-top:5rem;padding-bottom:5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.py-32{padding-top:8rem;padding-bottom:8rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-8{padding-top:2rem;padding-bottom:2rem}.text-left{text-align:left}.text-center{text-align:center}.font-sans{font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.tracking-tight{letter-spacing:-0.025em}.tracking-wide{letter-spacing:0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-sky-600{--tw-text-opacity:1;color:rgb(2 132 199 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139 / var(--tw-text-opacity, 1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105 / var(--tw-text-opacity, 1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85 / var(--tw-text-opacity, 1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-slate-950{--tw-text-opacity:1;color:rgb(2 6 23 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sky-600\/10{--tw-shadow-color:rgb(2 132 199 / 0.1);--tw-shadow:var(--tw-shadow-colored)}.shadow-sky-600\/20{--tw-shadow-color:rgb(2 132 199 / 0.2);--tw-shadow:var(--tw-shadow-colored)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-emerald-700:hover{--tw-bg-opacity:1;background-color:rgb(4 120 87 / var(--tw-bg-opacity, 1))}.hover\:bg-red-600:hover{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.hover\:bg-sky-700:hover{--tw-bg-opacity:1;background-color:rgb(3 105 161 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-600:hover{--tw-bg-opacity:1;background-color:rgb(71 85 105 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-900:hover{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.hover\:bg-white:hover{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.hover\:text-slate-300:hover{--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.hover\:shadow-md:hover{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.focus\:border-sky-500:focus{--tw-border-opacity:1;border-color:rgb(14 165 233 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}@media (min-width: 640px){.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 768px){.md\:flex{display:flex}.md\:w-32{width:8rem}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:items-center{align-items:center}.md\:text-6xl{font-size:3.75rem;line-height:1}.md\:text-lg{font-size:1.125rem;line-height:1.75rem}}</style></head>
+</head>
 <body class="font-sans bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
-    <!-- NAVBAR -->
     <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-100">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3 cursor-pointer">
-                <div id="logo-img-wrap" class="editable-image rounded-xl admin-image-active">
-                    <!-- EDIT HERE: Permanent Brand Logo URL -->
-                    <img id="logo-img" src="./Nirvana Biotech _ Pioneering Life Sciences_files/120" class="h-12 w-12 object-cover rounded-xl shadow-sm" alt="Nirvana Biotech">
-                </div>
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('home')">
+                <img id="logo-img" src="" class="h-12 w-12 object-cover rounded-xl shadow-sm fallback-img" alt="Logo">
                 <div>
-                    <!-- EDIT HERE: Permanent Brand Title -->
-                    <span id="logo-text" class="text-xl font-bold tracking-wider text-slate-900 block leading-tight editable admin-editable-active" contenteditable="true">NIRVANA</span>
-                    <!-- EDIT HERE: Permanent Brand Subtitle -->
-                    <p id="logo-sub" class="text-xs font-semibold tracking-widest text-sky-600 uppercase editable admin-editable-active" contenteditable="true">Biotech</p>
+                    <span id="logo-text" class="text-xl font-bold tracking-wider text-slate-900 block leading-tight"></span>
+                    <p id="logo-sub" class="text-xs font-semibold tracking-widest text-sky-600 uppercase"></p>
                 </div>
             </div>
             
             <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600" id="nav-menu">
-                <a href="https://rajindra04.github.io/nirvanabiotech.github.io/#" onclick="showSection(&#39;home&#39;)" class="nav-link">Home</a>
-                <a href="https://rajindra04.github.io/nirvanabiotech.github.io/#" onclick="showSection(&#39;about&#39;)" class="nav-link">About</a>
-                <a href="https://rajindra04.github.io/nirvanabiotech.github.io/#" onclick="showSection(&#39;innovations&#39;)" class="nav-link">Innovations</a>
-                <a href="https://rajindra04.github.io/nirvanabiotech.github.io/#" onclick="showSection(&#39;team&#39;)" class="nav-link active">Team</a>
-                <a href="https://rajindra04.github.io/nirvanabiotech.github.io/#" onclick="showSection(&#39;research&#39;)" class="nav-link">Research</a>
-                <a href="https://rajindra04.github.io/nirvanabiotech.github.io/#" onclick="showSection(&#39;contact&#39;)" class="nav-link">Contact</a>
+                <a href="#" onclick="showSection('home')" class="nav-link active">Home</a>
+                <a href="#" onclick="showSection('about')" class="nav-link">About</a>
+                <a href="#" onclick="showSection('innovations')" class="nav-link">Innovations</a>
+                <a href="#" onclick="showSection('team')" class="nav-link">Team</a>
+                <a href="#" onclick="showSection('research')" class="nav-link">Research</a>
+                <a href="#" onclick="showSection('contact')" class="nav-link">Contact</a>
             </div>
             
-            <button id="admin-login-btn" onclick="toggleAdminMode()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-semibold tracking-wider flex items-center gap-2 shadow-md transition-all">
-                <i class="fas fa-check-circle" id="admin-icon"></i>
-                <span id="edit-btn-text">ADMIN MODE ACTIVE</span>
-            </button>
+            <div class="w-28 flex justify-end">
+                <span class="text-[10px] text-slate-400 font-mono tracking-widest border border-slate-200 px-2 py-1 rounded-md">LIVE REPO</span>
+            </div>
         </div>
     </nav>
 
-    <!-- MAIN INTERACTIVE WRAPPERS -->
     <main class="flex-grow">
         
-        <!-- HOME SECTION -->
-        <!-- EDIT HERE: Permanent Home Section Background Image URL (Inside the url('...') block) -->
-        <section id="home" class="section py-32 section-bg min-h-[80vh] flex items-center relative" style="background-image: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.95)), url(&#39;https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&amp;w=2070&#39;);">
-            <button onclick="changeBackground(&#39;home&#39;, true)" class="admin-btn absolute top-6 right-6 bg-slate-900/90 hover:bg-slate-900 text-white text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-md z-10">
-                <i class="fas fa-image"></i> Change Home Background
-            </button>
+        <section id="home" class="section py-32 section-bg min-h-[80vh] flex items-center relative">
             <div class="max-w-5xl mx-auto px-6 text-center">
                 <div class="inline-block bg-sky-50 px-4 py-1.5 rounded-full">
-                    <!-- EDIT HERE: Permanent Tagline -->
-                    <span class="text-sky-600 text-sm font-bold tracking-widest uppercase editable admin-editable-active" id="home-tagline" contenteditable="true">Pioneering Life Sciences</span>
+                    <span class="text-sky-600 text-sm font-bold tracking-widest uppercase" id="home-tagline"></span>
                 </div>
-                <!-- EDIT HERE: Permanent Hero Headline -->
-                <h1 class="text-4xl md:text-6xl font-black text-slate-950 mt-6 tracking-tight editable admin-editable-active" id="home-title" contenteditable="true">Next-Gen Therapeutic Innovations</h1>
-                <!-- EDIT HERE: Permanent Hero Description Subtext -->
-                <p class="text-base md:text-lg text-slate-600 mt-6 max-w-2xl mx-auto editable admin-editable-active" id="home-subtitle" contenteditable="true">We merge deep cellular analysis with state-of-the-art biochemistry to accelerate breakthrough medical molecular structures.</p>
+                <h1 class="text-4xl md:text-6xl font-black text-slate-950 mt-6 tracking-tight" id="home-title"></h1>
+                <p class="text-base md:text-lg text-slate-600 mt-6 max-w-2xl mx-auto" id="home-subtitle"></p>
                 <div class="mt-10 flex justify-center gap-4">
-                    <button onclick="showSection(&#39;innovations&#39;)" class="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-sm font-medium transition-all shadow-lg shadow-sky-600/20">Explore Innovations</button>
-                    <button onclick="showSection(&#39;about&#39;)" class="px-6 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-sm font-medium transition-all">Learn More</button>
+                    <button onclick="showSection('innovations')" class="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-sm font-medium transition-all shadow-lg shadow-sky-600/20">Explore Innovations</button>
+                    <button onclick="showSection('about')" class="px-6 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-sm font-medium transition-all">Learn More</button>
                 </div>
             </div>
         </section>
 
-        <!-- ABOUT SECTION -->
         <section id="about" class="section py-20 bg-white">
             <div class="max-w-4xl mx-auto px-6">
-                <!-- EDIT HERE: Permanent About Heading -->
-                <h2 class="text-3xl font-bold text-slate-900 mb-6 editable admin-editable-active" id="about-title" contenteditable="true">Our Mission</h2>
-                <!-- EDIT HERE: Permanent About Main Text Paragraph -->
-                <p class="text-base text-slate-600 leading-relaxed editable admin-editable-active" id="about-desc" contenteditable="true">Nirvana Biotech was founded with a singular, clear path ahead: solving compound molecular delivery frameworks that standard methodologies deem unreachable. Our open-access research platform unites laboratories worldwide to reduce lead times for therapeutic synthesis.</p>
+                <h2 class="text-3xl font-bold text-slate-900 mb-6" id="about-title"></h2>
+                <p class="text-base text-slate-600 leading-relaxed" id="about-desc"></p>
             </div>
         </section>
 
-        <!-- INNOVATIONS SECTION -->
         <section id="innovations" class="section py-20 bg-slate-50 relative">
             <div class="max-w-6xl mx-auto px-6">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
-                    <div>
-                        <!-- EDIT HERE: Permanent Innovations Main Heading -->
-                        <h2 id="innovations-title" class="text-3xl font-bold text-slate-900 editable admin-editable-active" contenteditable="true">Key Core Capabilities</h2>
-                        <!-- EDIT HERE: Permanent Innovations Description Subtext -->
-                        <p id="innovations-sub" class="text-slate-600 mt-1 editable admin-editable-active" contenteditable="true">Advanced frameworks accelerating modern biotechnology milestones.</p>
-                    </div>
-                    <button onclick="addNewInnovationItem()" class="admin-btn bg-sky-600 hover:bg-sky-700 text-white px-5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all shadow-md">
-                        <i class="fas fa-plus mr-2"></i> Add Custom Innovation
-                    </button>
-                </div>
-                
-                <div id="innovations-grid" class="grid md:grid-cols-2 gap-8">
-                    <!-- Default Innovation Unit -->
-                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-start" data-default-id="innov-0">
-                        <div class="editable-image rounded-xl mb-6 w-full max-h-48 overflow-hidden bg-slate-100 admin-image-active">
-                            <!-- EDIT HERE: Permanent Default Innovation Card Feature Image URL -->
-                            <img src="./Nirvana Biotech _ Pioneering Life Sciences_files/photo-1579154204601-01588f35116f" class="w-full h-48 object-cover rounded-xl" alt="Innovation">
-                        </div>
-                        <!-- EDIT HERE: Permanent Default Innovation Card Title -->
-                        <h3 class="text-xl font-bold text-slate-900 mb-2 editable admin-editable-active" contenteditable="true">Gene Modification Frameworks</h3>
-                        <!-- EDIT HERE: Permanent Default Innovation Card Description Text -->
-                        <p class="text-slate-600 editable admin-editable-active" contenteditable="true">High-fidelity sequence mapping engineered to eliminate unintended gene splicing variances.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- TEAM SECTION -->
-        <!-- EDIT HERE: Permanent Team Section Background Image URL (Inside the url('...') block) -->
-        <section id="team" class="section py-20 section-bg relative active" style="background-image: linear-gradient(rgba(248,250,252,0.9), rgba(248,250,252,0.95)), url(&#39;https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&amp;w=2080&#39;);">
-            <div class="max-w-7xl mx-auto px-6 relative">
-                <button onclick="changeBackground(&#39;team&#39;, false)" class="admin-btn absolute -top-4 right-6 bg-slate-900/90 hover:bg-slate-900 text-white text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-md z-10">
-                    <i class="fas fa-image"></i> Change Team Background
-                </button>
-                
                 <div class="mb-12">
-                    <!-- EDIT HERE: Permanent Team Main Heading -->
-                    <h2 id="team-title" class="text-3xl font-bold text-slate-950 tracking-tight editable admin-editable-active" contenteditable="true">Our Scientific Leadership</h2>
-                    <!-- EDIT HERE: Permanent Team Description Subtext -->
-                    <p id="team-sub" class="text-slate-600 mt-2 editable admin-editable-active" contenteditable="true">World-class minds leading computational biology and therapeutics development.</p>
+                    <h2 id="innovations-title" class="text-3xl font-bold text-slate-900"></h2>
+                    <p id="innovations-sub" class="text-slate-600 mt-1"></p>
                 </div>
-                
-                <div id="team-grid" class="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
-                    <!-- Default Team Member Card -->
-                    <div class="team-card bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center transition-all hover:shadow-md" data-default-id="team-0">
-                        <div class="editable-image rounded-2xl mb-5 admin-image-active">
-                            <!-- EDIT HERE: Permanent Default Profile Avatar Image URL -->
-                            <img src="blob:https://rajindra04.github.io/d897e48c-8cbf-4d8b-ad98-1b66bf5ec54b" class="w-48 h-48 rounded-xl object-cover shadow-inner" alt="Dr. Priya Sharma" data-img-key="img_1782124666219_r8p9ood">
-                        </div>
-                        <!-- EDIT HERE: Permanent Default Name -->
-                        <h3 class="font-bold text-lg text-slate-900 editable admin-editable-active" contenteditable="true">Dr. Rajindra Napit</h3>
-                        <!-- EDIT HERE: Permanent Default Job Assignment Title -->
-                        <p class="text-sm font-medium text-sky-600 mt-1 editable admin-editable-active" contenteditable="true">President</p>
-                    </div>
-                </div>
-
-                <div class="text-center mt-12">
-                    <button onclick="addNewTeamMember()" id="add-member-btn" class="admin-btn bg-sky-600 hover:bg-sky-700 text-white px-6 py-3 rounded-xl text-sm font-semibold tracking-wide transition-all shadow-md">
-                        <i class="fas fa-plus mr-2"></i> Add Team Member
-                    </button>
-                </div>
+                <div id="innovations-grid" class="grid md:grid-cols-2 gap-8"></div>
             </div>
         </section>
 
-        <!-- RESEARCH SECTION -->
-        <!-- EDIT HERE: Permanent Research Section Background Image URL (Inside the url('...') block) -->
-        <section id="research" class="section py-20 section-bg relative" style="background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.95)), url(&#39;https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&amp;w=2070&#39;);">
-            <div class="max-w-5xl mx-auto px-6 relative">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
-                    <div>
-                        <button onclick="changeBackground(&#39;research&#39;, true)" class="admin-btn bg-slate-900/90 hover:bg-slate-900 text-white text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 mb-4 transition-all shadow-md">
-                            <i class="fas fa-image"></i> Change Section Background
-                        </button>
-                        <!-- EDIT HERE: Permanent Research Main Heading -->
-                        <h2 id="research-title" class="text-3xl font-bold text-slate-900 editable admin-editable-active" contenteditable="true">Published Whitepapers</h2>
-                        <!-- EDIT HERE: Permanent Research Description Subtext -->
-                        <p id="research-sub" class="text-slate-600 mt-1 editable admin-editable-active" contenteditable="true">Review our peer-verified tracking registries regarding targeted bio-delivery vectors.</p>
-                    </div>
-                    <button onclick="addNewResearchItem()" class="admin-btn bg-sky-600 hover:bg-sky-700 text-white px-5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all shadow-md">
-                        <i class="fas fa-plus mr-2"></i> Add New Research Entry
-                    </button>
+        <section id="team" class="section py-20 section-bg relative">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="mb-12">
+                    <h2 id="team-title" class="text-3xl font-bold text-slate-950 tracking-tight"></h2>
+                    <p id="team-sub" class="text-slate-600 mt-2"></p>
                 </div>
-                
-                <div id="research-grid" class="space-y-6">
-                    <!-- Default Research Unit -->
-                    <div class="p-6 bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl hover:bg-white transition-all shadow-sm flex flex-col md:flex-row gap-6 items-start md:items-center" data-default-id="research-0">
-                        <div class="editable-image rounded-xl w-full md:w-32 h-32 flex-shrink-0 bg-slate-100 admin-image-active">
-                            <!-- EDIT HERE: Permanent Default Research Cover Thumbnail Image URL -->
-                            <img src="./Nirvana Biotech _ Pioneering Life Sciences_files/photo-1453847668862-487637052f8a" class="w-full h-full object-cover rounded-xl" alt="Research Article Thumbnail">
-                        </div>
-                        <div class="flex-grow">
-                            <!-- EDIT HERE: Permanent Default Date -->
-                            <span class="text-xs font-semibold text-emerald-600 uppercase bg-emerald-50 px-2.5 py-1 rounded editable admin-editable-active" contenteditable="true">June 2026</span>
-                            <!-- EDIT HERE: Permanent Default Article Heading Title -->
-                            <h4 class="text-lg font-bold text-slate-900 mt-2 editable admin-editable-active" contenteditable="true">Evaluating Lipid Carrier Kinetics in Cellular Environments</h4>
-                            <!-- EDIT HERE: Permanent Default Abstract Summary Text -->
-                            <p class="text-slate-600 text-sm mt-1 editable admin-editable-active" contenteditable="true">Comprehensive analytical metrics measuring nanoparticle degradation velocity inside structural tissue layers.</p>
-                        </div>
-                    </div>
-                </div>
+                <div id="team-grid" class="grid sm:grid-cols-2 md:grid-cols-3 gap-8"></div>
             </div>
         </section>
 
-        <!-- CONTACT SECTION -->
+        <section id="research" class="section py-20 section-bg relative">
+            <div class="max-w-5xl mx-auto px-6">
+                <div class="mb-12">
+                    <h2 id="research-title" class="text-3xl font-bold text-slate-900"></h2>
+                    <p id="research-sub" class="text-slate-600 mt-1"></p>
+                </div>
+                <div id="research-grid" class="space-y-6"></div>
+            </div>
+        </section>
+
         <section id="contact" class="section py-20 bg-slate-950 text-white">
             <div class="max-w-3xl mx-auto px-6">
                 <div class="text-center mb-12">
-                    <!-- EDIT HERE: Permanent Contact Heading Title -->
-                    <h2 class="text-3xl font-bold mb-4 editable admin-editable-active" id="contact-title" contenteditable="true">Connect With Us</h2>
-                    <!-- EDIT HERE: Permanent Contact Description Paragraph -->
-                    <p class="text-slate-400 max-w-xl mx-auto editable admin-editable-active" id="contact-desc" contenteditable="true">Interested in strategic development partnerships or investing? Secure communications route directly to our primary review team.</p>
+                    <h2 class="text-3xl font-bold mb-4" id="contact-title"></h2>
+                    <p class="text-slate-400 max-w-xl mx-auto" id="contact-desc"></p>
                 </div>
                 
                 <form onsubmit="handleFormSubmit(event)" class="space-y-5 bg-slate-900 p-8 rounded-2xl border border-slate-800 shadow-xl text-left">
                     <div class="grid sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Sender Name</label>
-                            <input type="text" placeholder="Dr. John Doe" required="" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors">
+                            <input type="text" placeholder="Dr. John Doe" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Institutional Email</label>
-                            <input type="email" placeholder="partner@institution.org" required="" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors">
+                            <input type="email" placeholder="partner@institution.org" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors">
                         </div>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Subject Query</label>
-                        <input type="text" placeholder="Partnership Framework Inquiries" required="" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors">
+                        <input type="text" placeholder="Partnership Framework Inquiries" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Message Payload</label>
-                        <textarea rows="4" placeholder="Outline technical delivery specifications or collaborative proposal logs here..." required="" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors resize-none"></textarea>
+                        <textarea rows="4" placeholder="Outline technical delivery specifications or collaborative proposal logs here..." required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors resize-none"></textarea>
                     </div>
-                    <button type="submit" class="w-full py-3.5 bg-sky-600 hover:bg-sky-700 text-white font-medium text-sm rounded-xl transition-colors shadow-lg shadow-sky-600/10 tracking-wide uppercase font-semibold">
+                    <button type="submit" class="w-full py-3.5 bg-sky-600 hover:bg-sky-700 text-white font-medium text-sm rounded-xl transition-colors shadow-lg tracking-wide uppercase font-semibold">
                         Transmit Data Payload
                     </button>
                 </form>
@@ -278,397 +142,94 @@
 
     </main>
 
-    <!-- FOOTER -->
     <footer class="bg-slate-900 text-slate-500 text-xs py-8 border-t border-slate-800">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>© 2026 Nirvana Biotech Inc. All rights reserved. Registered Scientific Entity.</div>
+            <div>&copy; 2026 Nirvana Biotech Inc. All rights reserved. Registered Scientific Entity.</div>
             <div class="flex gap-6">
-                <a href="https://rajindra04.github.io/nirvanabiotech.github.io/#" class="hover:text-slate-300">Privacy Policy</a>
-                <a href="https://rajindra04.github.io/nirvanabiotech.github.io/#" class="hover:text-slate-300">Compliance Framework</a>
+                <a href="#" class="hover:text-slate-300">Privacy Policy</a>
+                <a href="#" class="hover:text-slate-300">Compliance Framework</a>
             </div>
         </div>
     </footer>
 
-    <!-- ADMIN TOOLBAR -->
-    <div id="admin-toolbar" class="visible">
-        <button onclick="manualSave()" class="bg-emerald-600 hover:bg-emerald-700">
-            <i class="fas fa-save"></i> Save Now
-        </button>
-        <button onclick="exportData()" class="bg-sky-600 hover:bg-sky-700">
-            <i class="fas fa-file-export"></i> Export Backup File
-        </button>
-        <button onclick="document.getElementById(&#39;import-file-input&#39;).click()" class="bg-slate-700 hover:bg-slate-600">
-            <i class="fas fa-file-import"></i> Import Backup File
-        </button>
-        <button onclick="resetAllData()" class="bg-red-600/90 hover:bg-red-600">
-            <i class="fas fa-trash"></i> Reset to Original
-        </button>
-        <input type="file" id="import-file-input" accept="application/json" class="hidden" onchange="importData(event)">
-        <div id="save-status" style="color: rgb(148, 163, 184);">All changes auto-save</div>
-    </div>
-
-    <!-- ENGINE LOGIC -->
     <script>
-        let isAuthenticated = false;
-        const ADMIN_PASSWORD = "nirvana2026";
-        const STORAGE_KEY = "nirvana_site_data_v1";
-        const DB_NAME = "nirvana_image_store";
-        const DB_VERSION = 1;
-        const IMG_STORE = "images";
+        const FALLBACK_IMG = "https://picsum.photos/id/1015/120/120";
 
-        let dbPromise = null;
-        function openImageDB() {
-            if (dbPromise) return dbPromise;
-            dbPromise = new Promise((resolve, reject) => {
-                const req = indexedDB.open(DB_NAME, DB_VERSION);
-                req.onupgradeneeded = () => {
-                    const db = req.result;
-                    if (!db.objectStoreNames.contains(IMG_STORE)) {
-                        db.createObjectStore(IMG_STORE);
-                    }
-                };
-                req.onsuccess = () => resolve(req.result);
-                req.onerror = () => reject(req.error);
-            });
-            return dbPromise;
-        }
-
-        async function idbPut(key, blob) {
-            const db = await openImageDB();
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction(IMG_STORE, 'readwrite');
-                tx.objectStore(IMG_STORE).put(blob, key);
-                tx.oncomplete = () => resolve();
-                tx.onerror = () => reject(tx.error);
-            });
-        }
-
-        async function idbGet(key) {
-            const db = await openImageDB();
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction(IMG_STORE, 'readonly');
-                const req = tx.objectStore(IMG_STORE).get(key);
-                req.onsuccess = () => resolve(req.result || null);
-                req.onerror = () => reject(req.error);
-            });
-        }
-
-        async function idbDelete(key) {
-            const db = await openImageDB();
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction(IMG_STORE, 'readwrite');
-                tx.objectStore(IMG_STORE).delete(key);
-                tx.oncomplete = () => resolve();
-                tx.onerror = () => reject(tx.error);
-            });
-        }
-
-        async function idbGetAllKeys() {
-            const db = await openImageDB();
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction(IMG_STORE, 'readonly');
-                const req = tx.objectStore(IMG_STORE).getAllKeys();
-                req.onsuccess = () => resolve(req.result || []);
-                req.onerror = () => reject(req.error);
-            });
-        }
-
-        const activeObjectURLs = {};
-        function setImageURLAndDisplay(key, blob, imgElement) {
-            if (activeObjectURLs[key]) {
-                URL.revokeObjectURL(activeObjectURLs[key]);
-            }
-            const url = URL.createObjectURL(blob);
-            activeObjectURLs[key] = url;
-            imgElement.src = url;
-        }
-
-        const MAX_DIMENSION = 1600; 
-        const JPEG_QUALITY = 0.85;
-
-        function processImageFile(file) {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                const reader = new FileReader();
-                reader.onload = e => { img.src = e.target.result; };
-                reader.onerror = reject;
-                img.onload = () => {
-                    let { width, height } = img;
-                    if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
-                        const scale = MAX_DIMENSION / Math.max(width, height);
-                        width = Math.round(width * scale);
-                        height = Math.round(height * scale);
-                    }
-                    const canvas = document.createElement('canvas');
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    const keepPng = /png|gif|svg/.test(file.type);
-                    canvas.toBlob(
-                        blob => blob ? resolve(blob) : reject(new Error('Canvas encoding failed')),
-                        keepPng ? 'image/png' : 'image/jpeg',
-                        keepPng ? undefined : JPEG_QUALITY
-                    );
-                };
-                img.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        function getDataObject() {
-            const textData = {};
-            document.querySelectorAll('[id].editable').forEach(el => {
-                textData[el.id] = el.innerHTML;
-            });
-
-            const imageRefs = {};
-            document.querySelectorAll('img[id][data-img-key]').forEach(img => {
-                imageRefs[img.id] = img.getAttribute('data-img-key');
-            });
-
-            const backgroundRefs = {};
-            document.querySelectorAll('.section-bg[id][data-bg-key]').forEach(sec => {
-                backgroundRefs[sec.id] = {
-                    key: sec.getAttribute('data-bg-key'),
-                    light: sec.getAttribute('data-bg-light') === 'true'
-                };
-            });
-
-            const dynamicGrids = {};
-            ['innovations-grid', 'team-grid', 'research-grid'].forEach(gridId => {
-                const grid = document.getElementById(gridId);
-                if (!grid) return;
-                const extras = Array.from(grid.children).filter(child => !child.hasAttribute('data-default-id'));
-                dynamicGrids[gridId] = extras.map(el => el.outerHTML);
-            });
-
-            return { version: 2, savedAt: new Date().toISOString(), textData, imageRefs, backgroundRefs, dynamicGrids };
-        }
-
-        async function applyDataObject(data) {
-            if (!data) return;
-
-            if (data.textData) {
-                Object.entries(data.textData).forEach(([id, html]) => {
-                    const el = document.getElementById(id);
-                    if (el) el.innerHTML = html;
-                });
-            }
-
-            if (data.dynamicGrids) {
-                Object.entries(data.dynamicGrids).forEach(([gridId, htmlArray]) => {
-                    const grid = document.getElementById(gridId);
-                    if (!grid) return;
-                    Array.from(grid.children).filter(child => !child.hasAttribute('data-default-id')).forEach(el => el.remove());
-                    htmlArray.forEach(outerHTML => {
-                        const tmp = document.createElement('div');
-                        tmp.innerHTML = outerHTML.trim();
-                        const node = tmp.firstElementChild;
-                        if (node) grid.appendChild(node);
-                    });
-                });
-            }
-
-            if (data.imageRefs) {
-                for (const [id, key] of Object.entries(data.imageRefs)) {
-                    const el = document.getElementById(id);
-                    if (!el) continue;
-                    el.setAttribute('data-img-key', key);
-                    try {
-                        const blob = await idbGet(key);
-                        if (blob) setImageURLAndDisplay(key, blob, el);
-                    } catch (err) { console.error(err); }
-                }
-            }
-
-            document.querySelectorAll('[data-img-key]').forEach(async el => {
-                if (el.tagName === 'IMG' && !el.hasAttribute('id')) {
-                    const key = el.getAttribute('data-img-key');
-                    try {
-                        const blob = await idbGet(key);
-                        if (blob) setImageURLAndDisplay(key, blob, el);
-                    } catch (err) { console.error(err); }
-                }
-            });
-
-            if (data.backgroundRefs) {
-                for (const [id, ref] of Object.entries(data.backgroundRefs)) {
-                    const el = document.getElementById(id);
-                    if (!el) continue;
-                    el.setAttribute('data-bg-key', ref.key);
-                    el.setAttribute('data-bg-light', ref.light);
-                    try {
-                        const blob = await idbGet(ref.key);
-                        if (blob) {
-                            if (activeObjectURLs[ref.key]) URL.revokeObjectURL(activeObjectURLs[ref.key]);
-                            const url = URL.createObjectURL(blob);
-                            activeObjectURLs[ref.key] = url;
-                            const mask = ref.light
-                                ? 'linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.95))'
-                                : 'linear-gradient(rgba(248,250,252,0.9), rgba(248,250,252,0.95))';
-                            el.style.backgroundImage = `${mask}, url('${url}')`;
-                        }
-                    } catch (err) { console.error(err); }
-                }
-            }
-        }
-
-        function persistToLocalStorage() {
+        async function initWebsite() {
             try {
-                const data = getDataObject();
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-                flashSaveStatus('Saved ' + new Date().toLocaleTimeString());
+                const response = await fetch('data.json');
+                if (!response.ok) throw new Error("Could not load database file");
+                const data = await response.parse ? await response.parse() : await response.json();
+                
+                // Hydrate Top-Level Brand Settings
+                document.getElementById('logo-text').textContent = data.brandName || "NIRVANA";
+                document.getElementById('logo-sub').textContent = data.brandSub || "Biotech";
+                document.getElementById('logo-img').src = data.logoUrl || FALLBACK_IMG;
+
+                // Hydrate Home Elements
+                document.getElementById('home-tagline').textContent = data.home.tagline;
+                document.getElementById('home-title').textContent = data.home.title;
+                document.getElementById('home-subtitle').textContent = data.home.subtitle;
+                document.getElementById('home').style.backgroundImage = `linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.95)), url('${data.home.backgroundUrl}')`;
+
+                // Hydrate About Section
+                document.getElementById('about-title').textContent = data.about.title;
+                document.getElementById('about-desc').textContent = data.about.desc;
+
+                // Build Innovations Array Loop
+                const innovGrid = document.getElementById('innovations-grid');
+                innovGrid.innerHTML = '';
+                data.innovations.forEach(item => {
+                    innovGrid.innerHTML += `
+                        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-start">
+                            <div class="rounded-xl mb-6 w-full max-h-48 overflow-hidden bg-slate-100">
+                                <img src="${item.imageUrl || FALLBACK_IMG}" class="w-full h-48 object-cover rounded-xl" alt="Innovation">
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">${item.title}</h3>
+                            <p class="text-slate-600">${item.desc}</p>
+                        </div>`;
+                });
+
+                // Build Team Structure Array Loop
+                document.getElementById('team').style.backgroundImage = `linear-gradient(rgba(248,250,252,0.9), rgba(248,250,252,0.95)), url('https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2080')`;
+                const teamGrid = document.getElementById('team-grid');
+                teamGrid.innerHTML = '';
+                data.team.forEach(member => {
+                    teamGrid.innerHTML += `
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center transition-all hover:shadow-md">
+                            <div class="rounded-2xl mb-5 overflow-hidden">
+                                <img src="${member.imageUrl || FALLBACK_IMG}" class="w-48 h-48 rounded-xl object-cover shadow-inner" alt="${member.name}">
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-900">${member.name}</h3>
+                            <p class="text-sm font-medium text-sky-600 mt-1">${member.role}</p>
+                        </div>`;
+                });
+
+                // Build Research Papers Array Loop
+                document.getElementById('research').style.backgroundImage = `linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.95)), url('https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=2070')`;
+                const researchGrid = document.getElementById('research-grid');
+                researchGrid.innerHTML = '';
+                data.research.forEach(paper => {
+                    researchGrid.innerHTML += `
+                        <div class="p-6 bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl hover:bg-white transition-all shadow-sm flex flex-col md:flex-row gap-6 items-start md:items-center">
+                            <div class="rounded-xl w-full md:w-32 h-32 flex-shrink-0 overflow-hidden bg-slate-100">
+                                <img src="${paper.imageUrl || FALLBACK_IMG}" class="w-full h-full object-cover rounded-xl" alt="Research Article Thumbnail">
+                            </div>
+                            <div class="flex-grow">
+                                <span class="text-xs font-semibold text-emerald-600 uppercase bg-emerald-50 px-2.5 py-1 rounded">${paper.date}</span>
+                                <h4 class="text-lg font-bold text-slate-900 mt-2">${paper.title}</h4>
+                                <p class="text-slate-600 text-sm mt-1">${paper.desc}</p>
+                            </div>
+                        </div>`;
+                });
+
+                // Hydrate Contact Text
+                document.getElementById('contact-title').textContent = data.contact.title;
+                document.getElementById('contact-desc').textContent = data.contact.desc;
+
             } catch (err) {
-                flashSaveStatus('Save failed — storage full', true);
+                console.error("Hydration processing error:", err);
             }
-        }
-
-        function flashSaveStatus(message, isError) {
-            const status = document.getElementById('save-status');
-            if (!status) return;
-            status.innerText = message;
-            status.style.color = isError ? '#f87171' : '#34d399';
-            setTimeout(() => {
-                status.innerText = 'All changes auto-save';
-                status.style.color = '#94a3b8';
-            }, 2500);
-        }
-
-        function manualSave() { persistToLocalStorage(); }
-
-        function blobToBase64(blob) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
-        }
-
-        function base64ToBlob(dataUrl) { return fetch(dataUrl).then(r => r.blob()); }
-
-        async function exportData() {
-            flashSaveStatus('Bundling backup…');
-            const data = getDataObject();
-            const keys = new Set();
-            Object.values(data.imageRefs || {}).forEach(k => keys.add(k));
-            Object.values(data.backgroundRefs || {}).forEach(ref => keys.add(ref.key));
-            document.querySelectorAll('[data-img-key]').forEach(el => keys.add(el.getAttribute('data-img-key')));
-
-            const images = {};
-            for (const key of keys) {
-                if (!key) continue;
-                try {
-                    const blob = await idbGet(key);
-                    if (blob) images[key] = await blobToBase64(blob);
-                } catch (err) { console.error(err); }
-            }
-
-            const exportPayload = { ...data, images };
-            const blob = new Blob([JSON.stringify(exportPayload)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'nirvana-site-backup-' + new Date().toISOString().slice(0, 10) + '.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            flashSaveStatus('Backup downloaded');
-        }
-
-        function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = async e => {
-                try {
-                    const payload = JSON.parse(e.target.result);
-                    const { images, ...data } = payload;
-                    if (images) {
-                        for (const [key, dataUrl] of Object.entries(images)) {
-                            const blob = await base64ToBlob(dataUrl);
-                            await idbPut(key, blob);
-                        }
-                    }
-                    await applyDataObject(data);
-                    persistToLocalStorage();
-                    flashSaveStatus('Import complete');
-                } catch (err) { alert('Invalid backup file.'); }
-            };
-            reader.readAsText(file);
-            event.target.value = '';
-        }
-
-        async function resetAllData() {
-            if (!confirm('Erase all saved custom configurations?')) return;
-            localStorage.removeItem(STORAGE_KEY);
-            try {
-                const keys = await idbGetAllKeys();
-                for (const key of keys) await idbDelete(key);
-            } catch (err) {}
-            location.reload();
-        }
-
-        async function loadFromLocalStorage() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (!raw) return;
-                await applyDataObject(JSON.parse(raw));
-            } catch (err) {}
-        }
-
-        function scheduleAutoSave() { persistToLocalStorage(); }
-        function makeImageKey() { return 'img_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9); }
-
-        function toggleAdminMode() {
-            if (!isAuthenticated) {
-                const pass = prompt("Enter Admin Password:", "");
-                if (pass === ADMIN_PASSWORD) {
-                    isAuthenticated = true;
-                    updateAdminUI(true);
-                } else if (pass !== null) { alert("Access Denied."); }
-            } else {
-                isAuthenticated = false;
-                updateAdminUI(false);
-            }
-        }
-
-        function updateAdminUI(activate) {
-            document.querySelectorAll('.editable').forEach(el => {
-                el.contentEditable = activate ? "true" : "false";
-                el.classList.toggle('admin-editable-active', activate);
-            });
-            document.querySelectorAll('.editable-image').forEach(el => {
-                el.classList.toggle('admin-image-active', activate);
-            });
-            document.querySelectorAll('.admin-btn').forEach(btn => btn.classList.toggle('hidden', !activate));
-            document.getElementById('admin-toolbar').classList.toggle('visible', activate);
-            
-            const loginBtn = document.getElementById('admin-login-btn');
-            const btnText = document.getElementById('edit-btn-text');
-            const icon = document.getElementById('admin-icon');
-            
-            if (activate) {
-                loginBtn.className = "px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-semibold tracking-wider flex items-center gap-2 shadow-md transition-all";
-                btnText.innerText = "ADMIN MODE ACTIVE";
-                icon.className = "fas fa-check-circle";
-                attachAutoSaveListeners();
-            } else {
-                loginBtn.className = "px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full text-xs font-semibold tracking-wider flex items-center gap-2 shadow-md transition-all";
-                btnText.innerText = "ADMIN LOGIN";
-                icon.className = "fas fa-shield-alt";
-                persistToLocalStorage();
-            }
-        }
-
-        function attachAutoSaveListeners() {
-            document.querySelectorAll('.editable').forEach(el => {
-                el.removeEventListener('blur', scheduleAutoSave);
-                el.addEventListener('blur', scheduleAutoSave);
-            });
         }
 
         function showSection(sectionId) {
@@ -684,131 +245,14 @@
 
         function handleFormSubmit(event) {
             event.preventDefault();
-            alert("🚀 Transmission Successful! Form payload processed successfully.");
+            alert("Transmission Successful!");
             event.target.reset();
         }
 
-        document.addEventListener('click', function(event) {
-            if (!isAuthenticated) return;
-            const wrapper = event.target.closest('.editable-image');
-            if (wrapper) {
-                const imgElement = wrapper.querySelector('img');
-                if (imgElement) triggerImageUpload(imgElement);
-            }
-        });
-
-        function triggerImageUpload(imgElement) {
-            const input = document.createElement('input');
-            input.type = 'file'; input.accept = 'image/*';
-            input.onchange = async e => {
-                const file = e.target.files[0];
-                if (!file) return;
-                flashSaveStatus('Processing image…');
-                try {
-                    const processedBlob = await processImageFile(file);
-                    const key = makeImageKey();
-                    await idbPut(key, processedBlob);
-                    imgElement.setAttribute('data-img-key', key);
-                    setImageURLAndDisplay(key, processedBlob, imgElement);
-                    persistToLocalStorage();
-                } catch (err) { alert('Image process failed.'); }
-            };
-            input.click();
-        }
-
-        function changeBackground(sectionId, useLightOverlay) {
-            if (!isAuthenticated) return;
-            const targetSection = document.getElementById(sectionId);
-            const input = document.createElement('input');
-            input.type = 'file'; input.accept = 'image/*';
-            input.onchange = async e => {
-                const file = e.target.files[0];
-                if (!file) return;
-                flashSaveStatus('Processing image…');
-                try {
-                    const processedBlob = await processImageFile(file);
-                    const key = makeImageKey();
-                    await idbPut(key, processedBlob);
-                    targetSection.setAttribute('data-bg-key', key);
-                    targetSection.setAttribute('data-bg-light', String(useLightOverlay));
-
-                    if (activeObjectURLs[key]) URL.revokeObjectURL(activeObjectURLs[key]);
-                    const url = URL.createObjectURL(processedBlob);
-                    activeObjectURLs[key] = url;
-
-                    const mask = useLightOverlay 
-                        ? 'linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.95))' 
-                        : 'linear-gradient(rgba(248,250,252,0.9), rgba(248,250,252,0.95))';
-                    targetSection.style.backgroundImage = `${mask}, url('${url}')`;
-                    persistToLocalStorage();
-                } catch (err) { alert('Background process failed.'); }
-            };
-            input.click();
-        }
-
-        function addNewInnovationItem() {
-            if (!isAuthenticated) return;
-            const title = prompt("Enter Innovation Structural Title:", "Biocompatible Synthetics"); if (!title) return;
-            const desc = prompt("Enter Framework Capabilities Description:", "Description specifications..."); if (!desc) return;
-
-            const grid = document.getElementById('innovations-grid');
-            const element = document.createElement('div');
-            element.className = "bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-start";
-            element.innerHTML = `
-                <div class="editable-image rounded-xl mb-6 w-full max-h-48 overflow-hidden bg-slate-100 admin-image-active">
-                    <img src="https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=600&fit=crop" class="w-full h-48 object-cover rounded-xl" alt="Img">
-                </div>
-                <h3 class="text-xl font-bold text-slate-900 mb-2 editable admin-editable-active" contenteditable="true">${title}</h3>
-                <p class="text-slate-600 editable admin-editable-active" contenteditable="true">${desc}</p>
-            `;
-            grid.appendChild(element); attachAutoSaveListeners(); persistToLocalStorage();
-        }
-
-        function addNewResearchItem() {
-            if (!isAuthenticated) return;
-            const title = prompt("Enter Research Document Title:", "Stabilized Bio-Delivery Matrices"); if (!title) return;
-            const desc = prompt("Enter Analytical Summary Abstract Text:", "Abstract metrics..."); if (!desc) return;
-            const date = prompt("Specify Publication Schedule Stamp:", "July 2026"); if (!date) return;
-
-            const grid = document.getElementById('research-grid');
-            const wrapper = document.createElement('div');
-            wrapper.className = "p-6 bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl hover:bg-white transition-all shadow-sm flex flex-col md:flex-row gap-6 items-start md:items-center";
-            wrapper.innerHTML = `
-                <div class="editable-image rounded-xl w-full md:w-32 h-32 flex-shrink-0 bg-slate-100 admin-image-active">
-                    <img src="https://images.unsplash.com/photo-1453847668862-487637052f8a?q=80&w=300&fit=crop" class="w-full h-full object-cover rounded-xl" alt="Img">
-                </div>
-                <div class="flex-grow">
-                    <span class="text-xs font-semibold text-emerald-600 uppercase bg-emerald-50 px-2.5 py-1 rounded editable admin-editable-active" contenteditable="true">${date}</span>
-                    <h4 class="text-lg font-bold text-slate-900 mt-2 editable admin-editable-active" contenteditable="true">${title}</h4>
-                    <p class="text-slate-600 text-sm mt-1 editable admin-editable-active" contenteditable="true">${desc}</p>
-                </div>
-            `;
-            grid.appendChild(wrapper); attachAutoSaveListeners(); persistToLocalStorage();
-        }
-
-        function addNewTeamMember() {
-            if (!isAuthenticated) return;
-            const name = prompt("Enter Team Member Full Name:", "Dr. Alex Mercer"); if (!name) return;
-            const role = prompt("Enter Assignment / Position Role:", "Genomics Engineer"); if (!role) return;
-
-            const grid = document.getElementById('team-grid');
-            const card = document.createElement('div');
-            card.className = "team-card bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center transition-all hover:shadow-md";
-            card.innerHTML = `
-                <div class="editable-image rounded-2xl mb-5 admin-image-active">
-                    <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=400&h=400&fit=crop" class="w-48 h-48 rounded-xl object-cover shadow-inner" alt="${name}">
-                </div>
-                <h3 class="font-bold text-lg text-slate-900 editable admin-editable-active" contenteditable="true">${name}</h3>
-                <p class="text-sm font-medium text-sky-600 mt-1 editable admin-editable-active" contenteditable="true">${role}</p>
-            `;
-            grid.appendChild(card); attachAutoSaveListeners(); persistToLocalStorage();
-        }
-
-        window.onload = async () => {
-            await loadFromLocalStorage();
+        window.onload = () => {
+            initWebsite();
             showSection('home');
         };
     </script>
-
-
-</body></html>
+</body>
+</html>
