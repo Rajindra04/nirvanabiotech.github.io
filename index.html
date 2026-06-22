@@ -198,16 +198,68 @@
         let PENDING_IMAGES = {};     // path -> base64 data URL, for images changed but not yet saved
 
         async function initWebsite() {
-            try {
-                const response = await fetch('data.json');
-                if (!response.ok) throw new Error("Could not load database file");
-                const data = await response.json();
-                SITE_DATA = data;
-                renderFromData(data);
-            } catch (err) {
-                console.error("Hydration processing error:", err);
+    // This is a complete, structural skeleton matching your layout requirements
+    const defaultTemplate = {
+        "brandName": "NIRVANA",
+        "brandSub": "BIOTECH",
+        "logoUrl": "https://picsum.photos/id/1015/120/120",
+        "home": {
+            "tagline": "Pioneering Life Sciences",
+            "title": "Welcome to Nirvana Biotech",
+            "subtitle": "Innovating the future of clinical delivery frameworks and molecular engineering.",
+            "backgroundUrl": "https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=2070"
+        },
+        "about": {
+            "title": "About Our Scientific Mission",
+            "desc": "Nirvana Biotech stands at the intersection of computational biology and technical precision. We construct advanced biological frameworks tailored to next-generation therapeutic pipelines."
+        },
+        "innovations": [
+            {
+                "title": "Aptamer Engineering Modality",
+                "desc": "High-affinity diagnostic platforms built for robust target delivery vectors.",
+                "imageUrl": "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2080"
             }
+        ],
+        "team": [
+            {
+                "name": "Dr. Rajindra",
+                "role": "Principal Lead Investigator",
+                "imageUrl": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=1964"
+            }
+        ],
+        "research": [
+            {
+                "date": "2026",
+                "title": "RNA-Folding Structural Models Logs",
+                "desc": "Documenting multi-tiered molecular configurations using advanced alignment algorithms.",
+                "imageUrl": "https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=2070"
+            }
+        ],
+        "contact": {
+            "title": "Connect With Our Labs",
+            "desc": "Initiate data packet transmittal or submit clinical framework inquiries directly to our administrative hub."
         }
+    };
+
+    try {
+        const response = await fetch('data.json');
+        if (!response.ok) throw new Error("Could not load database file");
+        
+        const text = await response.text();
+        // If the file exists but it's completely empty or whitespace, use the default template instead of crashing
+        if (!text || text.trim() === "") {
+            console.warn("data.json is empty. Loading default baseline template structure.");
+            SITE_DATA = defaultTemplate;
+        } else {
+            SITE_DATA = JSON.parse(text);
+        }
+    } catch (err) {
+        console.error("Hydration processing error caught, recovering with baseline layout template:", err);
+        SITE_DATA = defaultTemplate;
+    } finally {
+        renderFromData(SITE_DATA);
+    }
+}
 
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
