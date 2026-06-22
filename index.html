@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nirvana Biotech | Pioneering Life Sciences</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .section { display: none; }
+        .section.active { display: block; animation: fadeIn 0.4s ease-out forwards; }
+        
+        .nav-link { transition: all 0.3s ease; position: relative; }
+        .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background-color: #0ea5e9; transition: width 0.3s ease; }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link.active { color: #0ea5e9; font-weight: 600; }
+        
+        .section-bg {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="font-sans bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer relative group" onclick="if(!window.__editMode) showSection('home')">
+                <div class="relative">
+                    <img id="logo-img" src="" class="h-12 w-12 object-cover rounded-xl shadow-sm fallback-img" alt="Logo">
+                    <button class="edit-only hidden absolute -top-2 -right-2 bg-sky-600 text-white rounded-full w-5 h-5 text-[10px] flex items-center justify-center shadow" onclick="event.stopPropagation(); promptImageEdit('logoUrl', 'images/logo.png')"><i class="fa-solid fa-pen"></i></button>
+                </div>
+                <div>
+                    <span id="logo-text" class="text-xl font-bold tracking-wider text-slate-900 block leading-tight" data-field="brandName"></span>
+                    <p id="logo-sub" class="text-xs font-semibold tracking-widest text-sky-600 uppercase" data-field="brandSub"></p>
+                    <button class="edit-only hidden text-[10px] text-sky-600 underline" onclick="event.stopPropagation(); promptTextEdit('brandName', 'logo-text'); ">edit name</button>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600" id="nav-menu">
+                <a href="#" onclick="showSection('home')" class="nav-link active">Home</a>
+                <a href="#" onclick="showSection('about')" class="nav-link">About</a>
+                <a href="#" onclick="showSection('innovations')" class="nav-link">Innovations</a>
+                <a href="#" onclick="showSection('team')" class="nav-link">Team</a>
+                <a href="#" onclick="showSection('research')" class="nav-link">Research</a>
+                <a href="#" onclick="showSection('contact')" class="nav-link">Contact</a>
+            </div>
+            
+            <div class="w-auto flex justify-end items-center gap-3">
+                <span id="edit-mode-badge" class="hidden text-[10px] text-emerald-700 font-mono tracking-widest border border-emerald-300 bg-emerald-50 px-2 py-1 rounded-md">EDIT MODE</span>
+                <button id="admin-login-btn" onclick="openAdminLogin()" class="text-[10px] text-slate-400 font-mono tracking-widest border border-slate-200 px-2 py-1 rounded-md hover:bg-slate-50">ADMIN</button>
+                <button id="admin-logout-btn" onclick="adminLogout()" class="hidden text-[10px] text-red-500 font-mono tracking-widest border border-red-200 px-2 py-1 rounded-md hover:bg-red-50">LOGOUT</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="hidden fixed inset-0 bg-black/50 z-[100] flex items-center justify-center px-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6">
+            <h3 class="text-lg font-bold text-slate-900 mb-1">Admin Login</h3>
+            <p class="text-sm text-slate-500 mb-4">Enter the admin password to edit this site.</p>
+            <input id="admin-password-input" type="password" placeholder="Password" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-2 focus:outline-none focus:border-sky-500" onkeydown="if(event.key==='Enter') submitAdminLogin()">
+            <p id="admin-login-error" class="hidden text-xs text-red-500 mb-2">Incorrect password.</p>
+            <div class="flex gap-3 mt-4">
+                <button onclick="closeAdminLogin()" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50">Cancel</button>
+                <button onclick="submitAdminLogin()" class="flex-1 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium">Log In</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Save Bar (shown only in edit mode) -->
+    <div id="save-bar" class="hidden fixed bottom-0 left-0 w-full bg-slate-900 text-white z-[100] px-6 py-4 flex items-center justify-between shadow-2xl">
+        <span id="save-status" class="text-sm text-slate-300">Editing — changes are not yet saved.</span>
+        <div class="flex gap-3">
+            <button onclick="discardChanges()" class="px-4 py-2 rounded-lg border border-slate-700 text-sm hover:bg-slate-800">Discard</button>
+            <button id="save-btn" onclick="saveAllChanges()" class="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-sm font-semibold">Save Changes (Permanent)</button>
+        </div>
+    </div>
+
+    <main class="flex-grow">
+        
+        <section id="home" class="section py-32 section-bg min-h-[80vh] flex items-center relative">
+            <button class="edit-only hidden absolute top-4 right-4 z-10 bg-white shadow rounded-lg px-3 py-1.5 text-xs font-medium text-sky-600 hover:bg-sky-50" onclick="promptImageEdit('home.backgroundUrl', 'images/home-bg.jpg')"><i class="fa-solid fa-image mr-1"></i> Change Background</button>
+            <div class="max-w-5xl mx-auto px-6 text-center">
+                <div class="inline-block bg-sky-50 px-4 py-1.5 rounded-full relative">
+                    <span class="text-sky-600 text-sm font-bold tracking-widest uppercase" id="home-tagline"></span>
+                    <button class="edit-only hidden ml-2 text-sky-400 hover:text-sky-600" onclick="promptTextEdit('home.tagline', 'home-tagline')"><i class="fa-solid fa-pen text-xs"></i></button>
+                </div>
+                <h1 class="text-4xl md:text-6xl font-black text-slate-950 mt-6 tracking-tight relative group" id="home-title"></h1>
+                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-sm" onclick="promptTextEdit('home.title', 'home-title')"><i class="fa-solid fa-pen mr-1"></i>edit title</button>
+                <p class="text-base md:text-lg text-slate-600 mt-6 max-w-2xl mx-auto" id="home-subtitle"></p>
+                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-sm" onclick="promptTextEdit('home.subtitle', 'home-subtitle')"><i class="fa-solid fa-pen mr-1"></i>edit subtitle</button>
+                <div class="mt-10 flex justify-center gap-4">
+                    <button onclick="showSection('innovations')" class="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-sm font-medium transition-all shadow-lg shadow-sky-600/20">Explore Innovations</button>
+                    <button onclick="showSection('about')" class="px-6 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-sm font-medium transition-all">Learn More</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section py-20 bg-white relative">
+            <div class="max-w-4xl mx-auto px-6">
+                <h2 class="text-3xl font-bold text-slate-900 mb-6" id="about-title"></h2>
+                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-sm mb-3" onclick="promptTextEdit('about.title', 'about-title')"><i class="fa-solid fa-pen mr-1"></i>edit title</button>
+                <p class="text-base text-slate-600 leading-relaxed" id="about-desc"></p>
+                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-sm mt-3" onclick="promptTextEdit('about.desc', 'about-desc', true)"><i class="fa-solid fa-pen mr-1"></i>edit description</button>
+            </div>
+        </section>
+
+        <section id="innovations" class="section py-20 bg-slate-50 relative">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="mb-12">
+                    <h2 id="innovations-title" class="text-3xl font-bold text-slate-900"></h2>
+                    <p id="innovations-sub" class="text-slate-600 mt-1"></p>
+                    <button class="edit-only hidden mt-2 px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-medium hover:bg-sky-700" onclick="addArrayItem('innovations')"><i class="fa-solid fa-plus mr-1"></i>Add Innovation</button>
+                </div>
+                <div id="innovations-grid" class="grid md:grid-cols-2 gap-8"></div>
+            </div>
+        </section>
+
+        <section id="team" class="section py-20 section-bg relative">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="mb-12">
+                    <h2 id="team-title" class="text-3xl font-bold text-slate-950 tracking-tight"></h2>
+                    <p id="team-sub" class="text-slate-600 mt-2"></p>
+                    <button class="edit-only hidden mt-2 px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-medium hover:bg-sky-700" onclick="addArrayItem('team')"><i class="fa-solid fa-plus mr-1"></i>Add Team Member</button>
+                </div>
+                <div id="team-grid" class="grid sm:grid-cols-2 md:grid-cols-3 gap-8"></div>
+            </div>
+        </section>
+
+        <section id="research" class="section py-20 section-bg relative">
+            <div class="max-w-5xl mx-auto px-6">
+                <div class="mb-12">
+                    <h2 id="research-title" class="text-3xl font-bold text-slate-900"></h2>
+                    <p id="research-sub" class="text-slate-600 mt-1"></p>
+                    <button class="edit-only hidden mt-2 px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-medium hover:bg-sky-700" onclick="addArrayItem('research')"><i class="fa-solid fa-plus mr-1"></i>Add Research Entry</button>
+                </div>
+                <div id="research-grid" class="space-y-6"></div>
+            </div>
+        </section>
+
+        <section id="contact" class="section py-20 bg-slate-950 text-white">
+            <div class="max-w-3xl mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold mb-4" id="contact-title"></h2>
+                    <p class="text-slate-400 max-w-xl mx-auto" id="contact-desc"></p>
+                    <button class="edit-only hidden text-sky-400 hover:text-sky-300 text-sm mt-2" onclick="promptTextEdit('contact.title', 'contact-title')"><i class="fa-solid fa-pen mr-1"></i>edit title</button>
+                    <button class="edit-only hidden text-sky-400 hover:text-sky-300 text-sm mt-1" onclick="promptTextEdit('contact.desc', 'contact-desc', true)"><i class="fa-solid fa-pen mr-1"></i>edit description</button>
+                </div>
+                
+                <form onsubmit="handleFormSubmit(event)" class="space-y-5 bg-slate-900 p-8 rounded-2xl border border-slate-800 shadow-xl text-left">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Sender Name</label>
+                            <input type="text" placeholder="Dr. John Doe" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Institutional Email</label>
+                            <input type="email" placeholder="partner@institution.org" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Subject Query</label>
+                        <input type="text" placeholder="Partnership Framework Inquiries" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Message Payload</label>
+                        <textarea rows="4" placeholder="Outline technical delivery specifications or collaborative proposal logs here..." required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-sky-600 hover:bg-sky-700 text-white font-medium text-sm rounded-xl transition-colors shadow-lg tracking-wide uppercase font-semibold">
+                        Transmit Data Payload
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-500 text-xs py-8 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>&copy; 2026 Nirvana Biotech Inc. All rights reserved. Registered Scientific Entity.</div>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-slate-300">Privacy Policy</a>
+                <a href="#" class="hover:text-slate-300">Compliance Framework</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const FALLBACK_IMG = "https://picsum.photos/id/1015/120/120";
+        let SITE_DATA = null;        // the live in-memory copy of data.json, mutated by edits
+        let PENDING_IMAGES = {};     // path -> base64 data URL, for images changed but not yet saved
+
+        async function initWebsite() {
+            try {
+                const response = await fetch('data.json');
+                if (!response.ok) throw new Error("Could not load database file");
+                const data = await response.json();
+                SITE_DATA = data;
+                renderFromData(data);
+            } catch (err) {
+                console.error("Hydration processing error:", err);
+            }
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            const target = document.getElementById(sectionId);
+            if (target) target.classList.add('active');
+            
+            document.querySelectorAll('#nav-menu a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('onclick').includes(`'${sectionId}'`)) link.classList.add('active');
+            });
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            alert("Transmission Successful!");
+            event.target.reset();
+        }
+
+        // =====================================================================
+        // ADMIN: login, edit mode, and saving changes permanently to GitHub
+        // =====================================================================
+
+        // ---- CONFIG: set this to your deployed Cloudflare Worker URL ----
+        const ADMIN_API_BASE = "https://nirvana-biotech-admin.YOUR-SUBDOMAIN.workers.dev";
+        // -------------------------------------------------------------------
+
+        const SESSION_KEY = "nb_admin_session"; // stores only the session token, not the password
+
+        window.__editMode = false;
+
+        function openAdminLogin() {
+            document.getElementById('admin-login-modal').classList.remove('hidden');
+            document.getElementById('admin-password-input').value = '';
+            document.getElementById('admin-login-error').classList.add('hidden');
+            document.getElementById('admin-password-input').focus();
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('admin-login-modal').classList.add('hidden');
+        }
+
+        async function submitAdminLogin() {
+            const password = document.getElementById('admin-password-input').value;
+            const errEl = document.getElementById('admin-login-error');
+            try {
+                const resp = await fetch(`${ADMIN_API_BASE}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password }),
+                });
+                if (!resp.ok) {
+                    errEl.textContent = "Incorrect password.";
+                    errEl.classList.remove('hidden');
+                    return;
+                }
+                const { token } = await resp.json();
+                sessionStorage.setItem(SESSION_KEY, token);
+                closeAdminLogin();
+                enterEditMode();
+            } catch (err) {
+                errEl.textContent = "Could not reach admin server. Check your connection.";
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        function adminLogout() {
+            sessionStorage.removeItem(SESSION_KEY);
+            exitEditMode();
+        }
+
+        function getSessionToken() {
+            return sessionStorage.getItem(SESSION_KEY);
+        }
+
+        function enterEditMode() {
+            window.__editMode = true;
+            document.querySelectorAll('.edit-only').forEach(el => el.classList.remove('hidden'));
+            document.getElementById('edit-mode-badge').classList.remove('hidden');
+            document.getElementById('admin-login-btn').classList.add('hidden');
+            document.getElementById('admin-logout-btn').classList.remove('hidden');
+            document.getElementById('save-bar').classList.remove('hidden');
+        }
+
+        function exitEditMode() {
+            window.__editMode = false;
+            PENDING_IMAGES = {};
+            document.querySelectorAll('.edit-only').forEach(el => el.classList.add('hidden'));
+            document.getElementById('edit-mode-badge').classList.add('hidden');
+            document.getElementById('admin-login-btn').classList.remove('hidden');
+            document.getElementById('admin-logout-btn').classList.add('hidden');
+            document.getElementById('save-bar').classList.add('hidden');
+        }
+
+        // Restore edit mode automatically if a valid session token is already stored
+        // (so refreshing the page while logged in doesn't kick the admin out).
+        function restoreSessionIfPresent() {
+            if (getSessionToken()) enterEditMode();
+        }
+
+        // --- Generic helpers to read/write a dotted path like "home.title" or "team.2.name" ---
+        function getByPath(obj, path) {
+            return path.split('.').reduce((acc, key) => (acc == null ? acc : acc[key]), obj);
+        }
+        function setByPath(obj, path, value) {
+            const keys = path.split('.');
+            let cur = obj;
+            for (let i = 0; i < keys.length - 1; i++) {
+                cur = cur[keys[i]];
+            }
+            cur[keys[keys.length - 1]] = value;
+        }
+
+        // --- Text editing ---
+        // path: dotted path into SITE_DATA, e.g. "home.title" or "innovations.0.desc"
+        // elementId: if provided, the on-page element to update immediately (simple fields)
+        // multiline: use a textarea instead of a single-line prompt-style editor
+        // triggerEl: the button that was clicked, used to find the nearby text to update for array items
+        function promptTextEdit(path, elementId, multiline, triggerEl) {
+            const currentValue = getByPath(SITE_DATA, path) ?? '';
+            openTextEditorModal(currentValue, multiline, (newValue) => {
+                setByPath(SITE_DATA, path, newValue);
+                if (elementId) {
+                    document.getElementById(elementId).textContent = newValue;
+                } else {
+                    // Re-render the whole site so array-based fields reflect immediately.
+                    rerenderFromMemory();
+                }
+                markUnsaved();
+            });
+        }
+
+        function openTextEditorModal(initialValue, multiline, onConfirm) {
+            // Build a lightweight modal on the fly (kept separate from the login modal).
+            const overlay = document.createElement('div');
+            overlay.className = "fixed inset-0 bg-black/50 z-[110] flex items-center justify-center px-4";
+            overlay.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+                    <h3 class="text-lg font-bold text-slate-900 mb-3">Edit Text</h3>
+                    ${multiline
+                        ? `<textarea id="text-edit-input" rows="5" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sky-500 resize-none"></textarea>`
+                        : `<input id="text-edit-input" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sky-500">`
+                    }
+                    <div class="flex gap-3 mt-4">
+                        <button id="text-edit-cancel" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50">Cancel</button>
+                        <button id="text-edit-confirm" class="flex-1 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium">Apply</button>
+                    </div>
+                </div>`;
+            document.body.appendChild(overlay);
+            const input = overlay.querySelector('#text-edit-input');
+            input.value = initialValue;
+            input.focus();
+
+            const cleanup = () => overlay.remove();
+            overlay.querySelector('#text-edit-cancel').onclick = cleanup;
+            overlay.querySelector('#text-edit-confirm').onclick = () => {
+                onConfirm(input.value);
+                cleanup();
+            };
+        }
+
+        // --- Image editing ---
+        // path: dotted path into SITE_DATA for the imageUrl field, e.g. "team.1.imageUrl"
+        // suggestedRepoPath: optional fixed repo path for single-instance images (logo, home background)
+        function promptImageEdit(path, suggestedRepoPath) {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.onchange = () => {
+                const file = fileInput.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const dataUrl = reader.result; // "data:image/png;base64,...."
+                    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+                    const repoPath = suggestedRepoPath || `images/${path.replace(/\./g, '-')}-${Date.now()}.${ext}`;
+
+                    // Track the pending upload, and immediately preview it in-browser.
+                    PENDING_IMAGES[repoPath] = dataUrl;
+                    setByPath(SITE_DATA, path, repoPath);
+                    rerenderFromMemory(dataUrl, repoPath); // pass dataUrl + the actual repo path so preview shows before save
+                    markUnsaved();
+                };
+                reader.readAsDataURL(file);
+            };
+            fileInput.click();
+        }
+
+        // Re-render the page from the in-memory SITE_DATA so edits to array items show up
+        // immediately. previewDataUrl/previewPath let a freshly-picked image preview instantly
+        // even though the real file hasn't been committed to GitHub yet.
+        function rerenderFromMemory(previewDataUrl, previewPath) {
+            const wasEditMode = window.__editMode;
+            const activeSection = document.querySelector('.section.active')?.id || 'home';
+            renderFromData(SITE_DATA);
+            showSection(activeSection);
+            if (wasEditMode) enterEditMode();
+            if (previewDataUrl && previewPath) {
+                // Swap any <img> whose src matches the now-set repo path to show the local preview
+                // (the real file doesn't exist at that path on GitHub yet, so use the data URL instead).
+                document.querySelectorAll('img').forEach(img => {
+                    if (img.getAttribute('src') === previewPath || img.src.endsWith(previewPath)) {
+                        img.src = previewDataUrl;
+                    }
+                });
+                if (document.getElementById('logo-img').getAttribute('data-target-path') === previewPath) {
+                    document.getElementById('logo-img').src = previewDataUrl;
+                }
+            }
+        }
+
+        // --- Adding / removing array items (Innovations, Team, Research) ---
+        function addArrayItem(section) {
+            const templates = {
+                innovations: { title: "New Innovation", desc: "Description goes here.", imageUrl: "" },
+                team: { name: "New Team Member", role: "Role / Title", imageUrl: "" },
+                research: { date: "2026", title: "New Research Entry", desc: "Description goes here.", imageUrl: "" },
+            };
+            SITE_DATA[section].push({ ...templates[section] });
+            rerenderFromMemory();
+            markUnsaved();
+        }
+
+        function removeArrayItem(section, idx) {
+            if (!confirm("Remove this item? This cannot be undone once saved.")) return;
+            SITE_DATA[section].splice(idx, 1);
+            rerenderFromMemory();
+            markUnsaved();
+        }
+
+        function markUnsaved() {
+            document.getElementById('save-status').textContent = "Editing — changes are not yet saved.";
+            document.getElementById('save-status').classList.remove('text-emerald-400');
+            document.getElementById('save-status').classList.add('text-slate-300');
+        }
+
+        function discardChanges() {
+            if (!confirm("Discard all unsaved changes and reload the live version?")) return;
+            PENDING_IMAGES = {};
+            initWebsite().then(() => {
+                showSection('home');
+                if (window.__editMode) enterEditMode();
+            });
+        }
+
+        // --- Save: send updated data.json + any new images to the Worker, which commits to GitHub ---
+        async function saveAllChanges() {
+            const token = getSessionToken();
+            if (!token) {
+                alert("Your admin session expired. Please log in again.");
+                exitEditMode();
+                openAdminLogin();
+                return;
+            }
+
+            const saveBtn = document.getElementById('save-btn');
+            const statusEl = document.getElementById('save-status');
+            saveBtn.disabled = true;
+            saveBtn.textContent = "Saving...";
+            statusEl.textContent = "Committing changes to the live site...";
+
+            const images = Object.entries(PENDING_IMAGES).map(([path, base64]) => ({ path, base64 }));
+
+            try {
+                const resp = await fetch(`${ADMIN_API_BASE}/save`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({
+                        dataJson: SITE_DATA,
+                        images,
+                        commitMessage: "Admin: update site content via dashboard",
+                    }),
+                });
+
+                if (resp.status === 401) {
+                    alert("Your admin session expired. Please log in again.");
+                    exitEditMode();
+                    openAdminLogin();
+                    return;
+                }
+                if (!resp.ok) {
+                    const errBody = await resp.json().catch(() => ({}));
+                    throw new Error(errBody.error || `Save failed (${resp.status})`);
+                }
+
+                PENDING_IMAGES = {};
+                statusEl.textContent = "Saved! Changes are now permanent (live site updates in ~30-60s).";
+                statusEl.classList.remove('text-slate-300');
+                statusEl.classList.add('text-emerald-400');
+            } catch (err) {
+                console.error(err);
+                statusEl.textContent = "Save failed — see console for details.";
+                alert(`Could not save changes: ${err.message}`);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = "Save Changes (Permanent)";
+            }
+        }
+
+        // Wrap the hydration logic into a reusable renderer so edits can re-render
+        // without re-fetching data.json from the network.
+        function renderFromData(data) {
+            document.getElementById('logo-text').textContent = data.brandName || "NIRVANA";
+            document.getElementById('logo-sub').textContent = data.brandSub || "Biotech";
+            document.getElementById('logo-img').src = data.logoUrl || FALLBACK_IMG;
+            document.getElementById('logo-img').setAttribute('data-target-path', data.logoUrl || '');
+
+            document.getElementById('home-tagline').textContent = data.home.tagline;
+            document.getElementById('home-title').textContent = data.home.title;
+            document.getElementById('home-subtitle').textContent = data.home.subtitle;
+            document.getElementById('home').style.backgroundImage = `linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.95)), url('${data.home.backgroundUrl}')`;
+
+            document.getElementById('about-title').textContent = data.about.title;
+            document.getElementById('about-desc').textContent = data.about.desc;
+
+            const innovGrid = document.getElementById('innovations-grid');
+            innovGrid.innerHTML = '';
+            data.innovations.forEach((item, idx) => {
+                innovGrid.innerHTML += `
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-start relative">
+                        <button class="edit-only hidden absolute top-3 right-3 text-red-400 hover:text-red-600 text-xs" onclick="removeArrayItem('innovations', ${idx})"><i class="fa-solid fa-trash"></i></button>
+                        <div class="rounded-xl mb-6 w-full max-h-48 overflow-hidden bg-slate-100 relative">
+                            <img src="${item.imageUrl || FALLBACK_IMG}" class="w-full h-48 object-cover rounded-xl" alt="Innovation">
+                            <button class="edit-only hidden absolute bottom-2 right-2 bg-white shadow rounded-lg px-2 py-1 text-[10px] font-medium text-sky-600" onclick="promptImageEdit('innovations.${idx}.imageUrl')"><i class="fa-solid fa-image mr-1"></i>Change</button>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">${item.title}</h3>
+                        <p class="text-slate-600">${item.desc}</p>
+                        <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs mt-3" onclick="promptTextEdit('innovations.${idx}.title', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>edit title</button>
+                        <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs mt-1" onclick="promptTextEdit('innovations.${idx}.desc', null, true, this)"><i class="fa-solid fa-pen mr-1"></i>edit description</button>
+                    </div>`;
+            });
+
+            document.getElementById('team').style.backgroundImage = `linear-gradient(rgba(248,250,252,0.9), rgba(248,250,252,0.95)), url('https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2080')`;
+            const teamGrid = document.getElementById('team-grid');
+            teamGrid.innerHTML = '';
+            data.team.forEach((member, idx) => {
+                teamGrid.innerHTML += `
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center transition-all hover:shadow-md relative">
+                        <button class="edit-only hidden absolute top-3 right-3 text-red-400 hover:text-red-600 text-xs" onclick="removeArrayItem('team', ${idx})"><i class="fa-solid fa-trash"></i></button>
+                        <div class="rounded-2xl mb-5 overflow-hidden relative">
+                            <img src="${member.imageUrl || FALLBACK_IMG}" class="w-48 h-48 rounded-xl object-cover shadow-inner" alt="${member.name}">
+                            <button class="edit-only hidden absolute bottom-2 right-2 bg-white shadow rounded-lg px-2 py-1 text-[10px] font-medium text-sky-600" onclick="promptImageEdit('team.${idx}.imageUrl')"><i class="fa-solid fa-image mr-1"></i>Change</button>
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-900">${member.name}</h3>
+                        <p class="text-sm font-medium text-sky-600 mt-1">${member.role}</p>
+                        <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs mt-3" onclick="promptTextEdit('team.${idx}.name', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>edit name</button>
+                        <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs mt-1" onclick="promptTextEdit('team.${idx}.role', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>edit role</button>
+                    </div>`;
+            });
+
+            document.getElementById('research').style.backgroundImage = `linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.95)), url('https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=2070')`;
+            const researchGrid = document.getElementById('research-grid');
+            researchGrid.innerHTML = '';
+            data.research.forEach((paper, idx) => {
+                researchGrid.innerHTML += `
+                    <div class="p-6 bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl hover:bg-white transition-all shadow-sm flex flex-col md:flex-row gap-6 items-start md:items-center relative">
+                        <button class="edit-only hidden absolute top-3 right-3 text-red-400 hover:text-red-600 text-xs" onclick="removeArrayItem('research', ${idx})"><i class="fa-solid fa-trash"></i></button>
+                        <div class="rounded-xl w-full md:w-32 h-32 flex-shrink-0 overflow-hidden bg-slate-100 relative">
+                            <img src="${paper.imageUrl || FALLBACK_IMG}" class="w-full h-full object-cover rounded-xl" alt="Research Article Thumbnail">
+                            <button class="edit-only hidden absolute bottom-1 right-1 bg-white shadow rounded-lg px-2 py-1 text-[10px] font-medium text-sky-600" onclick="promptImageEdit('research.${idx}.imageUrl')"><i class="fa-solid fa-image mr-1"></i>Change</button>
+                        </div>
+                        <div class="flex-grow">
+                            <span class="text-xs font-semibold text-emerald-600 uppercase bg-emerald-50 px-2.5 py-1 rounded">${paper.date}</span>
+                            <h4 class="text-lg font-bold text-slate-900 mt-2">${paper.title}</h4>
+                            <p class="text-slate-600 text-sm mt-1">${paper.desc}</p>
+                            <div class="flex gap-3 mt-2">
+                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('research.${idx}.date', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>date</button>
+                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('research.${idx}.title', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>title</button>
+                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('research.${idx}.desc', null, true, this)"><i class="fa-solid fa-pen mr-1"></i>desc</button>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+
+            document.getElementById('contact-title').textContent = data.contact.title;
+            document.getElementById('contact-desc').textContent = data.contact.desc;
+        }
+
+        window.onload = () => {
+            initWebsite().then(() => {
+                showSection('home');
+                restoreSessionIfPresent();
+            });
+        };
+    </script>
+</body>
+</html>
