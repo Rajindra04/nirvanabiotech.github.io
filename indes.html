@@ -1,0 +1,144 @@
+<script>
+// === CONFIG ===
+const REPO_OWNER = 'Rajindra04';
+const REPO_NAME = 'web-page-template';
+const CONTENT_PATH = 'content.json';           // or 'data/content.json'
+const IMAGES_DIR = 'public/images';
+const GITHUB_API = 'https://api.github.com';
+
+// Store PAT in localStorage (or session) - **warn users to keep it private**
+let githubToken = localStorage.getItem('github_pat') || '';
+
+// === GitHub API Helpers ===
+async function githubRequest(endpoint, options = {}) {
+  const res = await fetch(`${GITHUB_API}${endpoint}`, {
+    headers: {
+      'Authorization': `token ${githubToken}`,
+      'Accept': 'application/vnd.github.v3+json',
+      ...options.headers
+    },
+    ...options
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`GitHub API error: ${res.status} ${err}`);
+  }
+  return res.json();
+}
+
+async function getFile(path) {
+  try {
+    const data = await githubRequest(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`);
+    return {
+      content: JSON.parse(atob(data.content)),
+      sha: data.sha
+    };
+  } catch (e) {
+    console.warn('No existing content.json');
+    return { content: { textData: {}, imageRefs: {}, backgroundRefs: {}, dynamicGrids: {} }, sha: null };
+  }
+}
+
+async function updateFile(path, content, sha, message) {
+  const body = {
+    message,
+    content: btoa(JSON.stringify(content, null, 2)),
+    sha: sha || undefined,
+    branch: 'main'   // change if needed
+  };
+  return githubRequest(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+}
+
+// Image upload to GitHub
+async function uploadImageToGitHub(file) {
+  const { blob, ext } = await processImageFile(file); // keep your existing processImageFile
+  const filename = `${Date.now()}-${file.name.replace(/[^a-z0-9.]/gi, '')}`;
+  const path = `${IMAGES_DIR}/${filename}`;
+
+  const reader = new FileReader();
+  reader.readAsDataURL(blob);
+  return new Promise((resolve, reject) => {
+    reader.onload = async () => {
+      const base64 = reader.result.split(',')[1];
+      try {
+        const data = await githubRequest(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            message: `Upload image ${filename}`,
+            content: base64,
+            branch: 'main'
+          })
+        });
+        resolve({
+          key: filename,
+          url: data.content.download_url
+        });
+      } catch (e) { reject(e); }
+    };
+  });
+}
+
+// === Updated load / save ===
+async function loadSiteContent() {
+  const { content } = await getFile(CONTENT_PATH);
+  applyDataObject(content);
+}
+
+async function saveSiteContent() {
+  if (!githubToken) {
+    alert("Please set your GitHub PAT first (in Admin Login)");
+    return false;
+  }
+  const data = getDataObject();
+  const { sha } = await getFile(CONTENT_PATH);
+  try {
+    await updateFile(CONTENT_PATH, data, sha, `Update site content ${new Date().toISOString()}`);
+    flashSaveStatus('Saved to GitHub');
+    return true;
+  } catch (err) {
+    console.error(err);
+    flashSaveStatus('Save failed: ' + err.message, true);
+    return false;
+  }
+}
+
+// === Admin Login (simple PAT entry) ===
+function openLoginModal() {
+  // Reuse your modal but change form to PAT input
+  const modal = document.getElementById('login-modal');
+  // You can simplify: just one input for PAT
+  githubToken = prompt("Enter your GitHub Personal Access Token (with repo contents write):") || '';
+  if (githubToken) {
+    localStorage.setItem('github_pat', githubToken);
+    isAuthenticated = true;
+    updateAdminUI(true);
+  }
+}
+
+// Update toggleAdminMode to use PAT
+window.toggleAdminMode = () => {
+  if (!isAuthenticated) openLoginModal();
+  else signOutAdmin();
+};
+
+function signOutAdmin() {
+  localStorage.removeItem('github_pat');
+  githubToken = '';
+  isAuthenticated = false;
+  updateAdminUI(false);
+}
+
+// Update image upload calls
+async function triggerImageUpload(imgElement) {
+  // ... existing file picker
+  const { key, url } = await uploadImageToGitHub(file);
+  // ... set src and data attrs
+  await saveSiteContent();
+}
+
+// Same for backgrounds, etc.
+</script>
