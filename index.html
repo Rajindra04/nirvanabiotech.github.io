@@ -240,7 +240,7 @@
             };
 
             try {
-                const response = await fetch('data.json');
+                const response = await fetch('data.json?v=' + Date.now(), { cache: 'no-store' });
                 if (!response.ok) throw new Error("Could not load database file");
                 
                 const text = await response.text();
@@ -591,7 +591,7 @@
                 if (document.getElementById('home-title')) document.getElementById('home-title').textContent = data.home.title || "";
                 if (document.getElementById('home-subtitle')) document.getElementById('home-subtitle').textContent = data.home.subtitle || "";
                 if (data.home.backgroundUrl) {
-                    document.getElementById('home-section')?.style.setProperty('background-image', `url('${data.home.backgroundUrl}')`);
+                    document.getElementById('home')?.style.setProperty('background-image', `url('${data.home.backgroundUrl}')`);
                 }
             }
 
