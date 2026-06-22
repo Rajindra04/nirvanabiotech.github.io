@@ -24,9 +24,9 @@
       "imageUrl": "images/innovations-1-imageUrl-1782169729844.png"
     },
     {
-      "title": "Dengue VLP development and validation",
+      "title": "Dengue VLP development ",
       "desc": "Construction: Designing the engineered plasmid with optimized signal sequences for HeLa cell expression.\n\nExpression & Purification: Highlighting the transient expression and the successful isolation of spherical, ~39nm VLPs confirmed by TEM.\n\nImmunization: Demonstrating the strong Dengue-1 specific IgG antibody response elicited in a murine model.",
-      "imageUrl": "images/innovations-2-imageUrl-1782170233704.png"
+      "imageUrl": "images/innovations-2-imageUrl-1782170135959.png"
     }
   ],
   "team": [
@@ -60,7 +60,7 @@
     {
       "date": "2026",
       "title": "Dengue VLP development and production",
-      "desc": "Description goes here.",
+      "desc": "The Goal: To develop a safer, more effective Dengue vaccine candidate using virus-like particles (VLPs)—structures that look like the real virus but cannot cause infection because they lack genetic material.\n\nThe Method: Researchers engineered a plasmid (genetic blueprint) containing Dengue-1 proteins, modified it with genetic signals from the Japanese Encephalitis virus to boost secretion, and grew it in human cells (HeLa cells).\n\nThe Results: The process successfully produced spherical VLPs that structurally mirror the native Dengue virus (about 39 nanometers wide). When tested in mice, these VLPs triggered a strong immune response, generating Dengue-1 specific antibodies.\n\nThe Takeaway: These HeLa-grown VLPs show strong potential for both new Dengue vaccines and diagnostic testing. The next step will be testing how effectively these antibodies actually protect against the live virus.",
       "imageUrl": ""
     }
   ],
