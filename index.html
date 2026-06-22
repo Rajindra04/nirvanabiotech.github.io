@@ -198,7 +198,7 @@
         let PENDING_IMAGES = {};     // path -> base64 data URL, for images changed but not yet saved
 
         async function initWebsite() {
-    // This is a complete, structural skeleton matching your layout requirements
+    // This provides a complete structural baseline so your edit buttons don't hit an empty wall
     const defaultTemplate = {
         "brandName": "NIRVANA",
         "brandSub": "BIOTECH",
@@ -246,21 +246,26 @@
         if (!response.ok) throw new Error("Could not load database file");
         
         const text = await response.text();
-        // If the file exists but it's completely empty or whitespace, use the default template instead of crashing
-        if (!text || text.trim() === "") {
-            console.warn("data.json is empty. Loading default baseline template structure.");
+        
+        // CRITICAL FIX: If text is empty/null, explicitly initialize SITE_DATA with the template object
+        if (!text || text.trim() === "" || text.trim() === "{}") {
+            console.warn("data.json is empty on GitHub. Initializing SITE_DATA with backup structure.");
             SITE_DATA = defaultTemplate;
         } else {
             SITE_DATA = JSON.parse(text);
         }
     } catch (err) {
-        console.error("Hydration processing error caught, recovering with baseline layout template:", err);
+        console.error("Hydration processing error caught. Falling back safely:", err);
         SITE_DATA = defaultTemplate;
-    } finally {
-        renderFromData(SITE_DATA);
     }
-}
 
+    // Double check to absolutely guarantee SITE_DATA isn't null before rendering
+    if (!SITE_DATA || Object.keys(SITE_DATA).length === 0) {
+        SITE_DATA = defaultTemplate;
+    }
+
+    renderFromData(SITE_DATA);
+}
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             const target = document.getElementById(sectionId);
