@@ -1,12 +1,12 @@
 {
   "brandName": "NIRVANA",
   "brandSub": "BIOTECH",
-  "logoUrl": "",
+  "logoUrl": "https://picsum.photos/id/1015/120/120",
   "home": {
     "tagline": "Pioneering Life Sciences",
     "title": "Welcome to Nirvana Biotech",
     "subtitle": "Innovating the future of clinical delivery frameworks and molecular engineering.",
-    "backgroundUrl": "https://picsum.photos/id/247/1200/800"
+    "backgroundUrl": "https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=2070"
   },
   "about": {
     "title": "About Our Scientific Mission",
@@ -16,14 +16,14 @@
     {
       "title": "Aptamer Engineering Modality",
       "desc": "High-affinity diagnostic platforms built for robust target delivery vectors.",
-      "imageUrl": ""
+      "imageUrl": "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2080"
     }
   ],
   "team": [
     {
       "name": "Dr. Rajindra",
       "role": "Principal Lead Investigator",
-      "imageUrl": ""
+      "imageUrl": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=1964"
     }
   ],
   "research": [
@@ -31,7 +31,7 @@
       "date": "2026",
       "title": "RNA-Folding Structural Models Logs",
       "desc": "Documenting multi-tiered molecular configurations using advanced alignment algorithms.",
-      "imageUrl": ""
+      "imageUrl": "https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=2070"
     }
   ],
   "contact": {
