@@ -26,8 +26,18 @@
       "imageUrl": "images/team-0-imageUrl-1782146391676.jpg"
     },
     {
-      "name": "New Team Member",
-      "role": "Role / Title",
+      "name": "Prof. Dr. Krishna Das Manandhar",
+      "role": "CEO",
+      "imageUrl": "images/team-1-imageUrl-1782168293156.webp"
+    },
+    {
+      "name": "Dr. Ram Pd. Aganja",
+      "role": "Research Director",
+      "imageUrl": ""
+    },
+    {
+      "name": "Aashis Shakhakarmi",
+      "role": "Adminstrative Chief",
       "imageUrl": ""
     },
     {
