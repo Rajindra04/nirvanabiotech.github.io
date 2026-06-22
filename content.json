@@ -1,0 +1,14 @@
+{
+  "textData": {
+    "home-tagline": "Pioneering Life Sciences",
+    "home-title": "Next-Gen Therapeutic Innovations",
+    "home-subtitle": "...",
+    "about-title": "Our Mission",
+    // ... all other editable IDs
+  },
+  "imageRefs": {
+    "logo-img": { "key": "logo.jpg", "url": "https://raw.githubusercontent.com/.../main/public/images/logo.jpg" }
+  },
+  "backgroundRefs": { ... },
+  "dynamicGrids": { ... }
+}
