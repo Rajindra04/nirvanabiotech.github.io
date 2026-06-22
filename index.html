@@ -60,7 +60,6 @@
         </div>
     </nav>
 
-    <!-- Admin Login Modal -->
     <div id="admin-login-modal" class="hidden fixed inset-0 bg-black/50 z-[100] flex items-center justify-center px-4">
         <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6">
             <h3 class="text-lg font-bold text-slate-900 mb-1">Admin Login</h3>
@@ -74,7 +73,6 @@
         </div>
     </div>
 
-    <!-- Floating Save Bar (shown only in edit mode) -->
     <div id="save-bar" class="hidden fixed bottom-0 left-0 w-full bg-slate-900 text-white z-[100] px-6 py-4 flex items-center justify-between shadow-2xl">
         <span id="save-status" class="text-sm text-slate-300">Editing — changes are not yet saved.</span>
         <div class="flex gap-3">
@@ -198,74 +196,75 @@
         let PENDING_IMAGES = {};     // path -> base64 data URL, for images changed but not yet saved
 
         async function initWebsite() {
-    // This provides a complete structural baseline so your edit buttons don't hit an empty wall
-    const defaultTemplate = {
-        "brandName": "NIRVANA",
-        "brandSub": "BIOTECH",
-        "logoUrl": "https://picsum.photos/id/1015/120/120",
-        "home": {
-            "tagline": "Pioneering Life Sciences",
-            "title": "Welcome to Nirvana Biotech",
-            "subtitle": "Innovating the future of clinical delivery frameworks and molecular engineering.",
-            "backgroundUrl": "https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=2070"
-        },
-        "about": {
-            "title": "About Our Scientific Mission",
-            "desc": "Nirvana Biotech stands at the intersection of computational biology and technical precision. We construct advanced biological frameworks tailored to next-generation therapeutic pipelines."
-        },
-        "innovations": [
-            {
-                "title": "Aptamer Engineering Modality",
-                "desc": "High-affinity diagnostic platforms built for robust target delivery vectors.",
-                "imageUrl": "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2080"
+            // This provides a complete structural baseline so your edit buttons don't hit an empty wall
+            const defaultTemplate = {
+                "brandName": "NIRVANA",
+                "brandSub": "BIOTECH",
+                "logoUrl": "https://picsum.photos/id/1015/120/120",
+                "home": {
+                    "tagline": "Pioneering Life Sciences",
+                    "title": "Welcome to Nirvana Biotech",
+                    "subtitle": "Innovating the future of clinical delivery frameworks and molecular engineering.",
+                    "backgroundUrl": "https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=2070"
+                },
+                "about": {
+                    "title": "About Our Scientific Mission",
+                    "desc": "Nirvana Biotech stands at the intersection of computational biology and technical precision. We construct advanced biological frameworks tailored to next-generation therapeutic pipelines."
+                },
+                "innovations": [
+                    {
+                        "title": "Aptamer Engineering Modality",
+                        "desc": "High-affinity diagnostic platforms built for robust target delivery vectors.",
+                        "imageUrl": "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2080"
+                    }
+                ],
+                "team": [
+                    {
+                        "name": "Dr. Rajindra",
+                        "role": "Principal Lead Investigator",
+                        "imageUrl": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=1964"
+                    }
+                ],
+                "research": [
+                    {
+                        "date": "2026",
+                        "title": "RNA-Folding Structural Models Logs",
+                        "desc": "Documenting multi-tiered molecular configurations using advanced alignment algorithms.",
+                        "imageUrl": "https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=2070"
+                    }
+                ],
+                "contact": {
+                    "title": "Connect With Our Labs",
+                    "desc": "Initiate data packet transmittal or submit clinical framework inquiries directly to our administrative hub."
+                }
+            };
+
+            try {
+                const response = await fetch('data.json');
+                if (!response.ok) throw new Error("Could not load database file");
+                
+                const text = await response.text();
+                
+                // If text is empty/null, explicitly initialize SITE_DATA with the template object
+                if (!text || text.trim() === "" || text.trim() === "{}") {
+                    console.warn("data.json is empty on GitHub. Initializing SITE_DATA with backup structure.");
+                    SITE_DATA = defaultTemplate;
+                } else {
+                    SITE_DATA = JSON.parse(text);
+                }
+            } catch (err) {
+                console.error("Hydration processing error caught. Falling back safely:", err);
+                SITE_DATA = defaultTemplate;
             }
-        ],
-        "team": [
-            {
-                "name": "Dr. Rajindra",
-                "role": "Principal Lead Investigator",
-                "imageUrl": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=1964"
+
+            // Double check to absolutely guarantee SITE_DATA isn't null before rendering
+            if (!SITE_DATA || Object.keys(SITE_DATA).length === 0) {
+                SITE_DATA = defaultTemplate;
             }
-        ],
-        "research": [
-            {
-                "date": "2026",
-                "title": "RNA-Folding Structural Models Logs",
-                "desc": "Documenting multi-tiered molecular configurations using advanced alignment algorithms.",
-                "imageUrl": "https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=2070"
-            }
-        ],
-        "contact": {
-            "title": "Connect With Our Labs",
-            "desc": "Initiate data packet transmittal or submit clinical framework inquiries directly to our administrative hub."
+
+            renderFromData(SITE_DATA);
         }
-    };
 
-    try {
-        const response = await fetch('data.json');
-        if (!response.ok) throw new Error("Could not load database file");
-        
-        const text = await response.text();
-        
-        // CRITICAL FIX: If text is empty/null, explicitly initialize SITE_DATA with the template object
-        if (!text || text.trim() === "" || text.trim() === "{}") {
-            console.warn("data.json is empty on GitHub. Initializing SITE_DATA with backup structure.");
-            SITE_DATA = defaultTemplate;
-        } else {
-            SITE_DATA = JSON.parse(text);
-        }
-    } catch (err) {
-        console.error("Hydration processing error caught. Falling back safely:", err);
-        SITE_DATA = defaultTemplate;
-    }
-
-    // Double check to absolutely guarantee SITE_DATA isn't null before rendering
-    if (!SITE_DATA || Object.keys(SITE_DATA).length === 0) {
-        SITE_DATA = defaultTemplate;
-    }
-
-    renderFromData(SITE_DATA);
-}
         function showSection(sectionId) {
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             const target = document.getElementById(sectionId);
@@ -288,7 +287,7 @@
         // =====================================================================
 
         // ---- CONFIG: set this to your deployed Cloudflare Worker URL ----
-        const ADMIN_API_BASE = " https://nirvana-biotech-admin.rajindra04.workers.dev";
+        const ADMIN_API_BASE = "https://nirvana-biotech-admin.rajindra04.workers.dev";
         // -------------------------------------------------------------------
 
         const SESSION_KEY = "nb_admin_session"; // stores only the session token, not the password
@@ -323,6 +322,11 @@
                 const { token } = await resp.json();
                 sessionStorage.setItem(SESSION_KEY, token);
                 closeAdminLogin();
+                
+                // CRITICAL FIX: Ensure template memory is populated before enabling edit tools
+                if (!SITE_DATA) {
+                    await initWebsite();
+                }
                 enterEditMode();
             } catch (err) {
                 errEl.textContent = "Could not reach admin server. Check your connection.";
@@ -359,37 +363,43 @@
         }
 
         // Restore edit mode automatically if a valid session token is already stored
-        // (so refreshing the page while logged in doesn't kick the admin out).
         function restoreSessionIfPresent() {
-            if (getSessionToken()) enterEditMode();
+            if (getSessionToken()) {
+                if (!SITE_DATA) {
+                    initWebsite().then(() => enterEditMode());
+                } else {
+                    enterEditMode();
+                }
+            }
         }
 
         // --- Generic helpers to read/write a dotted path like "home.title" or "team.2.name" ---
         function getByPath(obj, path) {
+            if (!obj) return null;
             return path.split('.').reduce((acc, key) => (acc == null ? acc : acc[key]), obj);
         }
+        
         function setByPath(obj, path, value) {
+            if (!obj) return;
             const keys = path.split('.');
             let cur = obj;
             for (let i = 0; i < keys.length - 1; i++) {
+                if (!cur[keys[i]]) cur[keys[i]] = {};
                 cur = cur[keys[i]];
             }
             cur[keys[keys.length - 1]] = value;
         }
 
         // --- Text editing ---
-        // path: dotted path into SITE_DATA, e.g. "home.title" or "innovations.0.desc"
-        // elementId: if provided, the on-page element to update immediately (simple fields)
-        // multiline: use a textarea instead of a single-line prompt-style editor
-        // triggerEl: the button that was clicked, used to find the nearby text to update for array items
         function promptTextEdit(path, elementId, multiline, triggerEl) {
+            if (!SITE_DATA) return;
             const currentValue = getByPath(SITE_DATA, path) ?? '';
             openTextEditorModal(currentValue, multiline, (newValue) => {
                 setByPath(SITE_DATA, path, newValue);
                 if (elementId) {
-                    document.getElementById(elementId).textContent = newValue;
+                    const el = document.getElementById(elementId);
+                    if (el) el.textContent = newValue;
                 } else {
-                    // Re-render the whole site so array-based fields reflect immediately.
                     rerenderFromMemory();
                 }
                 markUnsaved();
@@ -397,7 +407,6 @@
         }
 
         function openTextEditorModal(initialValue, multiline, onConfirm) {
-            // Build a lightweight modal on the fly (kept separate from the login modal).
             const overlay = document.createElement('div');
             overlay.className = "fixed inset-0 bg-black/50 z-[110] flex items-center justify-center px-4";
             overlay.innerHTML = `
@@ -426,9 +435,8 @@
         }
 
         // --- Image editing ---
-        // path: dotted path into SITE_DATA for the imageUrl field, e.g. "team.1.imageUrl"
-        // suggestedRepoPath: optional fixed repo path for single-instance images (logo, home background)
         function promptImageEdit(path, suggestedRepoPath) {
+            if (!SITE_DATA) return;
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.accept = 'image/*';
@@ -437,14 +445,13 @@
                 if (!file) return;
                 const reader = new FileReader();
                 reader.onload = () => {
-                    const dataUrl = reader.result; // "data:image/png;base64,...."
+                    const dataUrl = reader.result;
                     const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
                     const repoPath = suggestedRepoPath || `images/${path.replace(/\./g, '-')}-${Date.now()}.${ext}`;
 
-                    // Track the pending upload, and immediately preview it in-browser.
                     PENDING_IMAGES[repoPath] = dataUrl;
                     setByPath(SITE_DATA, path, repoPath);
-                    rerenderFromMemory(dataUrl, repoPath); // pass dataUrl + the actual repo path so preview shows before save
+                    rerenderFromMemory(dataUrl, repoPath);
                     markUnsaved();
                 };
                 reader.readAsDataURL(file);
@@ -452,9 +459,6 @@
             fileInput.click();
         }
 
-        // Re-render the page from the in-memory SITE_DATA so edits to array items show up
-        // immediately. previewDataUrl/previewPath let a freshly-picked image preview instantly
-        // even though the real file hasn't been committed to GitHub yet.
         function rerenderFromMemory(previewDataUrl, previewPath) {
             const wasEditMode = window.__editMode;
             const activeSection = document.querySelector('.section.active')?.id || 'home';
@@ -462,32 +466,32 @@
             showSection(activeSection);
             if (wasEditMode) enterEditMode();
             if (previewDataUrl && previewPath) {
-                // Swap any <img> whose src matches the now-set repo path to show the local preview
-                // (the real file doesn't exist at that path on GitHub yet, so use the data URL instead).
                 document.querySelectorAll('img').forEach(img => {
                     if (img.getAttribute('src') === previewPath || img.src.endsWith(previewPath)) {
                         img.src = previewDataUrl;
                     }
                 });
-                if (document.getElementById('logo-img').getAttribute('data-target-path') === previewPath) {
-                    document.getElementById('logo-img').src = previewDataUrl;
-                }
             }
         }
 
-        // --- Adding / removing array items (Innovations, Team, Research) ---
+        // --- Adding / removing array items ---
         function addArrayItem(section) {
+            if (!SITE_DATA) return;
+            if (!SITE_DATA[section]) SITE_DATA[section] = [];
+            
             const templates = {
                 innovations: { title: "New Innovation", desc: "Description goes here.", imageUrl: "" },
                 team: { name: "New Team Member", role: "Role / Title", imageUrl: "" },
                 research: { date: "2026", title: "New Research Entry", desc: "Description goes here.", imageUrl: "" },
             };
+            
             SITE_DATA[section].push({ ...templates[section] });
             rerenderFromMemory();
             markUnsaved();
         }
 
         function removeArrayItem(section, idx) {
+            if (!SITE_DATA || !SITE_DATA[section]) return;
             if (!confirm("Remove this item? This cannot be undone once saved.")) return;
             SITE_DATA[section].splice(idx, 1);
             rerenderFromMemory();
@@ -495,9 +499,12 @@
         }
 
         function markUnsaved() {
-            document.getElementById('save-status').textContent = "Editing — changes are not yet saved.";
-            document.getElementById('save-status').classList.remove('text-emerald-400');
-            document.getElementById('save-status').classList.add('text-slate-300');
+            const statusEl = document.getElementById('save-status');
+            if (statusEl) {
+                statusEl.textContent = "Editing — changes are not yet saved.";
+                statusEl.classList.remove('text-emerald-400');
+                statusEl.classList.add('text-slate-300');
+            }
         }
 
         function discardChanges() {
@@ -509,7 +516,7 @@
             });
         }
 
-        // --- Save: send updated data.json + any new images to the Worker, which commits to GitHub ---
+        // --- Save via Cloudflare Worker Endpoint ---
         async function saveAllChanges() {
             const token = getSessionToken();
             if (!token) {
@@ -535,7 +542,7 @@
                         'Authorization': `Bearer ${token}`,
                     },
                     body: JSON.stringify({
-                        dataJson: SITE_DATA, // Matches what your worker expects
+                        dataJson: SITE_DATA,
                         images: images,
                         commitMessage: "Admin: update site content via dashboard",
                     }),
@@ -554,7 +561,10 @@
 
                 alert("Changes successfully committed and pushed to GitHub! Give it a minute to update.");
                 PENDING_IMAGES = {};
-                markSavedStatus();
+                
+                statusEl.textContent = "All changes saved permanently to GitHub.";
+                statusEl.classList.remove('text-slate-300');
+                statusEl.classList.add('text-emerald-400');
 
             } catch (err) {
                 console.error("Save framework operation crashed:", err);
@@ -566,35 +576,28 @@
             }
         }
 
-        function markSavedStatus() {
-            const statusEl = document.getElementById('save-status');
-            statusEl.textContent = "All changes saved permanently to GitHub.";
-            statusEl.classList.remove('text-slate-300');
-            statusEl.classList.add('text-emerald-400');
-        }
-
         // --- Core Content Rendering Engine ---
         function renderFromData(data) {
             if (!data) return;
 
-            document.getElementById('logo-text').textContent = data.brandName || "NIRVANA";
-            document.getElementById('logo-sub').textContent = data.brandSub || "BIOTECH";
+            if (document.getElementById('logo-text')) document.getElementById('logo-text').textContent = data.brandName || "NIRVANA";
+            if (document.getElementById('logo-sub')) document.getElementById('logo-sub').textContent = data.brandSub || "BIOTECH";
             
             const logoImg = document.getElementById('logo-img');
             if (logoImg && data.logoUrl) logoImg.src = data.logoUrl;
 
             if (data.home) {
-                document.getElementById('home-tagline').textContent = data.home.tagline || "";
-                document.getElementById('home-title').textContent = data.home.title || "";
-                document.getElementById('home-subtitle').textContent = data.home.subtitle || "";
+                if (document.getElementById('home-tagline')) document.getElementById('home-tagline').textContent = data.home.tagline || "";
+                if (document.getElementById('home-title')) document.getElementById('home-title').textContent = data.home.title || "";
+                if (document.getElementById('home-subtitle')) document.getElementById('home-subtitle').textContent = data.home.subtitle || "";
                 if (data.home.backgroundUrl) {
                     document.getElementById('home-section')?.style.setProperty('background-image', `url('${data.home.backgroundUrl}')`);
                 }
             }
 
             if (data.about) {
-                document.getElementById('about-title').textContent = data.about.title || "";
-                document.getElementById('about-desc').textContent = data.about.desc || "";
+                if (document.getElementById('about-title')) document.getElementById('about-title').textContent = data.about.title || "";
+                if (document.getElementById('about-desc')) document.getElementById('about-desc').textContent = data.about.desc || "";
             }
 
             // Render Innovations Grid
@@ -661,8 +664,8 @@
             }
 
             if (data.contact) {
-                document.getElementById('contact-title').textContent = data.contact.title || "";
-                document.getElementById('contact-desc').textContent = data.contact.desc || "";
+                if (document.getElementById('contact-title')) document.getElementById('contact-title').textContent = data.contact.title || "";
+                if (document.getElementById('contact-desc')) document.getElementById('contact-desc').textContent = data.contact.desc || "";
             }
         }
 
