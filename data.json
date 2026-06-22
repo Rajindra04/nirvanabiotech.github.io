@@ -1,7 +1,7 @@
 {
   "brandName": "NIRVANA",
   "brandSub": "BIOTECH",
-  "logoUrl": "images/logo.png",
+  "logoUrl": "https://picsum.photos/id/1015/120/120",
   "home": {
     "tagline": "Pioneering Life Sciences",
     "title": "Welcome to Nirvana Biotech",
@@ -23,7 +23,17 @@
     {
       "name": "Dr. Rajindra",
       "role": "Principal Lead Investigator",
-      "imageUrl": "images/team-0-imageUrl-1782145833667.jpg"
+      "imageUrl": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=1964"
+    },
+    {
+      "name": "New Team Member",
+      "role": "Role / Title",
+      "imageUrl": ""
+    },
+    {
+      "name": "New Team Member",
+      "role": "Role / Title",
+      "imageUrl": ""
     }
   ],
   "research": [
