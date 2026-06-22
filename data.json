@@ -3,14 +3,14 @@
   "brandSub": "BIOTECH",
   "logoUrl": "images/logo.png",
   "home": {
-    "tagline": "Pioneering Life Sciences",
+    "tagline": "Pioneering Sciences",
     "title": "Welcome to Nirvana Biotech",
-    "subtitle": "Innovating the future of clinical delivery frameworks and molecular engineering.",
+    "subtitle": "Innovating the future through translational research and application",
     "backgroundUrl": "https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=2070"
   },
   "about": {
     "title": "About Our Scientific Mission",
-    "desc": "Nirvana Biotech stands at the intersection of computational biology and technical precision. We construct advanced biological frameworks tailored to next-generation therapeutic pipelines."
+    "desc": "Nirvana is a pioneering biotech firm dedicated to bridging the gap between human medicine and veterinary science. Through advanced molecular research, the company translates breakthrough discoveries from animal health applications into targeted, life-changing clinical therapies for humans.Core Focus AreasTranslational Molecular Research: Utilizing state-of-the-art genomics and molecular biology to understand complex diseases present across both human and animal populations.Veterinary Clinical Applications: Developing advanced therapeutics, diagnostics, and preventative care for companion and livestock health based on robust, cross-species molecular data.Human Therapeutics: Engineering next-generation treatments for chronic diseases, leveraging naturally sourced compounds and insights gained from comparative biology.The Nirvana AdvantageCross-Species Efficacy: By analyzing biological pathways conserved across species, the company rapidly identifies, validates, and de-risks treatments before taking them into human trials.Molecular Innovations: Moving beyond traditional pharmaceutical approaches to unlock the therapeutic potential of nature-derived molecules and advanced genetic applications.Holistic Health Pipeline: The research spans pain management, addiction mitigation, metabolic health, and immunology, benefiting both veterinary and human patients."
   },
   "innovations": [
     {
