@@ -9,14 +9,16 @@
     <style>
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.4s ease-out forwards; }
+        
         .nav-link { transition: all 0.3s ease; position: relative; }
         .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background-color: #0ea5e9; transition: width 0.3s ease; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
         .nav-link.active { color: #0ea5e9; font-weight: 600; }
-
+        
+        /* Admin Interactive Layer Rules */
         .admin-editable-active { position: relative; min-width: 40px; min-height: 20px; display: inline-block; }
         .admin-editable-active:hover { background-color: rgba(14, 165, 233, 0.08); outline: 2px dashed #0ea5e9; outline-offset: 4px; border-radius: 4px; }
-
+        
         .editable-image { position: relative; display: inline-block; overflow: hidden; cursor: default; }
         .admin-image-active { cursor: pointer !important; }
         .admin-image-active::before {
@@ -27,49 +29,56 @@
             opacity: 0; transition: opacity 0.2s ease; pointer-events: none; z-index: 10;
         }
         .admin-image-active:hover::before { opacity: 1; }
+        
+        .section-bg {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-image 0.4s ease-in-out;
+        }
 
-        .section-bg { background-size: cover; background-position: center; background-repeat: no-repeat; transition: background-image 0.4s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-        #admin-toolbar { position: fixed; bottom: 20px; right: 20px; z-index: 60; display: none; flex-direction: column; gap: 8px; background: rgba(15, 23, 42, 0.95); padding: 14px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+        /* Admin toolbar */
+        #admin-toolbar {
+            position: fixed; bottom: 20px; right: 20px; z-index: 60;
+            display: none;
+            flex-direction: column; gap: 8px;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 14px; border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            font-family: inherit;
+        }
         #admin-toolbar.visible { display: flex; }
-        #login-modal-backdrop { position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
-        #login-modal-backdrop.visible { display: flex; }
+        #admin-toolbar button {
+            font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
+            color: white; padding: 8px 14px; border-radius: 10px;
+            display: flex; align-items: center; gap: 8px; white-space: nowrap;
+            transition: all 0.15s ease; border: none; cursor: pointer;
+        }
+        #save-status {
+            font-size: 11px; color: #94a3b8; text-align: center; padding-top: 2px;
+        }
     </style>
 </head>
 <body class="font-sans bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
-    <!-- LOADING -->
-    <div id="content-loading" class="fixed inset-0 bg-white flex items-center justify-center z-50">
-        <i class="fas fa-circle-notch fa-spin text-4xl text-sky-500"></i>
-    </div>
-
-    <!-- LOGIN MODAL -->
-    <div id="login-modal-backdrop">
-        <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl">
-            <h3 class="text-xl font-bold mb-2">Admin Login</h3>
-            <p class="text-slate-600 mb-6">GitHub Personal Access Token (Contents: Write)</p>
-            <input id="pat-input" type="password" placeholder="ghp_xxxxxxxxxxxxxxxx" class="w-full border border-slate-300 rounded-xl px-4 py-3 mb-4">
-            <div class="flex gap-3">
-                <button onclick="closeLoginModal()" class="flex-1 py-3 border rounded-xl">Cancel</button>
-                <button onclick="handlePATLogin()" class="flex-1 py-3 bg-sky-600 text-white rounded-xl">Sign In</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- NAVBAR (same as original) -->
+    <!-- NAVBAR -->
     <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-100">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('home')">
+            <div class="flex items-center gap-3 cursor-pointer">
                 <div id="logo-img-wrap" class="editable-image rounded-xl">
                     <img id="logo-img" src="https://picsum.photos/id/1015/120/120" class="h-12 w-12 object-cover rounded-xl shadow-sm" alt="Nirvana Biotech">
                 </div>
                 <div>
-                    <span id="logo-text" class="text-xl font-bold tracking-wider text-slate-900 editable">NIRVANA</span>
+                    <span id="logo-text" class="text-xl font-bold tracking-wider text-slate-900 block leading-tight editable">NIRVANA</span>
                     <p id="logo-sub" class="text-xs font-semibold tracking-widest text-sky-600 uppercase editable">Biotech</p>
                 </div>
             </div>
+            
             <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600" id="nav-menu">
                 <a href="#" onclick="showSection('home')" class="nav-link active">Home</a>
                 <a href="#" onclick="showSection('about')" class="nav-link">About</a>
@@ -78,288 +87,695 @@
                 <a href="#" onclick="showSection('research')" class="nav-link">Research</a>
                 <a href="#" onclick="showSection('contact')" class="nav-link">Contact</a>
             </div>
-            <button id="admin-login-btn" onclick="toggleAdminMode()" class="px-5 py-2.5 bg-slate-900 text-white rounded-full text-xs font-semibold">ADMIN LOGIN</button>
+            
+            <button id="admin-login-btn" onclick="toggleAdminMode()" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full text-xs font-semibold tracking-wider flex items-center gap-2 shadow-md transition-all">
+                <i class="fas fa-shield-alt" id="admin-icon"></i>
+                <span id="edit-btn-text">ADMIN LOGIN</span>
+            </button>
         </div>
     </nav>
 
+    <!-- MAIN INTERACTIVE WRAPPERS -->
     <main class="flex-grow">
-        <!-- Paste all your original sections here (Home, About, Innovations, Team, Research, Contact) -->
-        <!-- I kept them identical to your nirvana.html -->
-        <!-- HOME -->
-        <section id="home" class="section active py-32 section-bg min-h-[80vh] flex items-center relative" style="background-image: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.95)), url('https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=2070');">
-            <button onclick="changeBackground('home', true)" class="admin-btn hidden absolute top-6 right-6 bg-slate-900/90 text-white text-xs px-4 py-2.5 rounded-xl">Change Background</button>
+        
+        <!-- HOME SECTION -->
+        <section id="home" class="section py-32 section-bg min-h-[80vh] flex items-center relative" style="background-image: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.95)), url('https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=2070');">
+            <button onclick="changeBackground('home', true)" class="admin-btn hidden absolute top-6 right-6 bg-slate-900/90 hover:bg-slate-900 text-white text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-md z-10">
+                <i class="fas fa-image"></i> Change Home Background
+            </button>
             <div class="max-w-5xl mx-auto px-6 text-center">
                 <div class="inline-block bg-sky-50 px-4 py-1.5 rounded-full">
-                    <span id="home-tagline" class="editable text-sky-600">Pioneering Life Sciences</span>
+                    <span class="text-sky-600 text-sm font-bold tracking-widest uppercase editable" id="home-tagline">Pioneering Life Sciences</span>
                 </div>
-                <h1 id="home-title" class="editable text-6xl font-black mt-6">Next-Gen Therapeutic Innovations</h1>
-                <p id="home-subtitle" class="editable mt-6">We merge deep cellular analysis...</p>
+                <h1 class="text-4xl md:text-6xl font-black text-slate-950 mt-6 tracking-tight editable" id="home-title">Next-Gen Therapeutic Innovations</h1>
+                <p class="text-base md:text-lg text-slate-600 mt-6 max-w-2xl mx-auto editable" id="home-subtitle">We merge deep cellular analysis with state-of-the-art biochemistry to accelerate breakthrough medical molecular structures.</p>
+                <div class="mt-10 flex justify-center gap-4">
+                    <button onclick="showSection('innovations')" class="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-sm font-medium transition-all shadow-lg shadow-sky-600/20">Explore Innovations</button>
+                    <button onclick="showSection('about')" class="px-6 py-3 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-sm font-medium transition-all">Learn More</button>
+                </div>
             </div>
         </section>
 
-        <!-- ABOUT, INNOVATIONS, TEAM, RESEARCH, CONTACT sections are identical to your nirvana.html file -->
-        <!-- (Copy them from the attached file you sent if they are missing) -->
+        <!-- ABOUT SECTION -->
+        <section id="about" class="section py-20 bg-white">
+            <div class="max-w-4xl mx-auto px-6">
+                <h2 class="text-3xl font-bold text-slate-900 mb-6 editable" id="about-title">Our Mission</h2>
+                <p class="text-base text-slate-600 leading-relaxed editable" id="about-desc">Nirvana Biotech was founded with a singular, clear path ahead: solving compound molecular delivery frameworks that standard methodologies deem unreachable. Our open-access research platform unites laboratories worldwide to reduce lead times for therapeutic synthesis.</p>
+            </div>
+        </section>
+
+        <!-- INNOVATIONS SECTION -->
+        <section id="innovations" class="section py-20 bg-slate-50 relative">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+                    <div>
+                        <h2 id="innovations-title" class="text-3xl font-bold text-slate-900 editable">Key Core Capabilities</h2>
+                        <p id="innovations-sub" class="text-slate-600 mt-1 editable">Advanced frameworks accelerating modern biotechnology milestones.</p>
+                    </div>
+                    <button onclick="addNewInnovationItem()" class="admin-btn hidden bg-sky-600 hover:bg-sky-700 text-white px-5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all shadow-md">
+                        <i class="fas fa-plus mr-2"></i> Add Custom Innovation
+                    </button>
+                </div>
+                
+                <div id="innovations-grid" class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-start" data-default-id="innov-0">
+                        <div class="editable-image rounded-xl mb-6 w-full max-h-48 overflow-hidden bg-slate-100">
+                            <img src="https://images.unsplash.com/photo-1579154204601-01588f35116f?q=80&w=600&fit=crop" class="w-full h-48 object-cover rounded-xl" alt="Innovation">
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2 editable">Gene Modification Frameworks</h3>
+                        <p class="text-slate-600 editable">High-fidelity sequence mapping engineered to eliminate unintended gene splicing variances.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TEAM SECTION -->
+        <section id="team" class="section py-20 section-bg relative" style="background-image: linear-gradient(rgba(248,250,252,0.9), rgba(248,250,252,0.95)), url('https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2080');">
+            <div class="max-w-7xl mx-auto px-6 relative">
+                <button onclick="changeBackground('team', false)" class="admin-btn hidden absolute -top-4 right-6 bg-slate-900/90 hover:bg-slate-900 text-white text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-md z-10">
+                    <i class="fas fa-image"></i> Change Team Background
+                </button>
+                
+                <div class="mb-12">
+                    <h2 id="team-title" class="text-3xl font-bold text-slate-950 tracking-tight editable">Our Scientific Leadership</h2>
+                    <p id="team-sub" class="text-slate-600 mt-2 editable">World-class minds leading computational biology and therapeutics development.</p>
+                </div>
+                
+                <div id="team-grid" class="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <div class="team-card bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center transition-all hover:shadow-md" data-default-id="team-0">
+                        <div class="editable-image rounded-2xl mb-5">
+                            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=400&h=400&fit=crop" class="w-48 h-48 rounded-xl object-cover shadow-inner" alt="Dr. Priya Sharma">
+                        </div>
+                        <h3 class="font-bold text-lg text-slate-900 editable">Dr. Priya Sharma</h3>
+                        <p class="text-sm font-medium text-sky-600 mt-1 editable">Chief Scientific Officer</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-12">
+                    <button onclick="addNewTeamMember()" id="add-member-btn" class="admin-btn hidden bg-sky-600 hover:bg-sky-700 text-white px-6 py-3 rounded-xl text-sm font-semibold tracking-wide transition-all shadow-md">
+                        <i class="fas fa-plus mr-2"></i> Add Team Member
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- RESEARCH SECTION -->
+        <section id="research" class="section py-20 section-bg relative" style="background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.95)), url('https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=2070');">
+            <div class="max-w-5xl mx-auto px-6 relative">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+                    <div>
+                        <button onclick="changeBackground('research', true)" class="admin-btn hidden bg-slate-900/90 hover:bg-slate-900 text-white text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 mb-4 transition-all shadow-md">
+                            <i class="fas fa-image"></i> Change Section Background
+                        </button>
+                        <h2 id="research-title" class="text-3xl font-bold text-slate-900 editable">Published Whitepapers</h2>
+                        <p id="research-sub" class="text-slate-600 mt-1 editable">Review our peer-verified tracking registries regarding targeted bio-delivery vectors.</p>
+                    </div>
+                    <button onclick="addNewResearchItem()" class="admin-btn hidden bg-sky-600 hover:bg-sky-700 text-white px-5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all shadow-md">
+                        <i class="fas fa-plus mr-2"></i> Add New Research Entry
+                    </button>
+                </div>
+                
+                <div id="research-grid" class="space-y-6">
+                    <div class="p-6 bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl hover:bg-white transition-all shadow-sm flex flex-col md:flex-row gap-6 items-start md:items-center" data-default-id="research-0">
+                        <div class="editable-image rounded-xl w-full md:w-32 h-32 flex-shrink-0 bg-slate-100">
+                            <img src="https://images.unsplash.com/photo-1453847668862-487637052f8a?q=80&w=300&fit=crop" class="w-full h-full object-cover rounded-xl" alt="Research Article Thumbnail">
+                        </div>
+                        <div class="flex-grow">
+                            <span class="text-xs font-semibold text-emerald-600 uppercase bg-emerald-50 px-2.5 py-1 rounded editable">June 2026</span>
+                            <h4 class="text-lg font-bold text-slate-900 mt-2 editable">Evaluating Lipid Carrier Kinetics in Cellular Environments</h4>
+                            <p class="text-slate-600 text-sm mt-1 editable">Comprehensive analytical metrics measuring nanoparticle degradation velocity inside structural tissue layers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="section py-20 bg-slate-950 text-white">
+            <div class="max-w-3xl mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold mb-4 editable" id="contact-title">Connect With Us</h2>
+                    <p class="text-slate-400 max-w-xl mx-auto editable" id="contact-desc">Interested in strategic development partnerships or investing? Secure communications route directly to our primary review team.</p>
+                </div>
+                
+                <form onsubmit="handleFormSubmit(event)" class="space-y-5 bg-slate-900 p-8 rounded-2xl border border-slate-800 shadow-xl text-left">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Sender Name</label>
+                            <input type="text" placeholder="Dr. John Doe" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Institutional Email</label>
+                            <input type="email" placeholder="partner@institution.org" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Subject Query</label>
+                        <input type="text" placeholder="Partnership Framework Inquiries" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Message Payload</label>
+                        <textarea rows="4" placeholder="Outline technical delivery specifications or collaborative proposal logs here..." required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-sky-500 transition-colors resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-sky-600 hover:bg-sky-700 text-white font-medium text-sm rounded-xl transition-colors shadow-lg shadow-sky-600/10 tracking-wide uppercase font-semibold">
+                        Transmit Data Payload
+                    </button>
+                </form>
+            </div>
+        </section>
 
     </main>
 
-    <footer class="bg-slate-900 text-slate-500 text-xs py-8">
-        <div class="max-w-7xl mx-auto px-6 text-center">© 2026 Nirvana Biotech Inc.</div>
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-500 text-xs py-8 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>&copy; 2026 Nirvana Biotech Inc. All rights reserved. Registered Scientific Entity.</div>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-slate-300">Privacy Policy</a>
+                <a href="#" class="hover:text-slate-300">Compliance Framework</a>
+            </div>
+        </div>
     </footer>
 
     <!-- ADMIN TOOLBAR -->
     <div id="admin-toolbar">
-        <button onclick="manualSave()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl">💾 Save Now</button>
-        <button onclick="signOutAdmin()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl">Sign Out</button>
-        <div id="save-status" class="text-xs text-center text-slate-400">Changes saved to GitHub</div>
+        <button onclick="manualSave()" class="bg-emerald-600 hover:bg-emerald-700">
+            <i class="fas fa-save"></i> Save Now
+        </button>
+        <button onclick="exportData()" class="bg-sky-600 hover:bg-sky-700">
+            <i class="fas fa-file-export"></i> Export Backup File
+        </button>
+        <button onclick="document.getElementById('import-file-input').click()" class="bg-slate-700 hover:bg-slate-600">
+            <i class="fas fa-file-import"></i> Import Backup File
+        </button>
+        <button onclick="resetAllData()" class="bg-red-600/90 hover:bg-red-600">
+            <i class="fas fa-trash"></i> Reset to Original
+        </button>
+        <input type="file" id="import-file-input" accept="application/json" class="hidden" onchange="importData(event)">
+        <div id="save-status">All changes auto-save</div>
     </div>
 
+    <!-- ENGINE LOGIC -->
     <script>
-        // ==================== CONFIG ====================
-        const REPO_OWNER = "Rajindra04";
-        const REPO_NAME = "nirvanabiotech.github.io";
-        const CONTENT_PATH = "content.json";
-        const IMAGES_DIR = "public/images";
-
-        let githubToken = localStorage.getItem("github_pat") || "";
         let isAuthenticated = false;
+        const ADMIN_PASSWORD = "nirvana2026";
+        const STORAGE_KEY = "nirvana_site_data_v1";
+        const DB_NAME = "nirvana_image_store";
+        const DB_VERSION = 1;
+        const IMG_STORE = "images";
 
-        // ==================== GITHUB API ====================
-        async function githubRequest(endpoint, options = {}) {
-            const res = await fetch(`https://api.github.com${endpoint}`, {
-                headers: {
-                    Authorization: `token ${githubToken}`,
-                    Accept: "application/vnd.github.v3+json"
-                },
-                ...options
-            });
-            if (!res.ok) throw new Error(`GitHub Error: ${res.status}`);
-            return res.json();
-        }
-
-        async function getFile() {
-            try {
-                const data = await githubRequest(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${CONTENT_PATH}`);
-                return { content: JSON.parse(atob(data.content)), sha: data.sha };
-            } catch {
-                return { content: { textData: {}, imageRefs: {}, backgroundRefs: {}, dynamicGrids: {} }, sha: null };
-            }
-        }
-
-        async function updateFile(content, sha) {
-            await githubRequest(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${CONTENT_PATH}`, {
-                method: "PUT",
-                body: JSON.stringify({
-                    message: `Update ${new Date().toISOString()}`,
-                    content: btoa(JSON.stringify(content, null, 2)),
-                    sha,
-                    branch: "main"
-                })
-            });
-        }
-
-        // ==================== IMAGE UPLOAD ====================
-        async function uploadImage(file) {
-            const { blob } = await processImageFile(file);
-            const filename = `${Date.now()}-${file.name.replace(/[^a-z0-9.]/gi, '')}`;
-            const path = `${IMAGES_DIR}/${filename}`;
-
-            const reader = new FileReader();
-            return new Promise((resolve, reject) => {
-                reader.onload = async () => {
-                    try {
-                        const base64 = reader.result.split(',')[1];
-                        const res = await githubRequest(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
-                            method: "PUT",
-                            body: JSON.stringify({ message: `Upload ${filename}`, content: base64, branch: "main" })
-                        });
-                        resolve({ key: filename, url: res.content.download_url });
-                    } catch (e) { reject(e); }
+        let dbPromise = null;
+        function openImageDB() {
+            if (dbPromise) return dbPromise;
+            dbPromise = new Promise((resolve, reject) => {
+                const req = indexedDB.open(DB_NAME, DB_VERSION);
+                req.onupgradeneeded = () => {
+                    const db = req.result;
+                    if (!db.objectStoreNames.contains(IMG_STORE)) {
+                        db.createObjectStore(IMG_STORE);
+                    }
                 };
-                reader.readAsDataURL(blob);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+            return dbPromise;
+        }
+
+        async function idbPut(key, blob) {
+            const db = await openImageDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(IMG_STORE, 'readwrite');
+                tx.objectStore(IMG_STORE).put(blob, key);
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject(tx.error);
             });
         }
+
+        async function idbGet(key) {
+            const db = await openImageDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(IMG_STORE, 'readonly');
+                const req = tx.objectStore(IMG_STORE).get(key);
+                req.onsuccess = () => resolve(req.result || null);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        async function idbDelete(key) {
+            const db = await openImageDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(IMG_STORE, 'readwrite');
+                tx.objectStore(IMG_STORE).delete(key);
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject(tx.error);
+            });
+        }
+
+        async function idbGetAllKeys() {
+            const db = await openImageDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(IMG_STORE, 'readonly');
+                const req = tx.objectStore(IMG_STORE).getAllKeys();
+                req.onsuccess = () => resolve(req.result || []);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        const activeObjectURLs = {};
+        function setImageURLAndDisplay(key, blob, imgElement) {
+            if (activeObjectURLs[key]) {
+                URL.revokeObjectURL(activeObjectURLs[key]);
+            }
+            const url = URL.createObjectURL(blob);
+            activeObjectURLs[key] = url;
+            imgElement.src = url;
+        }
+
+        const MAX_DIMENSION = 1600; 
+        const JPEG_QUALITY = 0.85;
 
         function processImageFile(file) {
             return new Promise((resolve, reject) => {
                 const img = new Image();
                 const reader = new FileReader();
-                reader.onload = e => img.src = e.target.result;
+                reader.onload = e => { img.src = e.target.result; };
+                reader.onerror = reject;
                 img.onload = () => {
-                    let w = img.width, h = img.height;
-                    const max = 1600;
-                    if (w > max || h > max) {
-                        const scale = max / Math.max(w, h);
-                        w = Math.round(w * scale); h = Math.round(h * scale);
+                    let { width, height } = img;
+                    if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+                        const scale = MAX_DIMENSION / Math.max(width, height);
+                        width = Math.round(width * scale);
+                        height = Math.round(height * scale);
                     }
                     const canvas = document.createElement('canvas');
-                    canvas.width = w; canvas.height = h;
-                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                    canvas.toBlob(b => resolve({ blob: b }), 'image/jpeg', 0.85);
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    const keepPng = /png|gif|svg/.test(file.type);
+                    canvas.toBlob(
+                        blob => blob ? resolve(blob) : reject(new Error('Canvas encoding failed')),
+                        keepPng ? 'image/png' : 'image/jpeg',
+                        keepPng ? undefined : JPEG_QUALITY
+                    );
                 };
+                img.onerror = reject;
                 reader.readAsDataURL(file);
             });
         }
 
-        // ==================== DATA FUNCTIONS (from your original) ====================
         function getDataObject() {
             const textData = {};
-            document.querySelectorAll('[id].editable').forEach(el => textData[el.id] = el.innerHTML);
+            document.querySelectorAll('[id].editable').forEach(el => {
+                textData[el.id] = el.innerHTML;
+            });
 
             const imageRefs = {};
-            document.querySelectorAll('img[data-img-key]').forEach(img => {
-                imageRefs[img.id || img.closest('.editable-image')?.id] = { key: img.getAttribute('data-img-key'), url: img.src };
+            document.querySelectorAll('img[id][data-img-key]').forEach(img => {
+                imageRefs[img.id] = img.getAttribute('data-img-key');
             });
 
             const backgroundRefs = {};
-            document.querySelectorAll('.section-bg').forEach(sec => {
-                if (sec.id && sec.getAttribute('data-bg-key')) {
-                    backgroundRefs[sec.id] = {
-                        key: sec.getAttribute('data-bg-key'),
-                        url: sec.getAttribute('data-bg-url'),
-                        light: sec.getAttribute('data-bg-light') === 'true'
-                    };
-                }
+            document.querySelectorAll('.section-bg[id][data-bg-key]').forEach(sec => {
+                backgroundRefs[sec.id] = {
+                    key: sec.getAttribute('data-bg-key'),
+                    light: sec.getAttribute('data-bg-light') === 'true'
+                };
             });
 
             const dynamicGrids = {};
-            ['innovations-grid','team-grid','research-grid'].forEach(id => {
-                const grid = document.getElementById(id);
-                if (grid) dynamicGrids[id] = Array.from(grid.children).filter(c => !c.hasAttribute('data-default-id')).map(c => c.outerHTML);
+            ['innovations-grid', 'team-grid', 'research-grid'].forEach(gridId => {
+                const grid = document.getElementById(gridId);
+                if (!grid) return;
+                const extras = Array.from(grid.children).filter(child => !child.hasAttribute('data-default-id'));
+                dynamicGrids[gridId] = extras.map(el => el.outerHTML);
             });
 
-            return { textData, imageRefs, backgroundRefs, dynamicGrids };
+            return { version: 2, savedAt: new Date().toISOString(), textData, imageRefs, backgroundRefs, dynamicGrids };
         }
 
-        function applyDataObject(data) {
-            // Apply text, grids, images, backgrounds (same logic as your nirvana.html)
-            if (data.textData) Object.entries(data.textData).forEach(([id, html]) => {
-                const el = document.getElementById(id); if (el) el.innerHTML = html;
+        async function applyDataObject(data) {
+            if (!data) return;
+
+            if (data.textData) {
+                Object.entries(data.textData).forEach(([id, html]) => {
+                    const el = document.getElementById(id);
+                    if (el) el.innerHTML = html;
+                });
+            }
+
+            if (data.dynamicGrids) {
+                Object.entries(data.dynamicGrids).forEach(([gridId, htmlArray]) => {
+                    const grid = document.getElementById(gridId);
+                    if (!grid) return;
+                    Array.from(grid.children).filter(child => !child.hasAttribute('data-default-id')).forEach(el => el.remove());
+                    htmlArray.forEach(outerHTML => {
+                        const tmp = document.createElement('div');
+                        tmp.innerHTML = outerHTML.trim();
+                        const node = tmp.firstElementChild;
+                        if (node) grid.appendChild(node);
+                    });
+                });
+            }
+
+            if (data.imageRefs) {
+                for (const [id, key] of Object.entries(data.imageRefs)) {
+                    const el = document.getElementById(id);
+                    if (!el) continue;
+                    el.setAttribute('data-img-key', key);
+                    try {
+                        const blob = await idbGet(key);
+                        if (blob) setImageURLAndDisplay(key, blob, el);
+                    } catch (err) { console.error(err); }
+                }
+            }
+
+            document.querySelectorAll('[data-img-key]').forEach(async el => {
+                if (el.tagName === 'IMG' && !el.hasAttribute('id')) {
+                    const key = el.getAttribute('data-img-key');
+                    try {
+                        const blob = await idbGet(key);
+                        if (blob) setImageURLAndDisplay(key, blob, el);
+                    } catch (err) { console.error(err); }
+                }
             });
-            // ... (add the rest of your applyDataObject logic if needed)
+
+            if (data.backgroundRefs) {
+                for (const [id, ref] of Object.entries(data.backgroundRefs)) {
+                    const el = document.getElementById(id);
+                    if (!el) continue;
+                    el.setAttribute('data-bg-key', ref.key);
+                    el.setAttribute('data-bg-light', ref.light);
+                    try {
+                        const blob = await idbGet(ref.key);
+                        if (blob) {
+                            if (activeObjectURLs[ref.key]) URL.revokeObjectURL(activeObjectURLs[ref.key]);
+                            const url = URL.createObjectURL(blob);
+                            activeObjectURLs[ref.key] = url;
+                            const mask = ref.light
+                                ? 'linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.95))'
+                                : 'linear-gradient(rgba(248,250,252,0.9), rgba(248,250,252,0.95))';
+                            el.style.backgroundImage = `${mask}, url('${url}')`;
+                        }
+                    } catch (err) { console.error(err); }
+                }
+            }
         }
 
-        async function loadSiteContent() {
-            const { content } = await getFile();
-            applyDataObject(content);
+        function persistToLocalStorage() {
+            try {
+                const data = getDataObject();
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                flashSaveStatus('Saved ' + new Date().toLocaleTimeString());
+            } catch (err) {
+                flashSaveStatus('Save failed — storage full', true);
+            }
         }
 
-        async function saveSiteContent() {
+        function flashSaveStatus(message, isError) {
+            const status = document.getElementById('save-status');
+            if (!status) return;
+            status.innerText = message;
+            status.style.color = isError ? '#f87171' : '#34d399';
+            setTimeout(() => {
+                status.innerText = 'All changes auto-save';
+                status.style.color = '#94a3b8';
+            }, 2500);
+        }
+
+        function manualSave() { persistToLocalStorage(); }
+
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        function base64ToBlob(dataUrl) { return fetch(dataUrl).then(r => r.blob()); }
+
+        async function exportData() {
+            flashSaveStatus('Bundling backup…');
             const data = getDataObject();
-            const { sha } = await getFile();
-            await updateFile(data, sha);
-            flashSaveStatus("✅ Saved to GitHub");
+            const keys = new Set();
+            Object.values(data.imageRefs || {}).forEach(k => keys.add(k));
+            Object.values(data.backgroundRefs || {}).forEach(ref => keys.add(ref.key));
+            document.querySelectorAll('[data-img-key]').forEach(el => keys.add(el.getAttribute('data-img-key')));
+
+            const images = {};
+            for (const key of keys) {
+                if (!key) continue;
+                try {
+                    const blob = await idbGet(key);
+                    if (blob) images[key] = await blobToBase64(blob);
+                } catch (err) { console.error(err); }
+            }
+
+            const exportPayload = { ...data, images };
+            const blob = new Blob([JSON.stringify(exportPayload)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'nirvana-site-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            flashSaveStatus('Backup downloaded');
         }
 
-        function flashSaveStatus(msg) {
-            const el = document.getElementById('save-status');
-            el.textContent = msg;
-            setTimeout(() => el.textContent = "Changes saved to GitHub", 2000);
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = async e => {
+                try {
+                    const payload = JSON.parse(e.target.result);
+                    const { images, ...data } = payload;
+                    if (images) {
+                        for (const [key, dataUrl] of Object.entries(images)) {
+                            const blob = await base64ToBlob(dataUrl);
+                            await idbPut(key, blob);
+                        }
+                    }
+                    await applyDataObject(data);
+                    persistToLocalStorage();
+                    flashSaveStatus('Import complete');
+                } catch (err) { alert('Invalid backup file.'); }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
         }
 
-        // ==================== UI FUNCTIONS (from your original) ====================
-        function showSection(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('#nav-menu a').forEach(a => a.classList.toggle('active', a.getAttribute('onclick').includes(id)));
+        async function resetAllData() {
+            if (!confirm('Erase all saved custom configurations?')) return;
+            localStorage.removeItem(STORAGE_KEY);
+            try {
+                const keys = await idbGetAllKeys();
+                for (const key of keys) await idbDelete(key);
+            } catch (err) {}
+            location.reload();
         }
+
+        async function loadFromLocalStorage() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return;
+                await applyDataObject(JSON.parse(raw));
+            } catch (err) {}
+        }
+
+        function scheduleAutoSave() { persistToLocalStorage(); }
+        function makeImageKey() { return 'img_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9); }
 
         function toggleAdminMode() {
             if (!isAuthenticated) {
-                document.getElementById('login-modal-backdrop').classList.add('visible');
+                const pass = prompt("Enter Admin Password:", "");
+                if (pass === ADMIN_PASSWORD) {
+                    isAuthenticated = true;
+                    updateAdminUI(true);
+                } else if (pass !== null) { alert("Access Denied."); }
             } else {
-                signOutAdmin();
+                isAuthenticated = false;
+                updateAdminUI(false);
             }
         }
 
-        function handlePATLogin() {
-            const token = document.getElementById('pat-input').value.trim();
-            if (!token) return;
-            githubToken = token;
-            localStorage.setItem('github_pat', token);
-            isAuthenticated = true;
-            closeLoginModal();
-            updateAdminUI(true);
-            loadSiteContent();
-        }
-
-        function closeLoginModal() {
-            document.getElementById('login-modal-backdrop').classList.remove('visible');
-        }
-
-        function signOutAdmin() {
-            localStorage.removeItem('github_pat');
-            githubToken = '';
-            isAuthenticated = false;
-            updateAdminUI(false);
-        }
-
-        function updateAdminUI(active) {
+        function updateAdminUI(activate) {
             document.querySelectorAll('.editable').forEach(el => {
-                el.contentEditable = active;
-                el.classList.toggle('admin-editable-active', active);
+                el.contentEditable = activate ? "true" : "false";
+                el.classList.toggle('admin-editable-active', activate);
             });
-            document.querySelectorAll('.editable-image').forEach(el => el.classList.toggle('admin-image-active', active));
-            document.querySelectorAll('.admin-btn').forEach(btn => btn.classList.toggle('hidden', !active));
-            document.getElementById('admin-toolbar').classList.toggle('visible', active);
+            document.querySelectorAll('.editable-image').forEach(el => {
+                el.classList.toggle('admin-image-active', activate);
+            });
+            document.querySelectorAll('.admin-btn').forEach(btn => btn.classList.toggle('hidden', !activate));
+            document.getElementById('admin-toolbar').classList.toggle('visible', activate);
+            
+            const loginBtn = document.getElementById('admin-login-btn');
+            const btnText = document.getElementById('edit-btn-text');
+            const icon = document.getElementById('admin-icon');
+            
+            if (activate) {
+                loginBtn.className = "px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full text-xs font-semibold tracking-wider flex items-center gap-2 shadow-md transition-all";
+                btnText.innerText = "ADMIN MODE ACTIVE";
+                icon.className = "fas fa-check-circle";
+                attachAutoSaveListeners();
+            } else {
+                loginBtn.className = "px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-full text-xs font-semibold tracking-wider flex items-center gap-2 shadow-md transition-all";
+                btnText.innerText = "ADMIN LOGIN";
+                icon.className = "fas fa-shield-alt";
+                persistToLocalStorage();
+            }
         }
 
-        // Image & Background handlers (adapted)
-        document.addEventListener('click', e => {
+        function attachAutoSaveListeners() {
+            document.querySelectorAll('.editable').forEach(el => {
+                el.removeEventListener('blur', scheduleAutoSave);
+                el.addEventListener('blur', scheduleAutoSave);
+            });
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            const target = document.getElementById(sectionId);
+            if (target) target.classList.add('active');
+            
+            document.querySelectorAll('#nav-menu a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('onclick').includes(`'${sectionId}'`)) link.classList.add('active');
+            });
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            alert("🚀 Transmission Successful! Form payload processed successfully.");
+            event.target.reset();
+        }
+
+        document.addEventListener('click', function(event) {
             if (!isAuthenticated) return;
-            const wrapper = e.target.closest('.editable-image');
+            const wrapper = event.target.closest('.editable-image');
             if (wrapper) {
-                const img = wrapper.querySelector('img');
-                if (img) triggerImageUpload(img);
+                const imgElement = wrapper.querySelector('img');
+                if (imgElement) triggerImageUpload(imgElement);
             }
         });
 
-        async function triggerImageUpload(imgElement) {
+        function triggerImageUpload(imgElement) {
             const input = document.createElement('input');
             input.type = 'file'; input.accept = 'image/*';
-            input.onchange = async () => {
-                const file = input.files[0];
+            input.onchange = async e => {
+                const file = e.target.files[0];
                 if (!file) return;
+                flashSaveStatus('Processing image…');
                 try {
-                    const { key, url } = await uploadImage(file);
+                    const processedBlob = await processImageFile(file);
+                    const key = makeImageKey();
+                    await idbPut(key, processedBlob);
                     imgElement.setAttribute('data-img-key', key);
-                    imgElement.src = url;
-                    await saveSiteContent();
-                } catch (err) { alert("Upload failed: " + err.message); }
+                    setImageURLAndDisplay(key, processedBlob, imgElement);
+                    persistToLocalStorage();
+                } catch (err) { alert('Image process failed.'); }
             };
             input.click();
         }
 
-        function changeBackground(sectionId, light) {
-            // Similar to triggerImageUpload but for background
-            // Implement same as your original but using uploadImage()
+        function changeBackground(sectionId, useLightOverlay) {
+            if (!isAuthenticated) return;
+            const targetSection = document.getElementById(sectionId);
+            const input = document.createElement('input');
+            input.type = 'file'; input.accept = 'image/*';
+            input.onchange = async e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                flashSaveStatus('Processing image…');
+                try {
+                    const processedBlob = await processImageFile(file);
+                    const key = makeImageKey();
+                    await idbPut(key, processedBlob);
+                    targetSection.setAttribute('data-bg-key', key);
+                    targetSection.setAttribute('data-bg-light', String(useLightOverlay));
+
+                    if (activeObjectURLs[key]) URL.revokeObjectURL(activeObjectURLs[key]);
+                    const url = URL.createObjectURL(processedBlob);
+                    activeObjectURLs[key] = url;
+
+                    const mask = useLightOverlay 
+                        ? 'linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.95))' 
+                        : 'linear-gradient(rgba(248,250,252,0.9), rgba(248,250,252,0.95))';
+                    targetSection.style.backgroundImage = `${mask}, url('${url}')`;
+                    persistToLocalStorage();
+                } catch (err) { alert('Background process failed.'); }
+            };
+            input.click();
         }
 
-        // Add new item functions (copy from your nirvana.html and call saveSiteContent() at the end)
+        function addNewInnovationItem() {
+            if (!isAuthenticated) return;
+            const title = prompt("Enter Innovation Structural Title:", "Biocompatible Synthetics"); if (!title) return;
+            const desc = prompt("Enter Framework Capabilities Description:", "Description specifications..."); if (!desc) return;
 
-        function manualSave() { saveSiteContent(); }
+            const grid = document.getElementById('innovations-grid');
+            const element = document.createElement('div');
+            element.className = "bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-start";
+            element.innerHTML = `
+                <div class="editable-image rounded-xl mb-6 w-full max-h-48 overflow-hidden bg-slate-100 admin-image-active">
+                    <img src="https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=600&fit=crop" class="w-full h-48 object-cover rounded-xl" alt="Img">
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-2 editable admin-editable-active" contenteditable="true">${title}</h3>
+                <p class="text-slate-600 editable admin-editable-active" contenteditable="true">${desc}</p>
+            `;
+            grid.appendChild(element); attachAutoSaveListeners(); persistToLocalStorage();
+        }
 
-        // INIT
+        function addNewResearchItem() {
+            if (!isAuthenticated) return;
+            const title = prompt("Enter Research Document Title:", "Stabilized Bio-Delivery Matrices"); if (!title) return;
+            const desc = prompt("Enter Analytical Summary Abstract Text:", "Abstract metrics..."); if (!desc) return;
+            const date = prompt("Specify Publication Schedule Stamp:", "July 2026"); if (!date) return;
+
+            const grid = document.getElementById('research-grid');
+            const wrapper = document.createElement('div');
+            wrapper.className = "p-6 bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl hover:bg-white transition-all shadow-sm flex flex-col md:flex-row gap-6 items-start md:items-center";
+            wrapper.innerHTML = `
+                <div class="editable-image rounded-xl w-full md:w-32 h-32 flex-shrink-0 bg-slate-100 admin-image-active">
+                    <img src="https://images.unsplash.com/photo-1453847668862-487637052f8a?q=80&w=300&fit=crop" class="w-full h-full object-cover rounded-xl" alt="Img">
+                </div>
+                <div class="flex-grow">
+                    <span class="text-xs font-semibold text-emerald-600 uppercase bg-emerald-50 px-2.5 py-1 rounded editable admin-editable-active" contenteditable="true">${date}</span>
+                    <h4 class="text-lg font-bold text-slate-900 mt-2 editable admin-editable-active" contenteditable="true">${title}</h4>
+                    <p class="text-slate-600 text-sm mt-1 editable admin-editable-active" contenteditable="true">${desc}</p>
+                </div>
+            `;
+            grid.appendChild(wrapper); attachAutoSaveListeners(); persistToLocalStorage();
+        }
+
+        function addNewTeamMember() {
+            if (!isAuthenticated) return;
+            const name = prompt("Enter Team Member Full Name:", "Dr. Alex Mercer"); if (!name) return;
+            const role = prompt("Enter Assignment / Position Role:", "Genomics Engineer"); if (!role) return;
+
+            const grid = document.getElementById('team-grid');
+            const card = document.createElement('div');
+            card.className = "team-card bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center transition-all hover:shadow-md";
+            card.innerHTML = `
+                <div class="editable-image rounded-2xl mb-5 admin-image-active">
+                    <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=400&h=400&fit=crop" class="w-48 h-48 rounded-xl object-cover shadow-inner" alt="${name}">
+                </div>
+                <h3 class="font-bold text-lg text-slate-900 editable admin-editable-active" contenteditable="true">${name}</h3>
+                <p class="text-sm font-medium text-sky-600 mt-1 editable admin-editable-active" contenteditable="true">${role}</p>
+            `;
+            grid.appendChild(card); attachAutoSaveListeners(); persistToLocalStorage();
+        }
+
         window.onload = async () => {
-            document.getElementById('content-loading').style.display = 'none';
-            if (githubToken) {
-                isAuthenticated = true;
-                updateAdminUI(true);
-            }
-            await loadSiteContent();
+            await loadFromLocalStorage();
             showSection('home');
         };
-
-        // Expose functions
-        window.showSection = showSection;
-        window.toggleAdminMode = toggleAdminMode;
-        window.handlePATLogin = handlePATLogin;
-        window.closeLoginModal = closeLoginModal;
-        window.signOutAdmin = signOutAdmin;
-        window.manualSave = manualSave;
-        window.changeBackground = changeBackground;
-        window.addNewInnovationItem = addNewInnovationItem;
-        window.addNewTeamMember = addNewTeamMember;
-        window.addNewResearchItem = addNewResearchItem;
     </script>
 </body>
 </html>
