@@ -71,10 +71,13 @@
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center gap-3 cursor-pointer">
                 <div id="logo-img-wrap" class="editable-image rounded-xl">
+                    <!-- EDIT HERE: Permanent Brand Logo URL -->
                     <img id="logo-img" src="https://picsum.photos/id/1015/120/120" class="h-12 w-12 object-cover rounded-xl shadow-sm" alt="Nirvana Biotech">
                 </div>
                 <div>
+                    <!-- EDIT HERE: Permanent Brand Title -->
                     <span id="logo-text" class="text-xl font-bold tracking-wider text-slate-900 block leading-tight editable">NIRVANA</span>
+                    <!-- EDIT HERE: Permanent Brand Subtitle -->
                     <p id="logo-sub" class="text-xs font-semibold tracking-widest text-sky-600 uppercase editable">Biotech</p>
                 </div>
             </div>
@@ -99,15 +102,19 @@
     <main class="flex-grow">
         
         <!-- HOME SECTION -->
+        <!-- EDIT HERE: Permanent Home Section Background Image URL (Inside the url('...') block) -->
         <section id="home" class="section py-32 section-bg min-h-[80vh] flex items-center relative" style="background-image: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.95)), url('https://images.unsplash.com/photo-1532187863486-abf9d39d6618?q=80&w=2070');">
             <button onclick="changeBackground('home', true)" class="admin-btn hidden absolute top-6 right-6 bg-slate-900/90 hover:bg-slate-900 text-white text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-md z-10">
                 <i class="fas fa-image"></i> Change Home Background
             </button>
             <div class="max-w-5xl mx-auto px-6 text-center">
                 <div class="inline-block bg-sky-50 px-4 py-1.5 rounded-full">
+                    <!-- EDIT HERE: Permanent Tagline -->
                     <span class="text-sky-600 text-sm font-bold tracking-widest uppercase editable" id="home-tagline">Pioneering Life Sciences</span>
                 </div>
+                <!-- EDIT HERE: Permanent Hero Headline -->
                 <h1 class="text-4xl md:text-6xl font-black text-slate-950 mt-6 tracking-tight editable" id="home-title">Next-Gen Therapeutic Innovations</h1>
+                <!-- EDIT HERE: Permanent Hero Description Subtext -->
                 <p class="text-base md:text-lg text-slate-600 mt-6 max-w-2xl mx-auto editable" id="home-subtitle">We merge deep cellular analysis with state-of-the-art biochemistry to accelerate breakthrough medical molecular structures.</p>
                 <div class="mt-10 flex justify-center gap-4">
                     <button onclick="showSection('innovations')" class="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-sm font-medium transition-all shadow-lg shadow-sky-600/20">Explore Innovations</button>
@@ -119,7 +126,9 @@
         <!-- ABOUT SECTION -->
         <section id="about" class="section py-20 bg-white">
             <div class="max-w-4xl mx-auto px-6">
+                <!-- EDIT HERE: Permanent About Heading -->
                 <h2 class="text-3xl font-bold text-slate-900 mb-6 editable" id="about-title">Our Mission</h2>
+                <!-- EDIT HERE: Permanent About Main Text Paragraph -->
                 <p class="text-base text-slate-600 leading-relaxed editable" id="about-desc">Nirvana Biotech was founded with a singular, clear path ahead: solving compound molecular delivery frameworks that standard methodologies deem unreachable. Our open-access research platform unites laboratories worldwide to reduce lead times for therapeutic synthesis.</p>
             </div>
         </section>
@@ -129,7 +138,9 @@
             <div class="max-w-6xl mx-auto px-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
                     <div>
+                        <!-- EDIT HERE: Permanent Innovations Main Heading -->
                         <h2 id="innovations-title" class="text-3xl font-bold text-slate-900 editable">Key Core Capabilities</h2>
+                        <!-- EDIT HERE: Permanent Innovations Description Subtext -->
                         <p id="innovations-sub" class="text-slate-600 mt-1 editable">Advanced frameworks accelerating modern biotechnology milestones.</p>
                     </div>
                     <button onclick="addNewInnovationItem()" class="admin-btn hidden bg-sky-600 hover:bg-sky-700 text-white px-5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all shadow-md">
@@ -138,11 +149,15 @@
                 </div>
                 
                 <div id="innovations-grid" class="grid md:grid-cols-2 gap-8">
+                    <!-- Default Innovation Unit -->
                     <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-start" data-default-id="innov-0">
                         <div class="editable-image rounded-xl mb-6 w-full max-h-48 overflow-hidden bg-slate-100">
+                            <!-- EDIT HERE: Permanent Default Innovation Card Feature Image URL -->
                             <img src="https://images.unsplash.com/photo-1579154204601-01588f35116f?q=80&w=600&fit=crop" class="w-full h-48 object-cover rounded-xl" alt="Innovation">
                         </div>
+                        <!-- EDIT HERE: Permanent Default Innovation Card Title -->
                         <h3 class="text-xl font-bold text-slate-900 mb-2 editable">Gene Modification Frameworks</h3>
+                        <!-- EDIT HERE: Permanent Default Innovation Card Description Text -->
                         <p class="text-slate-600 editable">High-fidelity sequence mapping engineered to eliminate unintended gene splicing variances.</p>
                     </div>
                 </div>
@@ -150,6 +165,7 @@
         </section>
 
         <!-- TEAM SECTION -->
+        <!-- EDIT HERE: Permanent Team Section Background Image URL (Inside the url('...') block) -->
         <section id="team" class="section py-20 section-bg relative" style="background-image: linear-gradient(rgba(248,250,252,0.9), rgba(248,250,252,0.95)), url('https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2080');">
             <div class="max-w-7xl mx-auto px-6 relative">
                 <button onclick="changeBackground('team', false)" class="admin-btn hidden absolute -top-4 right-6 bg-slate-900/90 hover:bg-slate-900 text-white text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition-all shadow-md z-10">
@@ -157,16 +173,22 @@
                 </button>
                 
                 <div class="mb-12">
+                    <!-- EDIT HERE: Permanent Team Main Heading -->
                     <h2 id="team-title" class="text-3xl font-bold text-slate-950 tracking-tight editable">Our Scientific Leadership</h2>
+                    <!-- EDIT HERE: Permanent Team Description Subtext -->
                     <p id="team-sub" class="text-slate-600 mt-2 editable">World-class minds leading computational biology and therapeutics development.</p>
                 </div>
                 
                 <div id="team-grid" class="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <!-- Default Team Member Card -->
                     <div class="team-card bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col items-center text-center transition-all hover:shadow-md" data-default-id="team-0">
                         <div class="editable-image rounded-2xl mb-5">
+                            <!-- EDIT HERE: Permanent Default Profile Avatar Image URL -->
                             <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=400&h=400&fit=crop" class="w-48 h-48 rounded-xl object-cover shadow-inner" alt="Dr. Priya Sharma">
                         </div>
+                        <!-- EDIT HERE: Permanent Default Name -->
                         <h3 class="font-bold text-lg text-slate-900 editable">Dr. Priya Sharma</h3>
+                        <!-- EDIT HERE: Permanent Default Job Assignment Title -->
                         <p class="text-sm font-medium text-sky-600 mt-1 editable">Chief Scientific Officer</p>
                     </div>
                 </div>
@@ -180,6 +202,7 @@
         </section>
 
         <!-- RESEARCH SECTION -->
+        <!-- EDIT HERE: Permanent Research Section Background Image URL (Inside the url('...') block) -->
         <section id="research" class="section py-20 section-bg relative" style="background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.95)), url('https://images.unsplash.com/photo-1518152006812-edab29b069ac?q=80&w=2070');">
             <div class="max-w-5xl mx-auto px-6 relative">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
@@ -187,7 +210,9 @@
                         <button onclick="changeBackground('research', true)" class="admin-btn hidden bg-slate-900/90 hover:bg-slate-900 text-white text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 mb-4 transition-all shadow-md">
                             <i class="fas fa-image"></i> Change Section Background
                         </button>
+                        <!-- EDIT HERE: Permanent Research Main Heading -->
                         <h2 id="research-title" class="text-3xl font-bold text-slate-900 editable">Published Whitepapers</h2>
+                        <!-- EDIT HERE: Permanent Research Description Subtext -->
                         <p id="research-sub" class="text-slate-600 mt-1 editable">Review our peer-verified tracking registries regarding targeted bio-delivery vectors.</p>
                     </div>
                     <button onclick="addNewResearchItem()" class="admin-btn hidden bg-sky-600 hover:bg-sky-700 text-white px-5 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all shadow-md">
@@ -196,13 +221,18 @@
                 </div>
                 
                 <div id="research-grid" class="space-y-6">
+                    <!-- Default Research Unit -->
                     <div class="p-6 bg-white/90 backdrop-blur-sm border border-slate-200 rounded-xl hover:bg-white transition-all shadow-sm flex flex-col md:flex-row gap-6 items-start md:items-center" data-default-id="research-0">
                         <div class="editable-image rounded-xl w-full md:w-32 h-32 flex-shrink-0 bg-slate-100">
+                            <!-- EDIT HERE: Permanent Default Research Cover Thumbnail Image URL -->
                             <img src="https://images.unsplash.com/photo-1453847668862-487637052f8a?q=80&w=300&fit=crop" class="w-full h-full object-cover rounded-xl" alt="Research Article Thumbnail">
                         </div>
                         <div class="flex-grow">
+                            <!-- EDIT HERE: Permanent Default Date -->
                             <span class="text-xs font-semibold text-emerald-600 uppercase bg-emerald-50 px-2.5 py-1 rounded editable">June 2026</span>
+                            <!-- EDIT HERE: Permanent Default Article Heading Title -->
                             <h4 class="text-lg font-bold text-slate-900 mt-2 editable">Evaluating Lipid Carrier Kinetics in Cellular Environments</h4>
+                            <!-- EDIT HERE: Permanent Default Abstract Summary Text -->
                             <p class="text-slate-600 text-sm mt-1 editable">Comprehensive analytical metrics measuring nanoparticle degradation velocity inside structural tissue layers.</p>
                         </div>
                     </div>
@@ -214,7 +244,9 @@
         <section id="contact" class="section py-20 bg-slate-950 text-white">
             <div class="max-w-3xl mx-auto px-6">
                 <div class="text-center mb-12">
+                    <!-- EDIT HERE: Permanent Contact Heading Title -->
                     <h2 class="text-3xl font-bold mb-4 editable" id="contact-title">Connect With Us</h2>
+                    <!-- EDIT HERE: Permanent Contact Description Paragraph -->
                     <p class="text-slate-400 max-w-xl mx-auto editable" id="contact-desc">Interested in strategic development partnerships or investing? Secure communications route directly to our primary review team.</p>
                 </div>
                 
