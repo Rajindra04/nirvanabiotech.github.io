@@ -114,8 +114,9 @@
             </div>
         </section>
 
-        <section id="about" class="section py-20 bg-white relative">
-            <div class="max-w-4xl mx-auto px-6">
+        <section id="about" class="section py-20 section-bg bg-white relative">
+            <button class="edit-only hidden absolute top-4 right-4 z-10 bg-white shadow rounded-lg px-3 py-1.5 text-xs font-medium text-sky-600 hover:bg-sky-50" onclick="promptImageEdit('about.backgroundUrl', 'images/about-bg.jpg')"><i class="fa-solid fa-image mr-1"></i> Change Background</button>
+            <div class="max-w-4xl mx-auto px-6 relative bg-white/90 backdrop-blur-sm rounded-2xl p-8">
                 <h2 class="text-3xl font-bold text-slate-900 mb-6" id="about-title"></h2>
                 <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-sm mb-3" onclick="promptTextEdit('about.title', 'about-title')"><i class="fa-solid fa-pen mr-1"></i>edit title</button>
                 <p class="text-base text-slate-600 leading-relaxed" id="about-desc"></p>
@@ -123,9 +124,10 @@
             </div>
         </section>
 
-        <section id="innovations" class="section py-20 bg-slate-50 relative">
-            <div class="max-w-6xl mx-auto px-6">
-                <div class="mb-12">
+        <section id="innovations" class="section py-20 section-bg bg-slate-50 relative">
+            <button class="edit-only hidden absolute top-4 right-4 z-10 bg-white shadow rounded-lg px-3 py-1.5 text-xs font-medium text-sky-600 hover:bg-sky-50" onclick="promptImageEdit('sectionBackgrounds.innovations', 'images/innovations-bg.jpg')"><i class="fa-solid fa-image mr-1"></i> Change Background</button>
+            <div class="max-w-6xl mx-auto px-6 relative">
+                <div class="mb-12 bg-white/90 backdrop-blur-sm rounded-2xl p-6 inline-block">
                     <h2 id="innovations-title" class="text-3xl font-bold text-slate-900"></h2>
                     <p id="innovations-sub" class="text-slate-600 mt-1"></p>
                     <button class="edit-only hidden mt-2 px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-medium hover:bg-sky-700" onclick="addArrayItem('innovations')"><i class="fa-solid fa-plus mr-1"></i>Add Innovation</button>
@@ -135,8 +137,9 @@
         </section>
 
         <section id="team" class="section py-20 section-bg relative">
+            <button class="edit-only hidden absolute top-4 right-4 z-10 bg-white shadow rounded-lg px-3 py-1.5 text-xs font-medium text-sky-600 hover:bg-sky-50" onclick="promptImageEdit('sectionBackgrounds.team', 'images/team-bg.jpg')"><i class="fa-solid fa-image mr-1"></i> Change Background</button>
             <div class="max-w-7xl mx-auto px-6">
-                <div class="mb-12">
+                <div class="mb-12 bg-white/90 backdrop-blur-sm rounded-2xl p-6 inline-block">
                     <h2 id="team-title" class="text-3xl font-bold text-slate-950 tracking-tight"></h2>
                     <p id="team-sub" class="text-slate-600 mt-2"></p>
                     <button class="edit-only hidden mt-2 px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-medium hover:bg-sky-700" onclick="addArrayItem('team')"><i class="fa-solid fa-plus mr-1"></i>Add Team Member</button>
@@ -146,8 +149,9 @@
         </section>
 
         <section id="research" class="section py-20 section-bg relative">
+            <button class="edit-only hidden absolute top-4 right-4 z-10 bg-white shadow rounded-lg px-3 py-1.5 text-xs font-medium text-sky-600 hover:bg-sky-50" onclick="promptImageEdit('sectionBackgrounds.research', 'images/research-bg.jpg')"><i class="fa-solid fa-image mr-1"></i> Change Background</button>
             <div class="max-w-5xl mx-auto px-6">
-                <div class="mb-12">
+                <div class="mb-12 bg-white/90 backdrop-blur-sm rounded-2xl p-6 inline-block">
                     <h2 id="research-title" class="text-3xl font-bold text-slate-900"></h2>
                     <p id="research-sub" class="text-slate-600 mt-1"></p>
                     <button class="edit-only hidden mt-2 px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-medium hover:bg-sky-700" onclick="addArrayItem('research')"><i class="fa-solid fa-plus mr-1"></i>Add Research Entry</button>
@@ -677,6 +681,17 @@
             }
         }
 
+        // --- Applies (or clears) a background image on a section by element id ---
+        function applySectionBackground(sectionId, url) {
+            const el = document.getElementById(sectionId);
+            if (!el) return;
+            if (url && url.trim()) {
+                el.style.setProperty('background-image', `url('${url}')`);
+            } else {
+                el.style.removeProperty('background-image');
+            }
+        }
+
         // --- Core Content Rendering Engine ---
         function renderFromData(data) {
             if (!data) return;
@@ -691,14 +706,23 @@
                 if (document.getElementById('home-tagline')) document.getElementById('home-tagline').textContent = data.home.tagline || "";
                 if (document.getElementById('home-title')) document.getElementById('home-title').textContent = data.home.title || "";
                 if (document.getElementById('home-subtitle')) document.getElementById('home-subtitle').textContent = data.home.subtitle || "";
-                if (data.home.backgroundUrl) {
-                    document.getElementById('home')?.style.setProperty('background-image', `url('${data.home.backgroundUrl}')`);
-                }
+                applySectionBackground('home', data.home.backgroundUrl);
             }
 
             if (data.about) {
                 if (document.getElementById('about-title')) document.getElementById('about-title').textContent = data.about.title || "";
                 if (document.getElementById('about-desc')) document.getElementById('about-desc').textContent = data.about.desc || "";
+                applySectionBackground('about', data.about.backgroundUrl);
+            }
+
+            if (data.innovations) {
+                applySectionBackground('innovations', data.sectionBackgrounds?.innovations);
+            }
+            if (data.team) {
+                applySectionBackground('team', data.sectionBackgrounds?.team);
+            }
+            if (data.research) {
+                applySectionBackground('research', data.sectionBackgrounds?.research);
             }
 
             // Render Innovations Grid
