@@ -81,6 +81,19 @@
         </div>
     </div>
 
+    <div id="detail-modal" class="hidden fixed inset-0 bg-black/60 z-[105] flex items-center justify-center px-4 py-8" onclick="if(event.target.id === 'detail-modal') closeDetailModal()">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto relative">
+            <button onclick="closeDetailModal()" class="absolute top-4 right-4 bg-white/90 hover:bg-slate-100 text-slate-600 rounded-full w-9 h-9 flex items-center justify-center shadow z-10"><i class="fa-solid fa-xmark"></i></button>
+            <img id="detail-modal-img" src="" class="w-full h-56 md:h-72 object-cover rounded-t-2xl hidden" alt="">
+            <div class="p-7 md:p-8">
+                <span id="detail-modal-date" class="hidden text-xs font-bold text-emerald-600 uppercase bg-emerald-50 px-2.5 py-1 rounded-md"></span>
+                <h3 id="detail-modal-title" class="text-2xl font-bold text-slate-900 mt-3"></h3>
+                <p id="detail-modal-text" class="text-slate-600 leading-relaxed mt-4 whitespace-pre-line"></p>
+                <a id="detail-modal-link" href="#" target="_blank" rel="noopener noreferrer" class="hidden mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-sm font-medium transition-colors"><i class="fa-solid fa-arrow-up-right-from-square"></i><span id="detail-modal-link-label">View Link</span></a>
+            </div>
+        </div>
+    </div>
+
     <main class="flex-grow">
         
         <section id="home" class="section py-32 section-bg min-h-[80vh] flex items-center relative">
@@ -434,6 +447,94 @@
             };
         }
 
+        // --- Detail (full text + link) editing for innovations/research cards ---
+        function promptDetailEdit(section, idx) {
+            if (!SITE_DATA) return;
+            const item = SITE_DATA[section]?.[idx];
+            if (!item) return;
+
+            const overlay = document.createElement('div');
+            overlay.className = "fixed inset-0 bg-black/50 z-[110] flex items-center justify-center px-4";
+            overlay.innerHTML = `
+                <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6">
+                    <h3 class="text-lg font-bold text-slate-900 mb-3">Edit Full Details</h3>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Full Text (shown in popup)</label>
+                    <textarea id="detail-edit-fulltext" rows="6" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-4 focus:outline-none focus:border-sky-500 resize-none"></textarea>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Link URL (optional, e.g. paper or PDF)</label>
+                    <input id="detail-edit-linkurl" type="text" placeholder="https://..." class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-4 focus:outline-none focus:border-sky-500">
+                    <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Link Button Label</label>
+                    <input id="detail-edit-linklabel" type="text" placeholder="e.g. Read Full Paper" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-2 focus:outline-none focus:border-sky-500">
+                    <div class="flex gap-3 mt-4">
+                        <button id="detail-edit-cancel" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50">Cancel</button>
+                        <button id="detail-edit-confirm" class="flex-1 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium">Apply</button>
+                    </div>
+                </div>`;
+            document.body.appendChild(overlay);
+
+            const fullTextInput = overlay.querySelector('#detail-edit-fulltext');
+            const linkUrlInput = overlay.querySelector('#detail-edit-linkurl');
+            const linkLabelInput = overlay.querySelector('#detail-edit-linklabel');
+            fullTextInput.value = item.fullText || '';
+            linkUrlInput.value = item.linkUrl || '';
+            linkLabelInput.value = item.linkLabel || '';
+            fullTextInput.focus();
+
+            const cleanup = () => overlay.remove();
+            overlay.querySelector('#detail-edit-cancel').onclick = cleanup;
+            overlay.querySelector('#detail-edit-confirm').onclick = () => {
+                item.fullText = fullTextInput.value;
+                item.linkUrl = linkUrlInput.value;
+                item.linkLabel = linkLabelInput.value;
+                markUnsaved();
+                cleanup();
+            };
+        }
+
+        // --- Detail modal (read-only popup shown to all visitors on card click) ---
+        function openDetailModal(section, idx) {
+            const item = SITE_DATA?.[section]?.[idx];
+            if (!item) return;
+
+            const modal = document.getElementById('detail-modal');
+            const imgEl = document.getElementById('detail-modal-img');
+            const dateEl = document.getElementById('detail-modal-date');
+            const titleEl = document.getElementById('detail-modal-title');
+            const textEl = document.getElementById('detail-modal-text');
+            const linkEl = document.getElementById('detail-modal-link');
+            const linkLabelEl = document.getElementById('detail-modal-link-label');
+
+            if (item.imageUrl) {
+                imgEl.src = item.imageUrl;
+                imgEl.classList.remove('hidden');
+            } else {
+                imgEl.classList.add('hidden');
+            }
+
+            if (item.date) {
+                dateEl.textContent = item.date;
+                dateEl.classList.remove('hidden');
+            } else {
+                dateEl.classList.add('hidden');
+            }
+
+            titleEl.textContent = item.title || '';
+            textEl.textContent = (item.fullText && item.fullText.trim()) ? item.fullText : (item.desc || '');
+
+            if (item.linkUrl && item.linkUrl.trim()) {
+                linkEl.href = item.linkUrl;
+                linkLabelEl.textContent = (item.linkLabel && item.linkLabel.trim()) ? item.linkLabel : 'View Link';
+                linkEl.classList.remove('hidden');
+            } else {
+                linkEl.classList.add('hidden');
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+        }
+
         // --- Image editing ---
         function promptImageEdit(path, suggestedRepoPath) {
             if (!SITE_DATA) return;
@@ -480,9 +581,9 @@
             if (!SITE_DATA[section]) SITE_DATA[section] = [];
             
             const templates = {
-                innovations: { title: "New Innovation", desc: "Description goes here.", imageUrl: "" },
+                innovations: { title: "New Innovation", desc: "Description goes here.", imageUrl: "", fullText: "", linkUrl: "", linkLabel: "" },
                 team: { name: "New Team Member", role: "Role / Title", imageUrl: "" },
-                research: { date: "2026", title: "New Research Entry", desc: "Description goes here.", imageUrl: "" },
+                research: { date: "2026", title: "New Research Entry", desc: "Description goes here.", imageUrl: "", fullText: "", linkUrl: "", linkLabel: "" },
             };
             
             SITE_DATA[section].push({ ...templates[section] });
@@ -606,15 +707,17 @@
                 innGrid.innerHTML = '';
                 (data.innovations || []).forEach((item, idx) => {
                     innGrid.innerHTML += `
-                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 overflow-hidden relative">
+                        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 overflow-hidden relative cursor-pointer hover:shadow-md transition-shadow" onclick="openDetailModal('innovations', ${idx})">
                             ${item.imageUrl ? `<img src="${item.imageUrl}" class="w-full h-48 object-cover rounded-xl mb-4" />` : ''}
                             <h4 class="text-xl font-bold text-slate-900">${item.title}</h4>
                             <p class="text-sm text-slate-600 mt-2">${item.desc}</p>
-                            <div class="flex gap-3 mt-4">
-                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('innovations.${idx}.title', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>title</button>
-                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('innovations.${idx}.desc', null, true, this)"><i class="fa-solid fa-pen mr-1"></i>desc</button>
-                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptImageEdit('innovations.${idx}.imageUrl')"><i class="fa-solid fa-image mr-1"></i>image</button>
-                                <button class="edit-only hidden text-rose-500 hover:text-rose-600 text-xs ml-auto" onclick="removeArrayItem('innovations', ${idx})"><i class="fa-solid fa-trash"></i></button>
+                            <span class="text-xs font-semibold text-sky-600 mt-3 inline-block">Read more <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                            <div class="flex gap-3 mt-4 flex-wrap">
+                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="event.stopPropagation(); promptTextEdit('innovations.${idx}.title', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>title</button>
+                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="event.stopPropagation(); promptTextEdit('innovations.${idx}.desc', null, true, this)"><i class="fa-solid fa-pen mr-1"></i>desc</button>
+                                <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="event.stopPropagation(); promptImageEdit('innovations.${idx}.imageUrl')"><i class="fa-solid fa-image mr-1"></i>image</button>
+                                <button class="edit-only hidden text-violet-500 hover:text-violet-600 text-xs" onclick="event.stopPropagation(); promptDetailEdit('innovations', ${idx})"><i class="fa-solid fa-align-left mr-1"></i>details</button>
+                                <button class="edit-only hidden text-rose-500 hover:text-rose-600 text-xs ml-auto" onclick="event.stopPropagation(); removeArrayItem('innovations', ${idx})"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div>`;
                 });
@@ -646,17 +749,19 @@
                 resGrid.innerHTML = '';
                 (data.research || []).forEach((paper, idx) => {
                     resGrid.innerHTML += `
-                        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col md:flex-row gap-6 relative">
+                        <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col md:flex-row gap-6 relative cursor-pointer hover:shadow-md transition-shadow" onclick="openDetailModal('research', ${idx})">
                             ${paper.imageUrl ? `<img src="${paper.imageUrl}" class="w-full md:w-48 h-32 object-cover rounded-xl" />` : ''}
                             <div class="flex-1">
                                 <span class="text-xs font-bold text-emerald-600 uppercase bg-emerald-50 px-2.5 py-1 rounded-md">${paper.date}</span>
                                 <h4 class="text-lg font-bold text-slate-900 mt-2">${paper.title}</h4>
                                 <p class="text-slate-600 text-sm mt-1">${paper.desc}</p>
-                                <div class="flex gap-3 mt-4">
-                                    <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('research.${idx}.date', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>date</button>
-                                    <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('research.${idx}.title', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>title</button>
-                                    <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="promptTextEdit('research.${idx}.desc', null, true, this)"><i class="fa-solid fa-pen mr-1"></i>desc</button>
-                                    <button class="edit-only hidden text-rose-500 hover:text-rose-600 text-xs ml-auto" onclick="removeArrayItem('research', ${idx})"><i class="fa-solid fa-trash"></i></button>
+                                <span class="text-xs font-semibold text-sky-600 mt-2 inline-block">Read more <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                                <div class="flex gap-3 mt-4 flex-wrap">
+                                    <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="event.stopPropagation(); promptTextEdit('research.${idx}.date', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>date</button>
+                                    <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="event.stopPropagation(); promptTextEdit('research.${idx}.title', null, false, this)"><i class="fa-solid fa-pen mr-1"></i>title</button>
+                                    <button class="edit-only hidden text-sky-500 hover:text-sky-600 text-xs" onclick="event.stopPropagation(); promptTextEdit('research.${idx}.desc', null, true, this)"><i class="fa-solid fa-pen mr-1"></i>desc</button>
+                                    <button class="edit-only hidden text-violet-500 hover:text-violet-600 text-xs" onclick="event.stopPropagation(); promptDetailEdit('research', ${idx})"><i class="fa-solid fa-align-left mr-1"></i>details</button>
+                                    <button class="edit-only hidden text-rose-500 hover:text-rose-600 text-xs ml-auto" onclick="event.stopPropagation(); removeArrayItem('research', ${idx})"><i class="fa-solid fa-trash"></i></button>
                                 </div>
                             </div>
                         </div>`;
@@ -668,6 +773,10 @@
                 if (document.getElementById('contact-desc')) document.getElementById('contact-desc').textContent = data.contact.desc || "";
             }
         }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDetailModal();
+        });
 
         window.onload = () => {
             initWebsite().then(() => {
