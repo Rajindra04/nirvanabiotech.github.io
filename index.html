@@ -391,6 +391,23 @@
         }
 
         // --- Generic helpers to read/write a dotted path like "home.title" or "team.2.name" ---
+        // --- Global guard: only one edit modal (text or detail) may be open at a time ---
+        // This prevents the exact bug where opening a second field's editor before
+        // closing the first one causes the wrong value to be written to the wrong field.
+        let EDIT_MODAL_OPEN = false;
+
+        function tryOpenEditModal() {
+            if (EDIT_MODAL_OPEN) {
+                return false;
+            }
+            EDIT_MODAL_OPEN = true;
+            return true;
+        }
+
+        function releaseEditModalLock() {
+            EDIT_MODAL_OPEN = false;
+        }
+
         function getByPath(obj, path) {
             if (!obj) return null;
             return path.split('.').reduce((acc, key) => (acc == null ? acc : acc[key]), obj);
@@ -410,6 +427,7 @@
         // --- Text editing ---
         function promptTextEdit(path, elementId, multiline, triggerEl) {
             if (!SITE_DATA) return;
+            if (!tryOpenEditModal()) return;
             const currentValue = getByPath(SITE_DATA, path) ?? '';
             openTextEditorModal(currentValue, multiline, (newValue) => {
                 setByPath(SITE_DATA, path, newValue);
@@ -424,28 +442,34 @@
         }
 
         function openTextEditorModal(initialValue, multiline, onConfirm) {
+            // Defensive: remove any stale leftover text-edit modal still in the DOM
+            // (guards against any prior modal not being cleaned up before a new one opens)
+            document.querySelectorAll('.text-edit-overlay').forEach(el => el.remove());
+
+            const uid = 'text-edit-' + Math.random().toString(36).slice(2);
             const overlay = document.createElement('div');
-            overlay.className = "fixed inset-0 bg-black/50 z-[110] flex items-center justify-center px-4";
+            overlay.className = "text-edit-overlay fixed inset-0 bg-black/50 z-[110] flex items-center justify-center px-4";
             overlay.innerHTML = `
                 <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
                     <h3 class="text-lg font-bold text-slate-900 mb-3">Edit Text</h3>
                     ${multiline
-                        ? `<textarea id="text-edit-input" rows="5" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sky-500 resize-none"></textarea>`
-                        : `<input id="text-edit-input" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sky-500">`
+                        ? `<textarea id="${uid}" rows="5" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sky-500 resize-none"></textarea>`
+                        : `<input id="${uid}" type="text" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sky-500">`
                     }
                     <div class="flex gap-3 mt-4">
-                        <button id="text-edit-cancel" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50">Cancel</button>
-                        <button id="text-edit-confirm" class="flex-1 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium">Apply</button>
+                        <button class="text-edit-cancel flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50">Cancel</button>
+                        <button class="text-edit-confirm flex-1 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium">Apply</button>
                     </div>
                 </div>`;
             document.body.appendChild(overlay);
-            const input = overlay.querySelector('#text-edit-input');
+            const input = overlay.querySelector(`#${uid}`);
             input.value = initialValue;
             input.focus();
 
-            const cleanup = () => overlay.remove();
-            overlay.querySelector('#text-edit-cancel').onclick = cleanup;
-            overlay.querySelector('#text-edit-confirm').onclick = () => {
+            const cleanup = () => { overlay.remove(); releaseEditModalLock(); };
+            overlay.onclick = (e) => { if (e.target === overlay) cleanup(); };
+            overlay.querySelector('.text-edit-cancel').onclick = cleanup;
+            overlay.querySelector('.text-edit-confirm').onclick = () => {
                 onConfirm(input.value);
                 cleanup();
             };
@@ -456,36 +480,39 @@
             if (!SITE_DATA) return;
             const item = SITE_DATA[section]?.[idx];
             if (!item) return;
+            if (!tryOpenEditModal()) return;
 
+            const uid = 'detail-edit-' + Math.random().toString(36).slice(2);
             const overlay = document.createElement('div');
             overlay.className = "fixed inset-0 bg-black/50 z-[110] flex items-center justify-center px-4";
             overlay.innerHTML = `
                 <div class="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6">
                     <h3 class="text-lg font-bold text-slate-900 mb-3">Edit Full Details</h3>
                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Full Text (shown in popup)</label>
-                    <textarea id="detail-edit-fulltext" rows="6" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-4 focus:outline-none focus:border-sky-500 resize-none"></textarea>
+                    <textarea id="${uid}-fulltext" rows="6" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-4 focus:outline-none focus:border-sky-500 resize-none"></textarea>
                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Link URL (optional, e.g. paper or PDF)</label>
-                    <input id="detail-edit-linkurl" type="text" placeholder="https://..." class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-4 focus:outline-none focus:border-sky-500">
+                    <input id="${uid}-linkurl" type="text" placeholder="https://..." class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-4 focus:outline-none focus:border-sky-500">
                     <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Link Button Label</label>
-                    <input id="detail-edit-linklabel" type="text" placeholder="e.g. Read Full Paper" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-2 focus:outline-none focus:border-sky-500">
+                    <input id="${uid}-linklabel" type="text" placeholder="e.g. Read Full Paper" class="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-2 focus:outline-none focus:border-sky-500">
                     <div class="flex gap-3 mt-4">
-                        <button id="detail-edit-cancel" class="flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50">Cancel</button>
-                        <button id="detail-edit-confirm" class="flex-1 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium">Apply</button>
+                        <button class="detail-edit-cancel flex-1 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50">Cancel</button>
+                        <button class="detail-edit-confirm flex-1 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-sm font-medium">Apply</button>
                     </div>
                 </div>`;
             document.body.appendChild(overlay);
 
-            const fullTextInput = overlay.querySelector('#detail-edit-fulltext');
-            const linkUrlInput = overlay.querySelector('#detail-edit-linkurl');
-            const linkLabelInput = overlay.querySelector('#detail-edit-linklabel');
+            const fullTextInput = overlay.querySelector(`#${uid}-fulltext`);
+            const linkUrlInput = overlay.querySelector(`#${uid}-linkurl`);
+            const linkLabelInput = overlay.querySelector(`#${uid}-linklabel`);
             fullTextInput.value = item.fullText || '';
             linkUrlInput.value = item.linkUrl || '';
             linkLabelInput.value = item.linkLabel || '';
             fullTextInput.focus();
 
-            const cleanup = () => overlay.remove();
-            overlay.querySelector('#detail-edit-cancel').onclick = cleanup;
-            overlay.querySelector('#detail-edit-confirm').onclick = () => {
+            const cleanup = () => { overlay.remove(); releaseEditModalLock(); };
+            overlay.onclick = (e) => { if (e.target === overlay) cleanup(); };
+            overlay.querySelector('.detail-edit-cancel').onclick = cleanup;
+            overlay.querySelector('.detail-edit-confirm').onclick = () => {
                 item.fullText = fullTextInput.value;
                 item.linkUrl = linkUrlInput.value;
                 item.linkLabel = linkLabelInput.value;
