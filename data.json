@@ -49,11 +49,6 @@
       "name": "Aashis Shakhakarmi",
       "role": "Adminstrative Chief",
       "imageUrl": ""
-    },
-    {
-      "name": "New Team Member",
-      "role": "Role / Title",
-      "imageUrl": ""
     }
   ],
   "research": [
@@ -66,6 +61,6 @@
   ],
   "contact": {
     "title": "Connect With Our Labs",
-    "desc": "Inquiries directly to our administrative hub."
+    "desc": "Inquiries directly to our administrative hub. or email to info@nirvanabiotech.org"
   }
 }
