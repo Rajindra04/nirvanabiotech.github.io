@@ -6,7 +6,7 @@ compatibility_date = "2024-01-01"
 [vars]
 GITHUB_OWNER = "Rajindra04"
 GITHUB_REPO = "nirvanabiotech.github.io"
-GITHUB_BRANCH = "main"
+GITHUB_BRANCH = "3"
 ALLOWED_ORIGIN = "https://nirvanabiotech.org"
 
 # Secrets (DO NOT put real values here — set them with:
