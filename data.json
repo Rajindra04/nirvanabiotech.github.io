@@ -150,11 +150,6 @@
       "name": "Aashis Shakhakarmi",
       "role": "Administrative Chief",
       "imageUrl": ""
-    },
-    {
-      "name": "Lata",
-      "role": "Research Associate",
-      "imageUrl": ""
     }
   ],
   "research": [
@@ -174,14 +169,6 @@
       "type": "Institution",
       "affiliation": "Academic Partner",
       "desc": "Collaborative access to clinical samples and laboratory facilities for translational research.",
-      "imageUrl": "",
-      "linkUrl": ""
-    },
-    {
-      "name": "Dr. Anjana Rai",
-      "type": "Individual",
-      "affiliation": "Scientific Advisor, Immunology",
-      "desc": "Advises on immunogenicity study design and murine model validation.",
       "imageUrl": "",
       "linkUrl": ""
     }
