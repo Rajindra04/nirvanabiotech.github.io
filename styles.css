@@ -328,9 +328,16 @@ textarea{ resize:vertical; }
 /* ============================================================
    ADMIN / EDIT MODE
    ============================================================ */
-.edit-only{ display:none; }
-body.edit-mode .edit-only{ display:inline-flex; }
-body.edit-mode .edit-only.block{ display:block; }
+/* !important here is deliberate: .edit-only elements often carry a second
+   layout class (.editable-controls, etc.) whose own display rule has equal
+   specificity and could otherwise win purely by being declared later in this
+   file. That ordering dependency previously caused edit controls to be
+   visible to logged-out visitors. !important removes the ordering hazard;
+   the body.edit-mode override below also uses !important so it still wins
+   once logged in. */
+.edit-only{ display:none !important; }
+body.edit-mode .edit-only{ display:inline-flex !important; }
+body.edit-mode .edit-only.block{ display:block !important; }
 
 .admin-trigger{
   font-family: var(--mono); font-size:0.62rem; letter-spacing:0.14em;

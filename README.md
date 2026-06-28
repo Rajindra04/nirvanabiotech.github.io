@@ -4,7 +4,7 @@ A from-scratch multipage rebuild of the original single-page `nirvanabiotech.git
 restructured so each nav item is its own real page (like fiftyfive5.com/work), while keeping
 all the original content and functionality.
 
-## ⚠️ Before you redeploy: two real bugs, both fixed in this package
+## ⚠️ Before you redeploy: three real bugs, all fixed in this package
 
 **1. Login did nothing — CORS mismatch.** Your site is served at the custom domain
 `https://nirvanabiotech.org`, but the Worker's `wrangler.toml` had
@@ -12,16 +12,28 @@ all the original content and functionality.
 when the origin doesn't match — looks exactly like "clicking Login does nothing."
 **Fix**: `wrangler.toml` now has `ALLOWED_ORIGIN = "https://nirvanabiotech.org"`.
 
-**2. Edit mode was active without logging in — unverified stored token.** The site only
-ever checked "is there a token sitting in this browser's storage," never "is this token
-actually still valid." A token from any earlier login attempt (even a broken one) would
-silently keep granting edit access on every later page load, forever, with no real
-authentication happening. **Fix**: the Worker now has a `/verify` route, and the site
-calls it on every page load — if the server doesn't actively confirm the token, edit mode
-never turns on. A stale or fake token can no longer grant access.
+**2. Edit mode was active without logging in (server-side cause) — unverified stored
+token.** The site only ever checked "is there a token sitting in this browser's storage,"
+never "is this token actually still valid." A token from any earlier login attempt (even a
+broken one) would silently keep granting edit access on every later page load, forever,
+with no real authentication happening. **Fix**: the Worker now has a `/verify` route, and
+the site calls it on every page load — if the server doesn't actively confirm the token,
+edit mode never turns on.
 
-**Because of fix #2, this isn't just a config change — you must redeploy the actual
-`worker.js` file, not just `wrangler.toml`.** See `WRANGLER_GUIDE.md` for exact commands.
+**3. Edit pencils were visible to everyone, even with bug #2 fixed — a pure CSS bug.**
+This is the one in your latest screenshot, and it's separate from #2. Every edit pencil
+sits inside a wrapper `<div>` with two classes: `editable-controls` (lays the buttons out
+in a row) and `edit-only` (supposed to hide them when logged out). Both classes set a
+`display` value with identical specificity, and `editable-controls` happened to be written
+later in the stylesheet — in CSS, when two rules have equal specificity, **whichever is
+declared later in the file wins**, regardless of what makes logical sense. So the "lay out
+in a row" rule was silently beating the "hide this" rule on every page, independent of
+login state entirely. **Fix**: the hide/show rules now use `!important`, which makes them
+win deterministically by design rather than by accidental file order. Pure CSS fix, already
+in `styles.css` — no Worker changes needed for this one, just redeploy the website files.
+
+**Because of fix #2, you must redeploy the actual `worker.js` file, not just
+`wrangler.toml`.** See `WRANGLER_GUIDE.md` for exact commands.
 
 Your `ADMIN_API_BASE` in `site.js` (`https://nirvana-biotech-admin.rajindra04.workers.dev`)
 was already correct and needs no change.
