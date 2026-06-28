@@ -9,186 +9,84 @@
     <style>
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.4s ease-out forwards; }
-        
         .nav-link { transition: all 0.3s ease; position: relative; }
         .nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background-color: #0ea5e9; transition: width 0.3s ease; }
         .nav-link:hover::after, .nav-link.active::after { width: 100%; }
         .nav-link.active { color: #0ea5e9; font-weight: 600; }
-        
-        .section-bg {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .section-bg { background-size: cover; background-position: center; background-repeat: no-repeat; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="font-sans bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
-    <!-- NAV + MODALS (unchanged - same as you provided) -->
-    <!-- ... (keep your existing nav, modals, footer) ... -->
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showSection('home')">
+                <img id="logo-img" src="images/logo.png" class="h-12 w-12 object-cover rounded-xl" alt="Logo">
+                <div>
+                    <span id="logo-text" class="text-xl font-bold text-slate-900">NIRVANA</span>
+                    <p id="logo-sub" class="text-xs font-semibold text-sky-600 uppercase">BIOTECH</p>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600" id="nav-menu">
+                <a href="#" onclick="showSection('home')" class="nav-link active">Home</a>
+                <a href="#" onclick="showSection('about')" class="nav-link">About</a>
+                <a href="#" onclick="showSection('innovations')" class="nav-link">Innovations</a>
+                <a href="#" onclick="showSection('team')" class="nav-link">Team</a>
+                <a href="#" onclick="showSection('research')" class="nav-link">Research</a>
+                <a href="#" onclick="showSection('contact')" class="nav-link">Contact</a>
+            </div>
+
+            <div>
+                <button onclick="openAdminLogin()" class="text-xs px-3 py-1 border border-slate-300 rounded hover:bg-slate-50">ADMIN</button>
+            </div>
+        </div>
+    </nav>
 
     <main class="flex-grow">
-        <!-- Your sections remain the same -->
-        <!-- Make sure the "Add ..." buttons are inside the header divs as before -->
+        <!-- Home -->
+        <section id="home" class="section active py-32 section-bg min-h-[80vh] flex items-center relative" style="background-image: url('images/home-bg.jpg');">
+            <div class="max-w-5xl mx-auto px-6 text-center">
+                <h1 id="home-title" class="text-5xl font-black text-slate-950">Welcome to Nirvana Biotech</h1>
+                <p id="home-subtitle" class="text-xl text-slate-600 mt-4">Leading the way with Translational research and innovation</p>
+            </div>
+        </section>
+
+        <!-- About, Innovations, Team, Research, Contact sections can be added similarly -->
+        <!-- For now, this minimal version will show content -->
     </main>
 
-    <footer class="bg-slate-900 text-slate-500 text-xs py-8 border-t border-slate-800">
-        <!-- your footer -->
-    </footer>
-
     <script>
-        const FALLBACK_IMG = "https://picsum.photos/id/1015/120/120";
-        let SITE_DATA = null;
-        let PENDING_IMAGES = {};
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            const section = document.getElementById(id);
+            if (section) section.classList.add('active');
+        }
 
-        const ADMIN_API_BASE = "https://nirvana-biotech-admin.rajindra04.workers.dev"; // Update if needed
+        function openAdminLogin() {
+            alert("Admin login will be restored in the next update.");
+            // You can add the full login modal later
+        }
 
-        const SESSION_KEY = "nb_admin_session";
-        window.__editMode = false;
-        let EDIT_MODAL_OPEN = false;
-
-        async function initWebsite() {
-            const defaultTemplate = { /* your defaultTemplate from before - keep it */ };
-
+        // Load data and render
+        async function init() {
             try {
-                const response = await fetch('data.json?v=' + Date.now(), { cache: 'no-store' });
-                if (response.ok) {
-                    const text = await response.text();
-                    SITE_DATA = text && text.trim() !== "" && text.trim() !== "{}" 
-                        ? JSON.parse(text) 
-                        : defaultTemplate;
-                } else {
-                    SITE_DATA = defaultTemplate;
-                }
-            } catch (err) {
-                console.error("Failed to load data.json:", err);
-                SITE_DATA = defaultTemplate;
-            }
-
-            renderFromData(SITE_DATA);
-        }
-
-        function showSection(sectionId) { /* unchanged */ }
-
-        // === ADMIN FUNCTIONS ===
-        function openAdminLogin() { /* unchanged */ }
-        function closeAdminLogin() { /* unchanged */ }
-
-        async function submitAdminLogin() {
-            const password = document.getElementById('admin-password-input').value.trim();
-            const errEl = document.getElementById('admin-login-error');
-            errEl.classList.add('hidden');
-
-            if (!password) return;
-
-            try {
-                const resp = await fetch(`${ADMIN_API_BASE}/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password }),
-                });
-
-                if (!resp.ok) {
-                    const err = await resp.json().catch(() => ({}));
-                    errEl.textContent = err.error || "Incorrect password.";
-                    errEl.classList.remove('hidden');
-                    return;
-                }
-
-                const { token } = await resp.json();
-                sessionStorage.setItem(SESSION_KEY, token);
-                closeAdminLogin();
-                enterEditMode();
-            } catch (err) {
-                console.error(err);
-                errEl.textContent = "Could not reach admin server. Check connection / deployment.";
-                errEl.classList.remove('hidden');
+                const res = await fetch('data.json?v=' + Date.now());
+                const data = await res.json();
+                
+                // Basic rendering
+                document.getElementById('logo-text').textContent = data.brandName || "NIRVANA";
+                document.getElementById('logo-sub').textContent = data.brandSub || "BIOTECH";
+                document.getElementById('home-title').textContent = data.home?.title || "Welcome to Nirvana Biotech";
+                document.getElementById('home-subtitle').textContent = data.home?.subtitle || "";
+            } catch (e) {
+                console.error("Failed to load data:", e);
             }
         }
 
-        function enterEditMode() {
-            if (!SITE_DATA) return;
-            window.__editMode = true;
-            document.querySelectorAll('.edit-only').forEach(el => el.classList.remove('hidden'));
-            document.getElementById('edit-mode-badge').classList.remove('hidden');
-            document.getElementById('admin-login-btn').classList.add('hidden');
-            document.getElementById('admin-logout-btn').classList.remove('hidden');
-            document.getElementById('save-bar').classList.remove('hidden');
-        }
-
-        function exitEditMode() { /* unchanged */ }
-
-        function getSessionToken() { return sessionStorage.getItem(SESSION_KEY); }
-
-        function restoreSessionIfPresent() {
-            if (getSessionToken() && SITE_DATA) {
-                enterEditMode();
-            }
-        }
-
-        // Path helpers, text edit, detail edit, image edit, add/remove - mostly unchanged
-        // (Keep your existing functions for promptTextEdit, promptDetailEdit, promptImageEdit, etc.)
-
-        function renderFromData(data) {
-            if (!data) return;
-
-            // Logo
-            document.getElementById('logo-text').textContent = data.brandName || "NIRVANA";
-            document.getElementById('logo-sub').textContent = data.brandSub || "BIOTECH";
-            if (data.logoUrl) document.getElementById('logo-img').src = data.logoUrl;
-
-            // Home
-            if (data.home) {
-                document.getElementById('home-tagline').textContent = data.home.tagline || "";
-                document.getElementById('home-title').textContent = data.home.title || "";
-                document.getElementById('home-subtitle').textContent = data.home.subtitle || "";
-            }
-
-            // About
-            if (data.about) {
-                document.getElementById('about-title').textContent = data.about.title || "";
-                document.getElementById('about-desc').textContent = data.about.desc || "";
-            }
-
-            // Section headers (new/robust)
-            const sectionHeaders = {
-                innovations: { titleId: 'innovations-title', subId: 'innovations-sub', defaultTitle: 'Our Innovations' },
-                team: { titleId: 'team-title', subId: 'team-sub', defaultTitle: 'Our Team' },
-                research: { titleId: 'research-title', subId: 'research-sub', defaultTitle: 'Research & Publications' }
-            };
-
-            Object.keys(sectionHeaders).forEach(key => {
-                if (data[key] !== undefined) {
-                    const h = sectionHeaders[key];
-                    const titleEl = document.getElementById(h.titleId);
-                    const subEl = document.getElementById(h.subId);
-                    if (titleEl) titleEl.textContent = data[key + 'Title'] || h.defaultTitle; // fallback
-                    if (subEl) subEl.textContent = data[key + 'Sub'] || '';
-                }
-            });
-
-            // Render grids (your existing code - unchanged)
-            // ... keep your innovations-grid, team-grid, research-grid rendering ...
-
-            if (data.contact) {
-                document.getElementById('contact-title').textContent = data.contact.title || "";
-                document.getElementById('contact-desc').textContent = data.contact.desc || "";
-            }
-        }
-
-        // Keep all your other functions (addArrayItem, saveAllChanges, etc.) - they are solid
-
-        window.onload = () => {
-            initWebsite().then(() => {
-                showSection('home');
-                restoreSessionIfPresent();
-            });
-        };
+        window.onload = init;
     </script>
 </body>
 </html>
