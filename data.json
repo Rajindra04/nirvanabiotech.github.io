@@ -1,0 +1,81 @@
+{
+  "brandName": "NIRVANA",
+  "brandSub": "BIOTECH",
+  "logoUrl": "images/logo.png",
+
+  "home": {
+    "tagline": "Pioneering Sciences",
+    "title": "Welcome to Nirvana Biotech",
+    "subtitle": "Leading the way with translational research and innovation \u2014 bridging veterinary discovery and human therapeutics.",
+    "backgroundUrl": "images/home-bg.jpg"
+  },
+
+  "about": {
+    "eyebrow": "Our mission",
+    "title": "About Our Scientific Mission",
+    "intro": "Nirvana is a pioneering biotech firm dedicated to bridging the gap between human medicine and veterinary science.",
+    "desc": "Through advanced molecular research, the company translates breakthrough discoveries from animal health applications into targeted, life-changing clinical therapies for humans.",
+    "focusAreas": [
+      { "title": "Translational Molecular Research", "desc": "Utilizing state-of-the-art genomics and molecular biology to understand complex diseases present across both human and animal populations." },
+      { "title": "Veterinary Clinical Applications", "desc": "Developing advanced therapeutics, diagnostics, and preventative care for companion and livestock health based on robust, cross-species molecular data." },
+      { "title": "Human Therapeutics", "desc": "Engineering next-generation treatments for chronic diseases, leveraging naturally sourced compounds and insights gained from comparative biology." }
+    ],
+    "advantages": [
+      { "title": "Cross-Species Efficacy", "desc": "By analyzing biological pathways conserved across species, we rapidly identify, validate, and de-risk treatments before taking them into human trials." },
+      { "title": "Molecular Innovations", "desc": "Moving beyond traditional pharmaceutical approaches to unlock the therapeutic potential of nature-derived molecules and advanced genetic applications." },
+      { "title": "Holistic Health Pipeline", "desc": "Research spans pain management, addiction mitigation, metabolic health, and immunology \u2014 benefiting both veterinary and human patients." }
+    ]
+  },
+
+  "innovations": [
+    {
+      "title": "Aptamer Engineering Modality",
+      "desc": "High-affinity diagnostic platforms built for robust target delivery vectors.",
+      "imageUrl": "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=2080",
+      "fullText": "",
+      "linkUrl": "",
+      "linkLabel": ""
+    },
+    {
+      "title": "Dengue Neutralizing Antibody Detection Kit",
+      "desc": "Using a domestically developed VLP platform and recombinant protein technology, a neutralizing antibody lateral flow test kit is being developed.",
+      "imageUrl": "images/innovations-1.png",
+      "fullText": "",
+      "linkUrl": "",
+      "linkLabel": ""
+    },
+    {
+      "title": "Dengue VLP Development and Validation",
+      "desc": "Construction: Designing the engineered plasmid with optimized signal sequences for HeLa cell expression.",
+      "imageUrl": "images/innovations-2.png",
+      "fullText": "Construction: Designing the engineered plasmid with optimized signal sequences for HeLa cell expression.\n\nExpression & Purification: Highlighting the transient expression and the successful isolation of spherical, ~39nm VLPs confirmed by TEM.\n\nImmunization: Demonstrating the strong Dengue-1 specific IgG antibody response elicited in a murine model.",
+      "linkUrl": "",
+      "linkLabel": ""
+    }
+  ],
+
+  "team": [
+    { "name": "Dr. Rajindra Napit", "role": "President", "imageUrl": "images/team-0.jpg" },
+    { "name": "Prof. Dr. Krishna Das Manandhar", "role": "CEO", "imageUrl": "images/team-1.webp" },
+    { "name": "Dr. Ram Pd. Aganja", "role": "Research Director", "imageUrl": "" },
+    { "name": "Aashis Shakhakarmi", "role": "Administrative Chief", "imageUrl": "" }
+  ],
+
+  "research": [
+    {
+      "date": "2026",
+      "title": "Dengue VLP Development and Production",
+      "desc": "Developing a safer, more effective Dengue vaccine candidate using virus-like particles (VLPs) that mimic the virus without carrying genetic material.",
+      "imageUrl": "",
+      "fullText": "The Goal: To develop a safer, more effective Dengue vaccine candidate using virus-like particles (VLPs)\u2014structures that look like the real virus but cannot cause infection because they lack genetic material.\n\nThe Method: Researchers engineered a plasmid (genetic blueprint) containing Dengue-1 proteins, modified it with genetic signals from the Japanese Encephalitis virus to boost secretion, and grew it in human cells (HeLa cells).\n\nThe Results: The process successfully produced spherical VLPs that structurally mirror the native Dengue virus (about 39 nanometers wide). When tested in mice, these VLPs triggered a strong immune response, generating Dengue-1 specific antibodies.\n\nThe Takeaway: These HeLa-grown VLPs show strong potential for both new Dengue vaccines and diagnostic testing. The next step will be testing how effectively these antibodies actually protect against the live virus.",
+      "linkUrl": "",
+      "linkLabel": ""
+    }
+  ],
+
+  "contact": {
+    "title": "Connect With Our Labs",
+    "desc": "Inquiries directly to our administrative hub \u2014 or email info@nirvanabiotech.org",
+    "email": "info@nirvanabiotech.org"
+  }
+}
