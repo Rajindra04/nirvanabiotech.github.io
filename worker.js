@@ -17,6 +17,9 @@ var worker_default = {
       if (path === "/login" && request.method === "POST") {
         return corsResponse(env, await handleLogin(request, env));
       }
+      if (path === "/verify" && request.method === "GET") {
+        return corsResponse(env, await handleVerify(request, env));
+      }
       if (path === "/save" && request.method === "POST") {
         return corsResponse(env, await handleSave(request, env));
       }
@@ -42,6 +45,17 @@ async function handleLogin(request, env) {
   return jsonResponse({ token, expiresIn: SESSION_TTL_SECONDS });
 }
 __name(handleLogin, "handleLogin");
+
+async function handleVerify(request, env) {
+  const auth = request.headers.get("Authorization") || "";
+  const token = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+  const valid = await verifySessionToken(token, env);
+  if (!valid) {
+    return jsonResponse({ error: "Unauthorized" }, 401);
+  }
+  return jsonResponse({ ok: true });
+}
+__name(handleVerify, "handleVerify");
 
 async function handleSave(request, env) {
   const auth = request.headers.get("Authorization") || "";

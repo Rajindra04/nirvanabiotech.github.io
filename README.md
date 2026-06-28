@@ -4,19 +4,24 @@ A from-scratch multipage rebuild of the original single-page `nirvanabiotech.git
 restructured so each nav item is its own real page (like fiftyfive5.com/work), while keeping
 all the original content and functionality.
 
-## ⚠️ Before you redeploy: the actual login bug
+## ⚠️ Before you redeploy: two real bugs, both fixed in this package
 
-Admin login wasn't broken in the code — it was a **CORS mismatch**. Your site is served at
-the custom domain `https://nirvanabiotech.org`, but the Worker's `wrangler.toml` had
+**1. Login did nothing — CORS mismatch.** Your site is served at the custom domain
+`https://nirvanabiotech.org`, but the Worker's `wrangler.toml` had
 `ALLOWED_ORIGIN = "https://rajindra04.github.io"`. The browser blocks the Worker's response
-when the origin doesn't match, which looks exactly like "clicking Login does nothing."
+when the origin doesn't match — looks exactly like "clicking Login does nothing."
+**Fix**: `wrangler.toml` now has `ALLOWED_ORIGIN = "https://nirvanabiotech.org"`.
 
-**Fix included in this package**: `wrangler.toml` now has
-`ALLOWED_ORIGIN = "https://nirvanabiotech.org"`. Redeploy the Worker with this file
-(`wrangler deploy`) and login should work. If you ever also access the site at
-`www.nirvanabiotech.org` or the raw `rajindra04.github.io` GitHub Pages URL, only whichever
-single origin is set in `ALLOWED_ORIGIN` will be allowed to log in — pick the one you
-actually use.
+**2. Edit mode was active without logging in — unverified stored token.** The site only
+ever checked "is there a token sitting in this browser's storage," never "is this token
+actually still valid." A token from any earlier login attempt (even a broken one) would
+silently keep granting edit access on every later page load, forever, with no real
+authentication happening. **Fix**: the Worker now has a `/verify` route, and the site
+calls it on every page load — if the server doesn't actively confirm the token, edit mode
+never turns on. A stale or fake token can no longer grant access.
+
+**Because of fix #2, this isn't just a config change — you must redeploy the actual
+`worker.js` file, not just `wrangler.toml`.** See `WRANGLER_GUIDE.md` for exact commands.
 
 Your `ADMIN_API_BASE` in `site.js` (`https://nirvana-biotech-admin.rajindra04.workers.dev`)
 was already correct and needs no change.
@@ -33,18 +38,21 @@ of placeholder text, so redeploying this won't lose anything you've already ente
 ## Structure
 
 ```
-index.html         Home
-about.html          About
-innovations.html    Innovations (click a card → detail modal)
-team.html           Team
-research.html       Research (click a row → detail modal)
-contact.html        Contact form
-styles.css          Shared design system (one file, all pages)
-site.js             Shared behavior: data loading, nav, modal, signature "trace" graphic
-data.json           All editable content — edit this, not the HTML, to change copy
-worker.js           Cloudflare Worker — handles admin /login and /save
-wrangler.toml       Worker config — ALLOWED_ORIGIN fixed to your real domain (see above)
-images/             Your real photos go here
+index.html           Home
+about.html            About
+innovations.html      Innovations (click a card → detail modal)
+team.html             Team
+collaborators.html    Collaborators (partner people & institutions)
+projects.html         Projects (status board + grant metadata)
+research.html         Research (click a row → detail modal)
+contact.html          Contact form
+styles.css            Shared design system (one file, all pages)
+site.js               Shared behavior: data loading, nav, modal, signature "trace" graphic
+data.json             All editable content — edit this, not the HTML, to change copy
+worker.js             Cloudflare Worker — handles admin /login, /verify, and /save
+wrangler.toml         Worker config — ALLOWED_ORIGIN fixed to your real domain (see above)
+WRANGLER_GUIDE.md     Step-by-step: deploying the Worker with the Wrangler CLI
+images/               Your real photos go here
 ```
 
 Every page is plain HTML/CSS/JS — no build step. Works as-is on GitHub Pages, exactly like the
@@ -90,6 +98,13 @@ site's password-protected edit mode, wired to your Cloudflare Worker (`worker.js
    - Innovations: add new, edit title/description/image, edit full pop-up details/link,
      remove
    - Team: add new member, edit name/role/photo, remove
+   - Collaborators: add new (person or organization), edit name/type/affiliation/
+     description/photo-or-logo/link, remove. "Type" uses a fixed picker
+     (Individual / Institution / Sponsor) instead of free text, so it stays consistent.
+   - Projects: add new, edit title/description/image/full details/link, remove. **Status**
+     (Ongoing / Completed / Planned) uses the same fixed picker — click it, choose the
+     value, done. The page above the list also has filter buttons to view by status, with
+     live counts.
    - Research: add new entry, edit date/title/description/image/full details/link, remove
    - Contact: title, description, email, label text, background
 3. Edits happen in your browser's memory first — nothing is written anywhere yet. A **save
@@ -112,28 +127,47 @@ Open `site.js` and find this line near the top:
 const ADMIN_API_BASE = "https://nirvana-biotech-admin.rajindra04.workers.dev";
 ```
 
-Replace it with **your own deployed Worker's URL**. The Worker itself (the script you
-shared) needs three environment variables/secrets set in Cloudflare:
+Replace it with **your own deployed Worker's URL** if it's different from this default
+(yours already matches, so no change needed for you specifically).
+
+The Worker itself needs these secrets/variables set in Cloudflare — see `WRANGLER_GUIDE.md`
+for exact commands:
 
 - `ADMIN_PASSWORD` — the password admins type into the login box
 - `GITHUB_TOKEN` — a GitHub personal access token with `contents:write` on this repo
 - `GITHUB_OWNER`, `GITHUB_REPO`, `GITHUB_BRANCH` — which repo/branch to commit to
 - `SESSION_SECRET` — any random string, used to sign login session tokens
-- `ALLOWED_ORIGIN` (optional) — restrict CORS to your site's origin instead of `*`
+- `ALLOWED_ORIGIN` — your site's real origin (`https://nirvanabiotech.org`), not `*`,
+  not the GitHub Pages URL
 
-If you deploy the Worker with `wrangler` and these are already set from before, you likely
-only need to update the URL in `site.js` — the Worker code itself doesn't need to change,
-since this rebuild uses the exact same `/login` and `/save` request/response shape as the
-original site did.
+**This `worker.js` adds a `/verify` route** that didn't exist in the version you deployed
+before — the client now confirms a stored login token is still valid with the server on
+every page load, instead of just trusting whatever's sitting in browser storage. You must
+redeploy this exact `worker.js`, not only the config file, for that fix to take effect.
 
 ### A note on multi-page vs. the original single page
 
 The original admin system lived entirely on one page, so "unsaved changes" only ever meant
-"things I changed on this page, right now." Across six pages, that same mental model would
-silently lose edits the moment you navigated away — so this version stores pending edits
-(and pending image uploads) in the browser's `sessionStorage` and re-applies them on every
-page load until you Save or Discard. Closing the tab or browser clears anything unsaved,
-same as before.
+"things I changed on this page, right now." Across eight pages, that same mental model
+would silently lose edits the moment you navigated away — so this version stores pending
+edits (and pending image uploads) in the browser's `sessionStorage` and re-applies them on
+every page load until you Save or Discard. Closing the tab or browser clears anything
+unsaved, same as before.
+
+## The two new pages
+
+**Collaborators** (`collaborators.html`) — a mixed list of people and organizations:
+partner researchers, advisors, sponsoring institutions. Each card shows a circular
+photo-or-logo, name, affiliation/role, a short description, and an optional "Visit" link.
+The "Type" field is a fixed picker so the data stays clean for future filtering if you ever
+want it.
+
+**Projects** (`projects.html`) — grant/initiative tracking, separate from Research (which
+is for write-ups of completed experiments). Each project has a status
+(Ongoing / Completed / Planned, shown as a colored pill), plus optional funder, amount, and
+duration fields for grant-style record-keeping. The filter bar above the list lets you (or
+any visitor) narrow to one status, with live counts per status. Click a row for the same
+full-detail popup pattern as Research/Innovations.
 
 ## Adding your real images
 

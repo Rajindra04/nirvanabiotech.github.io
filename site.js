@@ -50,12 +50,14 @@ function deepMerge(base, patch) {
 }
 
 const PAGES = [
-  { id: "home",        href: "index.html",       label: "Home" },
-  { id: "about",        href: "about.html",        label: "About" },
-  { id: "innovations",  href: "innovations.html",  label: "Innovations" },
-  { id: "team",         href: "team.html",         label: "Team" },
-  { id: "research",     href: "research.html",     label: "Research" },
-  { id: "contact",      href: "contact.html",      label: "Contact" },
+  { id: "home",          href: "index.html",         label: "Home" },
+  { id: "about",          href: "about.html",          label: "About" },
+  { id: "innovations",    href: "innovations.html",    label: "Innovations" },
+  { id: "team",           href: "team.html",           label: "Team" },
+  { id: "collaborators",  href: "collaborators.html",  label: "Collaborators" },
+  { id: "projects",       href: "projects.html",       label: "Projects" },
+  { id: "research",       href: "research.html",       label: "Research" },
+  { id: "contact",        href: "contact.html",        label: "Contact" },
 ];
 
 let SERVER_DATA = null; // last fetched, unmodified copy from data.json — used as the merge base
@@ -116,7 +118,7 @@ function openDetail(section, idx) {
   if (item.imageUrl) { img.src = item.imageUrl; img.style.display = 'block'; img.onerror = () => img.style.display = 'none'; }
   else { img.style.display = 'none'; }
 
-  tag.textContent = item.date ? item.date : section.toUpperCase();
+  tag.textContent = item.date ? item.date : (item.status ? item.status.toUpperCase() : section.toUpperCase());
   title.textContent = item.title || '';
   text.textContent = (item.fullText && item.fullText.trim()) ? item.fullText : (item.desc || '');
 
@@ -141,7 +143,16 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(
    ============================================================ */
 
 function getSessionToken() {
-  return sessionStorage.getItem(SESSION_KEY);
+  const token = sessionStorage.getItem(SESSION_KEY);
+  if (!token || !token.includes('.')) return null;
+  const [payload] = token.split('.');
+  const expires = parseInt(payload, 10);
+  if (Number.isNaN(expires) || Math.floor(Date.now() / 1000) >= expires) {
+    // Expired or malformed — never trust a stale/garbage token into edit mode.
+    sessionStorage.removeItem(SESSION_KEY);
+    return null;
+  }
+  return token;
 }
 
 function setupAdminUI() {
@@ -158,7 +169,30 @@ function setupAdminUI() {
   if (saveBtn) saveBtn.addEventListener('click', saveAllChanges);
   if (discardBtn) discardBtn.addEventListener('click', discardChanges);
 
-  if (getSessionToken()) enterEditMode();
+  const storedToken = getSessionToken();
+  if (storedToken) {
+    // Don't trust a stored token just because it's well-formed and unexpired —
+    // confirm the server still honors it (covers rotated SESSION_SECRET, revoked
+    // sessions, or any other server-side invalidation) before showing edit UI.
+    verifyTokenWithServer(storedToken).then(isValid => {
+      if (isValid) enterEditMode();
+      else { sessionStorage.removeItem(SESSION_KEY); exitEditMode(); }
+    });
+  }
+}
+
+async function verifyTokenWithServer(token) {
+  try {
+    const resp = await fetch(`${ADMIN_API_BASE}/verify`, {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return resp.ok;
+  } catch (e) {
+    // Network failure shouldn't silently grant edit mode — fail closed.
+    console.warn('Could not verify admin session with server:', e);
+    return false;
+  }
 }
 
 function openAdminLogin() {
@@ -293,6 +327,45 @@ function openTextEditorModal(initialValue, multiline, onConfirm) {
   overlay.querySelector('.text-edit-confirm').onclick = () => { onConfirm(input.value); cleanup(); };
 }
 
+/* ---- choice editing (fixed set of valid values, e.g. project status) ---- */
+function promptChoiceEdit(path, elementId, options, onApplied) {
+  if (!SITE_DATA || !tryOpenEditModal()) return;
+  const currentValue = getByPath(SITE_DATA, path) ?? options[0];
+  document.querySelectorAll('.choice-edit-overlay').forEach(el => el.remove());
+  const uid = 'choice-edit-' + Math.random().toString(36).slice(2);
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay choice-edit-overlay open';
+  overlay.innerHTML = `
+    <div class="modal-box" style="max-width:380px;">
+      <div class="modal-body">
+        <h3 style="font-size:1.2rem; margin-bottom:1rem;">Choose a value</h3>
+        <div id="${uid}-options" style="display:flex; flex-direction:column; gap:0.6rem;"></div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  const optionsWrap = overlay.querySelector(`#${uid}-options`);
+  const cleanup = () => { overlay.remove(); releaseEditModalLock(); };
+  optionsWrap.innerHTML = options.map(opt => `
+    <button class="btn ${opt === currentValue ? 'btn--solid' : 'btn--ghost'}" data-value="${escapeHtml(opt)}" style="justify-content:center;">${escapeHtml(opt)}</button>
+  `).join('');
+  optionsWrap.querySelectorAll('button').forEach(btn => {
+    btn.onclick = () => {
+      const newValue = btn.dataset.value;
+      setByPath(SITE_DATA, path, newValue);
+      if (elementId) {
+        const el = document.getElementById(elementId);
+        if (el) el.textContent = newValue;
+      } else {
+        rerenderFromMemory();
+      }
+      if (onApplied) onApplied(newValue);
+      markUnsaved();
+      cleanup();
+    };
+  });
+  overlay.onclick = (e) => { if (e.target === overlay) cleanup(); };
+}
+
 /* ---- detail editing (fullText + link, for innovations/research cards) ---- */
 function promptDetailEdit(section, idx) {
   if (!SITE_DATA) return;
@@ -385,6 +458,8 @@ const ARRAY_TEMPLATES = {
   focusAreas: { title: 'New Focus Area', desc: 'Description goes here.' },
   advantages: { title: 'New Advantage', desc: 'Description goes here.' },
   pillars: { tag: '0X', title: 'New Pillar', desc: 'Description goes here.' },
+  collaborators: { name: 'New Collaborator', type: 'Individual', affiliation: '', desc: 'Description goes here.', imageUrl: '', linkUrl: '' },
+  projects: { title: 'New Project', status: 'Planned', funder: '', amount: '', duration: '', desc: 'Description goes here.', fullText: '', linkUrl: '', linkLabel: '' },
 };
 // focusAreas/advantages live nested under "about"; pillars lives nested under "home"
 const NESTED_ARRAY_PARENT = { focusAreas: 'about', advantages: 'about', pillars: 'home' };

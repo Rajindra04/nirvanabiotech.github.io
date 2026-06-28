@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Team | Nirvana Biotech</title>
+<title>Collaborators | Nirvana Biotech</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
@@ -37,25 +37,25 @@
 
 
 <main>
-  <section class="hero page-fade" id="team-hero-section" style="padding-bottom:3rem;">
+  <section class="hero page-fade" id="collaborators-hero-section" style="padding-bottom:3rem;">
     <div class="shell">
-      <div class="eyebrow hero-eyebrow" id="team-eyebrow">THE PEOPLE BEHIND THE SCIENCE</div>
-      <h1 id="team-title">Team</h1>
-      <p class="lede" id="team-subtitle" style="margin-top:1.6rem;">Researchers and clinicians working across the veterinary&ndash;human boundary.</p>
+      <div class="eyebrow hero-eyebrow" id="collaborators-eyebrow">PARTNERS &amp; ADVISORS</div>
+      <h1 id="collaborators-title">Collaborators</h1>
+      <p class="lede" id="collaborators-subtitle" style="margin-top:1.6rem;">Institutions, sponsors, and individual advisors working alongside our research.</p>
       <div class="hero-trace" data-trace data-trace-h="60"></div>
       <div class="editable-controls edit-only">
-        <button class="edit-pencil" onclick="promptTextEdit('teamPage.eyebrow','team-eyebrow')">Edit label</button>
-        <button class="edit-pencil" onclick="promptTextEdit('teamPage.title','team-title')">Edit title</button>
-        <button class="edit-pencil" onclick="promptTextEdit('teamPage.subtitle','team-subtitle',true)">Edit subtitle</button>
-        <button class="edit-pencil" onclick="promptImageEdit('teamPage.backgroundUrl')">Change background</button>
+        <button class="edit-pencil" onclick="promptTextEdit('collaboratorsPage.eyebrow','collaborators-eyebrow')">Edit label</button>
+        <button class="edit-pencil" onclick="promptTextEdit('collaboratorsPage.title','collaborators-title')">Edit title</button>
+        <button class="edit-pencil" onclick="promptTextEdit('collaboratorsPage.subtitle','collaborators-subtitle',true)">Edit subtitle</button>
+        <button class="edit-pencil" onclick="promptImageEdit('collaboratorsPage.backgroundUrl')">Change background</button>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="shell">
-      <div class="card-grid grid-3" id="team-grid"></div>
-      <button class="add-item-btn edit-only" onclick="addArrayItem('team')">+ Add team member</button>
+      <div class="card-grid grid-3" id="collaborators-grid"></div>
+      <button class="add-item-btn edit-only" onclick="addArrayItem('collaborators')">+ Add collaborator</button>
     </div>
   </section>
 </main>
@@ -115,24 +115,30 @@
 <script src="site.js"></script>
 <script>
   function renderPage(data){
-    buildNav('team');
-    const p = data.teamPage || {};
-    document.getElementById('team-eyebrow').textContent = (p.eyebrow || 'THE PEOPLE BEHIND THE SCIENCE').toUpperCase();
-    document.getElementById('team-title').textContent = p.title || 'Team';
-    document.getElementById('team-subtitle').textContent = p.subtitle || '';
-    applySectionBackground('team-hero-section', p.backgroundUrl);
+    buildNav('collaborators');
+    const p = data.collaboratorsPage || {};
+    document.getElementById('collaborators-eyebrow').textContent = (p.eyebrow || 'PARTNERS & ADVISORS').toUpperCase();
+    document.getElementById('collaborators-title').textContent = p.title || 'Collaborators';
+    document.getElementById('collaborators-subtitle').textContent = p.subtitle || '';
+    applySectionBackground('collaborators-hero-section', p.backgroundUrl);
 
-    const grid = document.getElementById('team-grid');
-    grid.innerHTML = (data.team || []).map((member, idx) => `
-      <div class="card team-card editable-wrap" style="cursor:default;">
-        <img src="${member.imageUrl || 'https://picsum.photos/seed/' + encodeURIComponent(member.name) + '/400/300'}" alt="${escapeHtml(member.name)}" onerror="this.src='https://picsum.photos/seed/${encodeURIComponent(member.name)}/400/300'">
-        <button class="editable-img-btn edit-only" onclick="promptImageEdit('team.${idx}.imageUrl')">Change photo</button>
-        <div class="name">${escapeHtml(member.name)}</div>
-        <div class="role">${escapeHtml(member.role)}</div>
+    const grid = document.getElementById('collaborators-grid');
+    grid.innerHTML = (data.collaborators || []).map((c, idx) => `
+      <div class="card collab-card editable-wrap">
+        <img class="collab-photo" src="${c.imageUrl || 'https://picsum.photos/seed/' + encodeURIComponent(c.name || 'collab' + idx) + '/200/200'}" alt="${escapeHtml(c.name)}" onerror="this.src='https://picsum.photos/seed/${encodeURIComponent(c.name || 'collab' + idx)}/200/200'">
+        <button class="editable-img-btn edit-only" onclick="promptImageEdit('collaborators.${idx}.imageUrl')">Change photo</button>
+        <div class="name">${escapeHtml(c.name)}</div>
+        <div class="affiliation">${escapeHtml(c.affiliation)}</div>
+        <span class="type-pill">${escapeHtml(c.type || 'Individual')}</span>
+        <p style="margin-top:0.8rem; color:var(--sage); font-size:0.9rem; line-height:1.6;">${escapeHtml(c.desc)}</p>
+        ${c.linkUrl ? `<a href="${c.linkUrl}" target="_blank" rel="noopener noreferrer" class="more" style="display:inline-flex; margin-top:0.9rem;">Visit &rarr;</a>` : ''}
         <div class="editable-controls edit-only">
-          <button class="edit-pencil" onclick="promptTextEdit('team.${idx}.name', null)">Name</button>
-          <button class="edit-pencil" onclick="promptTextEdit('team.${idx}.role', null)">Role</button>
-          <button class="edit-pencil danger" onclick="removeArrayItem('team', ${idx})">Remove</button>
+          <button class="edit-pencil" onclick="promptTextEdit('collaborators.${idx}.name', null)">Name</button>
+          <button class="edit-pencil" onclick="promptChoiceEdit('collaborators.${idx}.type', null, ['Individual', 'Institution', 'Sponsor'])">Type</button>
+          <button class="edit-pencil" onclick="promptTextEdit('collaborators.${idx}.affiliation', null)">Affiliation</button>
+          <button class="edit-pencil" onclick="promptTextEdit('collaborators.${idx}.desc', null, true)">Description</button>
+          <button class="edit-pencil" onclick="promptTextEdit('collaborators.${idx}.linkUrl', null)">Link</button>
+          <button class="edit-pencil danger" onclick="removeArrayItem('collaborators', ${idx})">Remove</button>
         </div>
       </div>`).join('');
   }
