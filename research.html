@@ -37,12 +37,18 @@
 
 
 <main>
-  <section class="hero page-fade" style="padding-bottom:3rem;">
+  <section class="hero page-fade" id="research-hero-section" style="padding-bottom:3rem;">
     <div class="shell">
-      <div class="eyebrow hero-eyebrow">PUBLISHED &amp; ONGOING WORK</div>
-      <h1>Research</h1>
-      <p class="lede" style="margin-top:1.6rem;">A record of the experiments behind the platforms &mdash; methods, results, and what comes next.</p>
+      <div class="eyebrow hero-eyebrow" id="research-eyebrow">PUBLISHED &amp; ONGOING WORK</div>
+      <h1 id="research-title">Research</h1>
+      <p class="lede" id="research-subtitle" style="margin-top:1.6rem;">A record of the experiments behind the platforms &mdash; methods, results, and what comes next.</p>
       <div class="hero-trace" data-trace data-trace-h="60"></div>
+      <div class="editable-controls edit-only">
+        <button class="edit-pencil" onclick="promptTextEdit('researchPage.eyebrow','research-eyebrow')">Edit label</button>
+        <button class="edit-pencil" onclick="promptTextEdit('researchPage.title','research-title')">Edit title</button>
+        <button class="edit-pencil" onclick="promptTextEdit('researchPage.subtitle','research-subtitle',true)">Edit subtitle</button>
+        <button class="edit-pencil" onclick="promptImageEdit('researchPage.backgroundUrl')">Change background</button>
+      </div>
     </div>
   </section>
 
@@ -123,6 +129,12 @@
 <script>
   function renderPage(data){
     buildNav('research');
+    const p = data.researchPage || {};
+    document.getElementById('research-eyebrow').textContent = (p.eyebrow || 'PUBLISHED & ONGOING WORK').toUpperCase();
+    document.getElementById('research-title').textContent = p.title || 'Research';
+    document.getElementById('research-subtitle').textContent = p.subtitle || '';
+    applySectionBackground('research-hero-section', p.backgroundUrl);
+
     const list = document.getElementById('research-list');
     list.innerHTML = (data.research || []).map((paper, idx) => `
       <div class="research-row editable-wrap" onclick="openDetail('research', ${idx})">

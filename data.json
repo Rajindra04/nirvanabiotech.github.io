@@ -6,8 +6,19 @@
   "home": {
     "tagline": "Pioneering Sciences",
     "title": "Welcome to Nirvana Biotech",
-    "subtitle": "Leading the way with translational research and innovation \u2014 bridging veterinary discovery and human therapeutics.",
-    "backgroundUrl": "images/home-bg.jpg"
+    "subtitle": "Leading the way with Translational research and innovation ",
+    "backgroundUrl": "images/home-bg.jpg",
+    "whatWeDoEyebrow": "What we do",
+    "whatWeDoHeading": "Two species, one molecular language",
+    "whatWeDoIntro": "Nirvana works at the seam between veterinary and human medicine \u2014 reading the same biological pathways across species to move treatments forward faster, with less risk.",
+    "pillars": [
+      { "tag": "01 \u00b7 Research", "title": "Translational Molecular Research", "desc": "State-of-the-art genomics applied across both human and animal disease models." },
+      { "tag": "02 \u00b7 Clinic", "title": "Veterinary Applications", "desc": "Therapeutics and diagnostics for companion and livestock health." },
+      { "tag": "03 \u00b7 Pipeline", "title": "Human Therapeutics", "desc": "Next-generation treatments engineered from cross-species insight." }
+    ],
+    "featuredEyebrow": "Featured innovation",
+    "featuredHeading": "Dengue VLP platform, built and validated in-house",
+    "featuredText": "Spherical, ~39nm virus-like particles produced in HeLa cells \u2014 eliciting a strong Dengue-1 specific antibody response in murine models."
   },
 
   "about": {
@@ -15,16 +26,47 @@
     "title": "About Our Scientific Mission",
     "intro": "Nirvana is a pioneering biotech firm dedicated to bridging the gap between human medicine and veterinary science.",
     "desc": "Through advanced molecular research, the company translates breakthrough discoveries from animal health applications into targeted, life-changing clinical therapies for humans.",
+    "backgroundUrl": "",
+    "focusEyebrow": "Core focus areas",
+    "focusHeading": "Where the science happens",
+    "advantageEyebrow": "The nirvana advantage",
+    "advantageHeading": "Why cross-species research moves faster",
     "focusAreas": [
       { "title": "Translational Molecular Research", "desc": "Utilizing state-of-the-art genomics and molecular biology to understand complex diseases present across both human and animal populations." },
       { "title": "Veterinary Clinical Applications", "desc": "Developing advanced therapeutics, diagnostics, and preventative care for companion and livestock health based on robust, cross-species molecular data." },
       { "title": "Human Therapeutics", "desc": "Engineering next-generation treatments for chronic diseases, leveraging naturally sourced compounds and insights gained from comparative biology." }
     ],
     "advantages": [
-      { "title": "Cross-Species Efficacy", "desc": "By analyzing biological pathways conserved across species, we rapidly identify, validate, and de-risk treatments before taking them into human trials." },
+      { "title": "Cross-Species Efficacy", "desc": "By analyzing biological pathways conserved across species, the company rapidly identifies, validates, and de-risks treatments before taking them into human trials." },
       { "title": "Molecular Innovations", "desc": "Moving beyond traditional pharmaceutical approaches to unlock the therapeutic potential of nature-derived molecules and advanced genetic applications." },
-      { "title": "Holistic Health Pipeline", "desc": "Research spans pain management, addiction mitigation, metabolic health, and immunology \u2014 benefiting both veterinary and human patients." }
+      { "title": "Holistic Health Pipeline", "desc": "The research spans pain management, addiction mitigation, metabolic health, and immunology, benefiting both veterinary and human patients." }
     ]
+  },
+
+  "innovationsPage": {
+    "eyebrow": "Pipeline & platforms",
+    "title": "Innovations",
+    "subtitle": "Diagnostic and therapeutic platforms moving from bench to field \u2014 engineered for cross-species validation.",
+    "backgroundUrl": ""
+  },
+
+  "teamPage": {
+    "eyebrow": "The people behind the science",
+    "title": "Team",
+    "subtitle": "Researchers and clinicians working across the veterinary\u2013human boundary.",
+    "backgroundUrl": ""
+  },
+
+  "researchPage": {
+    "eyebrow": "Published & ongoing work",
+    "title": "Research",
+    "subtitle": "A record of the experiments behind the platforms \u2014 methods, results, and what comes next.",
+    "backgroundUrl": ""
+  },
+
+  "contactPage": {
+    "eyebrow": "Get in touch",
+    "backgroundUrl": ""
   },
 
   "innovations": [
@@ -37,17 +79,17 @@
       "linkLabel": ""
     },
     {
-      "title": "Dengue Neutralizing Antibody Detection Kit",
-      "desc": "Using a domestically developed VLP platform and recombinant protein technology, a neutralizing antibody lateral flow test kit is being developed.",
-      "imageUrl": "images/innovations-1.png",
+      "title": "Dengue Neutralizing antibody detection lateral flow test kit",
+      "desc": "Using domestically developed VLP platform and recombinant protein technology. Neutralizing antibody test kit is being developed",
+      "imageUrl": "images/innovations-1-imageUrl-1782169729844.png",
       "fullText": "",
       "linkUrl": "",
       "linkLabel": ""
     },
     {
-      "title": "Dengue VLP Development and Validation",
+      "title": "Dengue VLP development and validation",
       "desc": "Construction: Designing the engineered plasmid with optimized signal sequences for HeLa cell expression.",
-      "imageUrl": "images/innovations-2.png",
+      "imageUrl": "images/innovations-2-imageUrl-1782170233704.png",
       "fullText": "Construction: Designing the engineered plasmid with optimized signal sequences for HeLa cell expression.\n\nExpression & Purification: Highlighting the transient expression and the successful isolation of spherical, ~39nm VLPs confirmed by TEM.\n\nImmunization: Demonstrating the strong Dengue-1 specific IgG antibody response elicited in a murine model.",
       "linkUrl": "",
       "linkLabel": ""
@@ -55,8 +97,8 @@
   ],
 
   "team": [
-    { "name": "Dr. Rajindra Napit", "role": "President", "imageUrl": "images/team-0.jpg" },
-    { "name": "Prof. Dr. Krishna Das Manandhar", "role": "CEO", "imageUrl": "images/team-1.webp" },
+    { "name": "Dr. Rajindra Napit", "role": "President", "imageUrl": "images/team-0-imageUrl-1782146391676.jpg" },
+    { "name": "Prof. Dr. Krishna Das Manandhar", "role": "CEO", "imageUrl": "images/team-1-imageUrl-1782168293156.webp" },
     { "name": "Dr. Ram Pd. Aganja", "role": "Research Director", "imageUrl": "" },
     { "name": "Aashis Shakhakarmi", "role": "Administrative Chief", "imageUrl": "" }
   ],
@@ -75,7 +117,7 @@
 
   "contact": {
     "title": "Connect With Our Labs",
-    "desc": "Inquiries directly to our administrative hub \u2014 or email info@nirvanabiotech.org",
+    "desc": "Inquiries directly to our administrative hub. or email to info@nirvanabiotech.org",
     "email": "info@nirvanabiotech.org"
   }
 }

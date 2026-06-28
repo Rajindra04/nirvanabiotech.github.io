@@ -384,9 +384,10 @@ const ARRAY_TEMPLATES = {
   research: { date: '2026', title: 'New Research Entry', desc: 'Description goes here.', imageUrl: '', fullText: '', linkUrl: '', linkLabel: '' },
   focusAreas: { title: 'New Focus Area', desc: 'Description goes here.' },
   advantages: { title: 'New Advantage', desc: 'Description goes here.' },
+  pillars: { tag: '0X', title: 'New Pillar', desc: 'Description goes here.' },
 };
-// focusAreas/advantages live nested under "about", everything else is top-level
-const NESTED_ARRAY_PARENT = { focusAreas: 'about', advantages: 'about' };
+// focusAreas/advantages live nested under "about"; pillars lives nested under "home"
+const NESTED_ARRAY_PARENT = { focusAreas: 'about', advantages: 'about', pillars: 'home' };
 function getArrayContainer(section) {
   const parentKey = NESTED_ARRAY_PARENT[section];
   return parentKey ? (SITE_DATA[parentKey] ||= {}) : SITE_DATA;

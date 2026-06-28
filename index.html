@@ -60,37 +60,32 @@
   <section class="section">
     <div class="shell">
       <div class="section-head">
-        <div class="eyebrow">What we do</div>
-        <h2>Two species, one molecular language</h2>
-        <p class="lede mt-lg">Nirvana works at the seam between veterinary and human medicine &mdash; reading the same biological pathways across species to move treatments forward faster, with less risk.</p>
-      </div>
-      <div class="card-grid grid-3">
-        <div class="card" style="cursor:default;">
-          <span class="tag">01 &middot; Research</span>
-          <h3 style="margin-top:0.9rem;">Translational Molecular Research</h3>
-          <p>State-of-the-art genomics applied across both human and animal disease models.</p>
-        </div>
-        <div class="card" style="cursor:default;">
-          <span class="tag">02 &middot; Clinic</span>
-          <h3 style="margin-top:0.9rem;">Veterinary Applications</h3>
-          <p>Therapeutics and diagnostics for companion and livestock health.</p>
-        </div>
-        <div class="card" style="cursor:default;">
-          <span class="tag">03 &middot; Pipeline</span>
-          <h3 style="margin-top:0.9rem;">Human Therapeutics</h3>
-          <p>Next-generation treatments engineered from cross-species insight.</p>
+        <div class="eyebrow" id="whatwedo-eyebrow">What we do</div>
+        <h2 id="whatwedo-heading">Two species, one molecular language</h2>
+        <p class="lede mt-lg" id="whatwedo-intro">Nirvana works at the seam between veterinary and human medicine &mdash; reading the same biological pathways across species to move treatments forward faster, with less risk.</p>
+        <div class="editable-controls edit-only">
+          <button class="edit-pencil" onclick="promptTextEdit('home.whatWeDoEyebrow','whatwedo-eyebrow')">Edit label</button>
+          <button class="edit-pencil" onclick="promptTextEdit('home.whatWeDoHeading','whatwedo-heading')">Edit heading</button>
+          <button class="edit-pencil" onclick="promptTextEdit('home.whatWeDoIntro','whatwedo-intro',true)">Edit intro</button>
         </div>
       </div>
+      <div class="card-grid grid-3" id="pillars-grid"></div>
+      <button class="add-item-btn edit-only" onclick="addArrayItem('pillars')">+ Add pillar</button>
     </div>
   </section>
 
   <section class="section section--paper">
     <div class="shell flex-between">
       <div>
-        <div class="eyebrow">Featured innovation</div>
-        <h2 style="margin-top:0.7rem; max-width:24ch;">Dengue VLP platform, built and validated in-house</h2>
-        <p class="lede" style="margin-top:1rem; color:var(--sage-dim);">Spherical, ~39nm virus-like particles produced in HeLa cells &mdash; eliciting a strong Dengue-1 specific antibody response in murine models.</p>
+        <div class="eyebrow" id="featured-eyebrow">Featured innovation</div>
+        <h2 id="featured-heading" style="margin-top:0.7rem; max-width:24ch;">Dengue VLP platform, built and validated in-house</h2>
+        <p class="lede" id="featured-text" style="margin-top:1rem; color:var(--sage-dim);">Spherical, ~39nm virus-like particles produced in HeLa cells &mdash; eliciting a strong Dengue-1 specific antibody response in murine models.</p>
         <a href="research.html" class="btn btn--ghost" style="margin-top:2rem;">Read the research &rarr;</a>
+        <div class="editable-controls edit-only">
+          <button class="edit-pencil" onclick="promptTextEdit('home.featuredEyebrow','featured-eyebrow')">Edit label</button>
+          <button class="edit-pencil" onclick="promptTextEdit('home.featuredHeading','featured-heading')">Edit heading</button>
+          <button class="edit-pencil" onclick="promptTextEdit('home.featuredText','featured-text',true)">Edit text</button>
+        </div>
       </div>
     </div>
   </section>
@@ -151,10 +146,33 @@
   function renderPage(data){
     buildNav('home');
     if (!data.home) return;
-    document.getElementById('home-tagline').textContent = (data.home.tagline || '').toUpperCase();
-    document.getElementById('home-title').textContent = data.home.title || '';
-    document.getElementById('home-subtitle').textContent = data.home.subtitle || '';
-    applySectionBackground('home-hero-section', data.home.backgroundUrl);
+    const h = data.home;
+    document.getElementById('home-tagline').textContent = (h.tagline || '').toUpperCase();
+    document.getElementById('home-title').textContent = h.title || '';
+    document.getElementById('home-subtitle').textContent = h.subtitle || '';
+    applySectionBackground('home-hero-section', h.backgroundUrl);
+
+    document.getElementById('whatwedo-eyebrow').textContent = h.whatWeDoEyebrow || 'What we do';
+    document.getElementById('whatwedo-heading').textContent = h.whatWeDoHeading || '';
+    document.getElementById('whatwedo-intro').textContent = h.whatWeDoIntro || '';
+
+    const pillarsGrid = document.getElementById('pillars-grid');
+    pillarsGrid.innerHTML = (h.pillars || []).map((p, i) => `
+      <div class="card" style="cursor:default;">
+        <span class="tag">${escapeHtml(p.tag || '')}</span>
+        <h3 style="margin-top:0.9rem;">${escapeHtml(p.title)}</h3>
+        <p>${escapeHtml(p.desc)}</p>
+        <div class="editable-controls edit-only">
+          <button class="edit-pencil" onclick="promptTextEdit('home.pillars.${i}.tag', null)">Tag</button>
+          <button class="edit-pencil" onclick="promptTextEdit('home.pillars.${i}.title', null)">Title</button>
+          <button class="edit-pencil" onclick="promptTextEdit('home.pillars.${i}.desc', null, true)">Desc</button>
+          <button class="edit-pencil danger" onclick="removeArrayItem('pillars', ${i})">Remove</button>
+        </div>
+      </div>`).join('');
+
+    document.getElementById('featured-eyebrow').textContent = h.featuredEyebrow || 'Featured innovation';
+    document.getElementById('featured-heading').textContent = h.featuredHeading || '';
+    document.getElementById('featured-text').textContent = h.featuredText || '';
   }
 </script>
 </body>

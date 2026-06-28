@@ -37,16 +37,18 @@
 
 
 <main>
-  <section class="hero page-fade" style="padding-bottom:3rem;">
+  <section class="hero page-fade" id="contact-hero-section" style="padding-bottom:3rem;">
     <div class="shell">
-      <div class="eyebrow hero-eyebrow">GET IN TOUCH</div>
+      <div class="eyebrow hero-eyebrow" id="contact-eyebrow">GET IN TOUCH</div>
       <h1 id="contact-title">Connect With Our Labs</h1>
       <p class="lede" id="contact-desc" style="margin-top:1.6rem;"></p>
       <div class="hero-trace" data-trace data-trace-h="60"></div>
       <div class="editable-controls edit-only">
+        <button class="edit-pencil" onclick="promptTextEdit('contactPage.eyebrow','contact-eyebrow')">Edit label</button>
         <button class="edit-pencil" onclick="promptTextEdit('contact.title','contact-title')">Edit title</button>
         <button class="edit-pencil" onclick="promptTextEdit('contact.desc','contact-desc',true)">Edit description</button>
         <button class="edit-pencil" onclick="promptTextEdit('contact.email', null)">Edit email</button>
+        <button class="edit-pencil" onclick="promptImageEdit('contactPage.backgroundUrl')">Change background</button>
       </div>
     </div>
   </section>
@@ -133,6 +135,9 @@
   function renderPage(data){
     buildNav('contact');
     const c = data.contact;
+    const p = data.contactPage || {};
+    document.getElementById('contact-eyebrow').textContent = (p.eyebrow || 'GET IN TOUCH').toUpperCase();
+    applySectionBackground('contact-hero-section', p.backgroundUrl);
     if (!c) return;
     document.getElementById('contact-title').textContent = c.title || 'Connect With Our Labs';
     document.getElementById('contact-desc').textContent = c.desc || '';

@@ -4,6 +4,32 @@ A from-scratch multipage rebuild of the original single-page `nirvanabiotech.git
 restructured so each nav item is its own real page (like fiftyfive5.com/work), while keeping
 all the original content and functionality.
 
+## ⚠️ Before you redeploy: the actual login bug
+
+Admin login wasn't broken in the code — it was a **CORS mismatch**. Your site is served at
+the custom domain `https://nirvanabiotech.org`, but the Worker's `wrangler.toml` had
+`ALLOWED_ORIGIN = "https://rajindra04.github.io"`. The browser blocks the Worker's response
+when the origin doesn't match, which looks exactly like "clicking Login does nothing."
+
+**Fix included in this package**: `wrangler.toml` now has
+`ALLOWED_ORIGIN = "https://nirvanabiotech.org"`. Redeploy the Worker with this file
+(`wrangler deploy`) and login should work. If you ever also access the site at
+`www.nirvanabiotech.org` or the raw `rajindra04.github.io` GitHub Pages URL, only whichever
+single origin is set in `ALLOWED_ORIGIN` will be allowed to log in — pick the one you
+actually use.
+
+Your `ADMIN_API_BASE` in `site.js` (`https://nirvana-biotech-admin.rajindra04.workers.dev`)
+was already correct and needs no change.
+
+## What was actually missing before
+
+The previous zip you deployed only ever had the old single-page files live — the new
+multipage HTML/CSS/JS was never pushed to the repo, which is also why the left-hand rail
+nav and missing "Add" buttons showed up: you were looking at the old build. This package's
+`data.json` has been updated to carry over the **real content you already added** through
+the old admin (your actual uploaded image filenames, team bios, research writeup) instead
+of placeholder text, so redeploying this won't lose anything you've already entered.
+
 ## Structure
 
 ```
@@ -16,7 +42,9 @@ contact.html        Contact form
 styles.css          Shared design system (one file, all pages)
 site.js             Shared behavior: data loading, nav, modal, signature "trace" graphic
 data.json           All editable content — edit this, not the HTML, to change copy
-images/             Drop your real photos here (see below)
+worker.js           Cloudflare Worker — handles admin /login and /save
+wrangler.toml       Worker config — ALLOWED_ORIGIN fixed to your real domain (see above)
+images/             Your real photos go here
 ```
 
 Every page is plain HTML/CSS/JS — no build step. Works as-is on GitHub Pages, exactly like the
@@ -50,8 +78,20 @@ site's password-protected edit mode, wired to your Cloudflare Worker (`worker.js
 1. Click **Admin** in the top-right of any page and enter the admin password (the same
    `ADMIN_PASSWORD` secret your Worker is configured with).
 2. Once logged in, every editable field on every page shows a small **edit pencil** button
-   next to it — text fields, images, and whole card/row entries (add or remove items in
-   Innovations, Team, Research, and the two About-page card grids).
+   next to it. That now includes:
+   - Site brand name and logo (every page's top nav)
+   - Every page's hero label/title/subtitle/heading text **and background image**
+     (Home, About, Innovations, Team, Research, Contact all have their own background
+     image pencil now — upload any photo and it becomes that page's hero backdrop)
+   - Home page's "What we do" intro and its 3 pillar cards (add/remove/edit each)
+   - Home page's "Featured innovation" callout text
+   - About page's intro/description, plus both card-grid section headers
+     ("Core focus areas" / "The Nirvana Advantage") and every card in each grid
+   - Innovations: add new, edit title/description/image, edit full pop-up details/link,
+     remove
+   - Team: add new member, edit name/role/photo, remove
+   - Research: add new entry, edit date/title/description/image/full details/link, remove
+   - Contact: title, description, email, label text, background
 3. Edits happen in your browser's memory first — nothing is written anywhere yet. A **save
    bar** appears at the bottom of the screen showing unsaved-changes status.
 4. Edits **persist across pages** for the session: if you edit something on the Team page,

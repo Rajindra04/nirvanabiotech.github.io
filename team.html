@@ -37,12 +37,18 @@
 
 
 <main>
-  <section class="hero page-fade" style="padding-bottom:3rem;">
+  <section class="hero page-fade" id="team-hero-section" style="padding-bottom:3rem;">
     <div class="shell">
-      <div class="eyebrow hero-eyebrow">THE PEOPLE BEHIND THE SCIENCE</div>
-      <h1>Team</h1>
-      <p class="lede" style="margin-top:1.6rem;">Researchers and clinicians working across the veterinary&ndash;human boundary.</p>
+      <div class="eyebrow hero-eyebrow" id="team-eyebrow">THE PEOPLE BEHIND THE SCIENCE</div>
+      <h1 id="team-title">Team</h1>
+      <p class="lede" id="team-subtitle" style="margin-top:1.6rem;">Researchers and clinicians working across the veterinary&ndash;human boundary.</p>
       <div class="hero-trace" data-trace data-trace-h="60"></div>
+      <div class="editable-controls edit-only">
+        <button class="edit-pencil" onclick="promptTextEdit('teamPage.eyebrow','team-eyebrow')">Edit label</button>
+        <button class="edit-pencil" onclick="promptTextEdit('teamPage.title','team-title')">Edit title</button>
+        <button class="edit-pencil" onclick="promptTextEdit('teamPage.subtitle','team-subtitle',true)">Edit subtitle</button>
+        <button class="edit-pencil" onclick="promptImageEdit('teamPage.backgroundUrl')">Change background</button>
+      </div>
     </div>
   </section>
 
@@ -108,6 +114,12 @@
 <script>
   function renderPage(data){
     buildNav('team');
+    const p = data.teamPage || {};
+    document.getElementById('team-eyebrow').textContent = (p.eyebrow || 'THE PEOPLE BEHIND THE SCIENCE').toUpperCase();
+    document.getElementById('team-title').textContent = p.title || 'Team';
+    document.getElementById('team-subtitle').textContent = p.subtitle || '';
+    applySectionBackground('team-hero-section', p.backgroundUrl);
+
     const grid = document.getElementById('team-grid');
     grid.innerHTML = (data.team || []).map((member, idx) => `
       <div class="card team-card editable-wrap" style="cursor:default;">

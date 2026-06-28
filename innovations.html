@@ -37,12 +37,18 @@
 
 
 <main>
-  <section class="hero page-fade" style="padding-bottom:3rem;">
+  <section class="hero page-fade" id="innovations-hero-section" style="padding-bottom:3rem;">
     <div class="shell">
-      <div class="eyebrow hero-eyebrow">PIPELINE &amp; PLATFORMS</div>
-      <h1>Innovations</h1>
-      <p class="lede" style="margin-top:1.6rem;">Diagnostic and therapeutic platforms moving from bench to field &mdash; engineered for cross-species validation.</p>
+      <div class="eyebrow hero-eyebrow" id="innovations-eyebrow">PIPELINE &amp; PLATFORMS</div>
+      <h1 id="innovations-title">Innovations</h1>
+      <p class="lede" id="innovations-subtitle" style="margin-top:1.6rem;">Diagnostic and therapeutic platforms moving from bench to field &mdash; engineered for cross-species validation.</p>
       <div class="hero-trace" data-trace data-trace-h="60"></div>
+      <div class="editable-controls edit-only">
+        <button class="edit-pencil" onclick="promptTextEdit('innovationsPage.eyebrow','innovations-eyebrow')">Edit label</button>
+        <button class="edit-pencil" onclick="promptTextEdit('innovationsPage.title','innovations-title')">Edit title</button>
+        <button class="edit-pencil" onclick="promptTextEdit('innovationsPage.subtitle','innovations-subtitle',true)">Edit subtitle</button>
+        <button class="edit-pencil" onclick="promptImageEdit('innovationsPage.backgroundUrl')">Change background</button>
+      </div>
     </div>
   </section>
 
@@ -123,6 +129,12 @@
 <script>
   function renderPage(data){
     buildNav('innovations');
+    const p = data.innovationsPage || {};
+    document.getElementById('innovations-eyebrow').textContent = (p.eyebrow || 'PIPELINE & PLATFORMS').toUpperCase();
+    document.getElementById('innovations-title').textContent = p.title || 'Innovations';
+    document.getElementById('innovations-subtitle').textContent = p.subtitle || '';
+    applySectionBackground('innovations-hero-section', p.backgroundUrl);
+
     const grid = document.getElementById('innovations-grid');
     grid.innerHTML = (data.innovations || []).map((item, idx) => `
       <div class="card editable-wrap" onclick="openDetail('innovations', ${idx})">

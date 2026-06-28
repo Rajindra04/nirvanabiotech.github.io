@@ -37,7 +37,7 @@
 
 
 <main>
-  <section class="hero page-fade" style="padding-bottom:3rem;">
+  <section class="hero page-fade" id="about-hero-section" style="padding-bottom:3rem;">
     <div class="shell">
       <div class="eyebrow hero-eyebrow" id="about-eyebrow">OUR MISSION</div>
       <h1 id="about-title">About Our Scientific Mission</h1>
@@ -47,6 +47,7 @@
         <button class="edit-pencil" onclick="promptTextEdit('about.eyebrow','about-eyebrow')">Edit eyebrow</button>
         <button class="edit-pencil" onclick="promptTextEdit('about.title','about-title')">Edit title</button>
         <button class="edit-pencil" onclick="promptTextEdit('about.intro','about-intro',true)">Edit intro</button>
+        <button class="edit-pencil" onclick="promptImageEdit('about.backgroundUrl')">Change background</button>
       </div>
     </div>
   </section>
@@ -63,8 +64,12 @@
   <section class="section section--paper">
     <div class="shell">
       <div class="section-head">
-        <div class="eyebrow">Core focus areas</div>
-        <h2>Where the science happens</h2>
+        <div class="eyebrow" id="focus-eyebrow">Core focus areas</div>
+        <h2 id="focus-heading">Where the science happens</h2>
+        <div class="editable-controls edit-only">
+          <button class="edit-pencil" onclick="promptTextEdit('about.focusEyebrow','focus-eyebrow')">Edit label</button>
+          <button class="edit-pencil" onclick="promptTextEdit('about.focusHeading','focus-heading')">Edit heading</button>
+        </div>
       </div>
       <div class="card-grid grid-3" id="focus-grid"></div>
       <button class="add-item-btn edit-only" onclick="addArrayItem('focusAreas')">+ Add focus area</button>
@@ -74,8 +79,12 @@
   <section class="section">
     <div class="shell">
       <div class="section-head">
-        <div class="eyebrow">The nirvana advantage</div>
-        <h2>Why cross-species research moves faster</h2>
+        <div class="eyebrow" id="advantage-eyebrow">The nirvana advantage</div>
+        <h2 id="advantage-heading">Why cross-species research moves faster</h2>
+        <div class="editable-controls edit-only">
+          <button class="edit-pencil" onclick="promptTextEdit('about.advantageEyebrow','advantage-eyebrow')">Edit label</button>
+          <button class="edit-pencil" onclick="promptTextEdit('about.advantageHeading','advantage-heading')">Edit heading</button>
+        </div>
       </div>
       <div class="card-grid grid-3" id="advantage-grid"></div>
       <button class="add-item-btn edit-only" onclick="addArrayItem('advantages')">+ Add advantage</button>
@@ -143,6 +152,11 @@
     document.getElementById('about-title').textContent = a.title || '';
     document.getElementById('about-intro').textContent = a.intro || '';
     document.getElementById('about-desc').textContent = a.desc || '';
+    document.getElementById('focus-eyebrow').textContent = a.focusEyebrow || 'Core focus areas';
+    document.getElementById('focus-heading').textContent = a.focusHeading || 'Where the science happens';
+    document.getElementById('advantage-eyebrow').textContent = a.advantageEyebrow || 'The nirvana advantage';
+    document.getElementById('advantage-heading').textContent = a.advantageHeading || 'Why cross-species research moves faster';
+    applySectionBackground('about-hero-section', a.backgroundUrl);
 
     const focusGrid = document.getElementById('focus-grid');
     focusGrid.innerHTML = (a.focusAreas || []).map((f, i) => `
