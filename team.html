@@ -129,9 +129,11 @@
         <button class="editable-img-btn edit-only" onclick="promptImageEdit('team.${idx}.imageUrl')">Change photo</button>
         <div class="name">${escapeHtml(member.name)}</div>
         <div class="role">${escapeHtml(member.role)}</div>
+        ${member.bio ? `<p style="margin-top:0.8rem; color:var(--sage); font-size:0.88rem; line-height:1.6;">${escapeHtml(member.bio)}</p>` : ''}
         <div class="editable-controls edit-only">
           <button class="edit-pencil" onclick="promptTextEdit('team.${idx}.name', null)">Name</button>
           <button class="edit-pencil" onclick="promptTextEdit('team.${idx}.role', null)">Role</button>
+          <button class="edit-pencil" onclick="promptTextEdit('team.${idx}.bio', null, true)">Bio</button>
           <button class="edit-pencil danger" onclick="removeArrayItem('team', ${idx})">Remove</button>
         </div>
       </div>`).join('');

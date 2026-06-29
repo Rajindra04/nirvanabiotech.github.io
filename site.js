@@ -453,7 +453,7 @@ function rerenderFromMemory(previewDataUrl, previewPath) {
 /* ---- add / remove array items (innovations, team, research) ---- */
 const ARRAY_TEMPLATES = {
   innovations: { title: 'New Innovation', desc: 'Description goes here.', imageUrl: '', fullText: '', linkUrl: '', linkLabel: '' },
-  team: { name: 'New Team Member', role: 'Role / Title', imageUrl: '' },
+  team: { name: 'New Team Member', role: 'Role / Title', bio: '', imageUrl: '' },
   research: { date: '2026', title: 'New Research Entry', desc: 'Description goes here.', imageUrl: '', fullText: '', linkUrl: '', linkLabel: '' },
   focusAreas: { title: 'New Focus Area', desc: 'Description goes here.' },
   advantages: { title: 'New Advantage', desc: 'Description goes here.' },
