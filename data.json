@@ -175,6 +175,14 @@
       "desc": "Shresta Lab, La Jolla Institute (LJI) is an international research collaborator of Nirvana Biotech, partnering on immunology research initiatives. Through cooperative scientific studies, technical expertise, and knowledge sharing, the partnership aims to advance immunological research. The cooperation fosters capacity building, collaborative innovation, and the development of research that tackles regional and global health concerns by fusing Nirvana Biotech's local research and laboratory skills with LJI's internationally known strengths in immunology.",
       "imageUrl": "images/collaborators-0-imageUrl-1782811600481.png",
       "linkUrl": "https://www.lji.org/labs/shresta-lab/"
+    },
+    {
+      "name": "Center for Molecular Dynamics (CMDN)",
+      "type": "Institution",
+      "affiliation": "",
+      "desc": "CMDN is a research driven non-governmental organization in Nepal. CMDN collaborates with Nirvana Biotech to laboratory research and laboratory capability through shared technical collaboration.",
+      "imageUrl": "images/collaborators-1-imageUrl-1782811778408.png",
+      "linkUrl": "https://www.cmdn.org.np/"
     }
   ],
   "projects": [
