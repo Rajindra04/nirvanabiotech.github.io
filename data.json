@@ -183,6 +183,14 @@
       "desc": "CMDN is a research driven non-governmental organization in Nepal. CMDN collaborates with Nirvana Biotech to laboratory research and laboratory capability through shared technical collaboration.",
       "imageUrl": "images/collaborators-1-imageUrl-1782811778408.png",
       "linkUrl": "https://www.cmdn.org.np/"
+    },
+    {
+      "name": "Central Department of Zoology, Tribhuvan University",
+      "type": "Institution",
+      "affiliation": "",
+      "desc": "Central Department of Zoology (TU) partners with Nirvana Biotech combining academic expertise with advanced laboratory capabilities to strengthen molecular research and facilitate knowledge exchange. Through joint laboratory work and collaborative projects, the partnership contributes to advancing scientific research and capacity building in Nepal.",
+      "imageUrl": "images/collaborators-2-imageUrl-1782812253035.png",
+      "linkUrl": "https://cdz.tu.edu.np/"
     }
   ],
   "projects": [
