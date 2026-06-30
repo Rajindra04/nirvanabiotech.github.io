@@ -2,7 +2,6 @@
   "brandName": "NIRVANA",
   "brandSub": "BIOTECH",
   "logoUrl": "images/logo.png",
-
   "home": {
     "tagline": "Pioneering Sciences",
     "title": "Welcome to Nirvana Biotech",
@@ -10,17 +9,28 @@
     "backgroundUrl": "images/home-bg.jpg",
     "whatWeDoEyebrow": "What we do",
     "whatWeDoHeading": "Two species, one molecular language",
-    "whatWeDoIntro": "Nirvana works at the seam between veterinary and human medicine \u2014 reading the same biological pathways across species to move treatments forward faster, with less risk.",
+    "whatWeDoIntro": "Nirvana works at the seam between veterinary and human medicine — reading the same biological pathways across species to move treatments forward faster, with less risk.",
     "pillars": [
-      { "tag": "01 \u00b7 Research", "title": "Translational Molecular Research", "desc": "State-of-the-art genomics applied across both human and animal disease models." },
-      { "tag": "02 \u00b7 Clinic", "title": "Veterinary Applications", "desc": "Therapeutics and diagnostics for companion and livestock health." },
-      { "tag": "03 \u00b7 Pipeline", "title": "Human Therapeutics", "desc": "Next-generation treatments engineered from cross-species insight." }
+      {
+        "tag": "01 · Research",
+        "title": "Translational Molecular Research",
+        "desc": "State-of-the-art genomics applied across both human and animal disease models."
+      },
+      {
+        "tag": "02 · Clinic",
+        "title": "Veterinary Applications",
+        "desc": "Therapeutics and diagnostics for companion and livestock health."
+      },
+      {
+        "tag": "03 · Pipeline",
+        "title": "Human Therapeutics",
+        "desc": "Next-generation treatments engineered from cross-species insight."
+      }
     ],
     "featuredEyebrow": "Featured innovation",
     "featuredHeading": "Dengue VLP platform, built and validated in-house",
-    "featuredText": "Spherical, ~39nm virus-like particles produced in HeLa cells \u2014 eliciting a strong Dengue-1 specific antibody response in murine models."
+    "featuredText": "Spherical, ~39nm virus-like particles produced in HeLa cells — eliciting a strong Dengue-1 specific antibody response in murine models."
   },
-
   "about": {
     "eyebrow": "Our mission",
     "title": "About Our Scientific Mission",
@@ -32,57 +42,68 @@
     "advantageEyebrow": "The nirvana advantage",
     "advantageHeading": "Why cross-species research moves faster",
     "focusAreas": [
-      { "title": "Translational Molecular Research", "desc": "Utilizing state-of-the-art genomics and molecular biology to understand complex diseases present across both human and animal populations." },
-      { "title": "Veterinary Clinical Applications", "desc": "Developing advanced therapeutics, diagnostics, and preventative care for companion and livestock health based on robust, cross-species molecular data." },
-      { "title": "Human Therapeutics", "desc": "Engineering next-generation treatments for chronic diseases, leveraging naturally sourced compounds and insights gained from comparative biology." }
+      {
+        "title": "Translational Molecular Research",
+        "desc": "Utilizing state-of-the-art genomics and molecular biology to understand complex diseases present across both human and animal populations."
+      },
+      {
+        "title": "Veterinary Clinical Applications",
+        "desc": "Developing advanced therapeutics, diagnostics, and preventative care for companion and livestock health based on robust, cross-species molecular data."
+      },
+      {
+        "title": "Human Therapeutics",
+        "desc": "Engineering next-generation treatments for chronic diseases, leveraging naturally sourced compounds and insights gained from comparative biology."
+      }
     ],
     "advantages": [
-      { "title": "Cross-Species Efficacy", "desc": "By analyzing biological pathways conserved across species, the company rapidly identifies, validates, and de-risks treatments before taking them into human trials." },
-      { "title": "Molecular Innovations", "desc": "Moving beyond traditional pharmaceutical approaches to unlock the therapeutic potential of nature-derived molecules and advanced genetic applications." },
-      { "title": "Holistic Health Pipeline", "desc": "The research spans pain management, addiction mitigation, metabolic health, and immunology, benefiting both veterinary and human patients." }
+      {
+        "title": "Cross-Species Efficacy",
+        "desc": "By analyzing biological pathways conserved across species, the company rapidly identifies, validates, and de-risks treatments before taking them into human trials."
+      },
+      {
+        "title": "Molecular Innovations",
+        "desc": "Moving beyond traditional pharmaceutical approaches to unlock the therapeutic potential of nature-derived molecules and advanced genetic applications."
+      },
+      {
+        "title": "Holistic Health Pipeline",
+        "desc": "The research spans pain management, addiction mitigation, metabolic health, and immunology, benefiting both veterinary and human patients."
+      }
     ]
   },
-
   "innovationsPage": {
     "eyebrow": "Pipeline & platforms",
     "title": "Innovations",
-    "subtitle": "Diagnostic and therapeutic platforms moving from bench to field \u2014 engineered for cross-species validation.",
+    "subtitle": "Diagnostic and therapeutic platforms moving from bench to field — engineered for cross-species validation.",
     "backgroundUrl": ""
   },
-
   "teamPage": {
     "eyebrow": "The people behind the science",
     "title": "Team",
-    "subtitle": "Researchers and clinicians working across the veterinary\u2013human boundary.",
+    "subtitle": "Researchers and clinicians working across the veterinary–human boundary.",
     "backgroundUrl": ""
   },
-
   "researchPage": {
     "eyebrow": "Published & ongoing work",
     "title": "Research",
-    "subtitle": "A record of the experiments behind the platforms \u2014 methods, results, and what comes next.",
+    "subtitle": "A record of the experiments behind the platforms — methods, results, and what comes next.",
     "backgroundUrl": ""
   },
-
   "contactPage": {
     "eyebrow": "Get in touch",
     "backgroundUrl": ""
   },
-
   "collaboratorsPage": {
     "eyebrow": "Partners & advisors",
     "title": "Collaborators",
     "subtitle": "Institutions, sponsors, and individual advisors working alongside our research.",
     "backgroundUrl": ""
   },
-
   "projectsPage": {
     "eyebrow": "Active & completed work",
     "title": "Projects",
     "subtitle": "Grants and initiatives tracked by status, funder, and timeline.",
     "backgroundUrl": ""
   },
-
   "innovations": [
     {
       "title": "Aptamer Engineering Modality",
@@ -109,52 +130,60 @@
       "linkLabel": ""
     }
   ],
-
   "team": [
-    { "name": "Dr. Rajindra Napit", "role": "President", "bio": "", "imageUrl": "images/team-0-imageUrl-1782146391676.jpg" },
-    { "name": "Prof. Dr. Krishna Das Manandhar", "role": "CEO", "bio": "", "imageUrl": "images/team-1-imageUrl-1782168293156.webp" },
-    { "name": "Dr. Ram Pd. Aganja", "role": "Research Director", "bio": "", "imageUrl": "" },
-    { "name": "Aashis Shakhakarmi", "role": "Administrative Chief", "bio": "", "imageUrl": "" }
+    {
+      "name": "Dr. Rajindra Napit",
+      "role": "President",
+      "bio": "",
+      "imageUrl": "images/team-0-imageUrl-1782146391676.jpg"
+    },
+    {
+      "name": "Prof. Dr. Krishna Das Manandhar",
+      "role": "CEO",
+      "bio": "",
+      "imageUrl": "images/team-1-imageUrl-1782168293156.webp"
+    },
+    {
+      "name": "Dr. Ram Pd. Aganja",
+      "role": "Research Director",
+      "bio": "",
+      "imageUrl": ""
+    },
+    {
+      "name": "Aashis Shakhakarmi",
+      "role": "Administrative Chief",
+      "bio": "",
+      "imageUrl": ""
+    }
   ],
-
   "research": [
     {
       "date": "2026",
       "title": "Dengue VLP Development and Production",
       "desc": "Developing a safer, more effective Dengue vaccine candidate using virus-like particles (VLPs) that mimic the virus without carrying genetic material.",
       "imageUrl": "",
-      "fullText": "The Goal: To develop a safer, more effective Dengue vaccine candidate using virus-like particles (VLPs)\u2014structures that look like the real virus but cannot cause infection because they lack genetic material.\n\nThe Method: Researchers engineered a plasmid (genetic blueprint) containing Dengue-1 proteins, modified it with genetic signals from the Japanese Encephalitis virus to boost secretion, and grew it in human cells (HeLa cells).\n\nThe Results: The process successfully produced spherical VLPs that structurally mirror the native Dengue virus (about 39 nanometers wide). When tested in mice, these VLPs triggered a strong immune response, generating Dengue-1 specific antibodies.\n\nThe Takeaway: These HeLa-grown VLPs show strong potential for both new Dengue vaccines and diagnostic testing. The next step will be testing how effectively these antibodies actually protect against the live virus.",
+      "fullText": "The Goal: To develop a safer, more effective Dengue vaccine candidate using virus-like particles (VLPs)—structures that look like the real virus but cannot cause infection because they lack genetic material.\n\nThe Method: Researchers engineered a plasmid (genetic blueprint) containing Dengue-1 proteins, modified it with genetic signals from the Japanese Encephalitis virus to boost secretion, and grew it in human cells (HeLa cells).\n\nThe Results: The process successfully produced spherical VLPs that structurally mirror the native Dengue virus (about 39 nanometers wide). When tested in mice, these VLPs triggered a strong immune response, generating Dengue-1 specific antibodies.\n\nThe Takeaway: These HeLa-grown VLPs show strong potential for both new Dengue vaccines and diagnostic testing. The next step will be testing how effectively these antibodies actually protect against the live virus.",
       "linkUrl": "",
       "linkLabel": ""
     }
   ],
-
   "collaborators": [
     {
-      "name": "Tribhuvan University, Institute of Medicine",
+      "name": "La Jolla Institute for Immunology, Shresta Lab",
       "type": "Institution",
-      "affiliation": "Academic Partner",
-      "desc": "Collaborative access to clinical samples and laboratory facilities for translational research.",
-      "imageUrl": "",
-      "linkUrl": ""
-    },
-    {
-      "name": "Dr. Anjana Rai",
-      "type": "Individual",
-      "affiliation": "Scientific Advisor, Immunology",
-      "desc": "Advises on immunogenicity study design and murine model validation.",
-      "imageUrl": "",
-      "linkUrl": ""
+      "affiliation": "https://www.lji.org/",
+      "desc": "Shresta Lab, La Jolla Institute (LJI) is an international research collaborator of Nirvana Biotech, partnering on immunology research initiatives. Through cooperative scientific studies, technical expertise, and knowledge sharing, the partnership aims to advance immunological research. The cooperation fosters capacity building, collaborative innovation, and the development of research that tackles regional and global health concerns by fusing Nirvana Biotech's local research and laboratory skills with LJI's internationally known strengths in immunology.",
+      "imageUrl": "images/collaborators-0-imageUrl-1782811600481.png",
+      "linkUrl": "https://www.lji.org/labs/shresta-lab/"
     }
   ],
-
   "projects": [
     {
       "title": "Dengue VLP Vaccine Platform",
       "status": "Ongoing",
       "funder": "Nepal Health Research Council",
       "amount": "",
-      "duration": "2025 \u2013 2027",
+      "duration": "2025 – 2027",
       "desc": "Development and immunogenicity validation of a HeLa-cell-expressed Dengue-1 virus-like particle platform.",
       "imageUrl": "",
       "fullText": "",
@@ -174,7 +203,6 @@
       "linkLabel": ""
     }
   ],
-
   "contact": {
     "title": "Connect With Our Labs",
     "desc": "Inquiries directly to our administrative hub. or email to info@nirvanabiotech.org",
